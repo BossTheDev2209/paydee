@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: "Alan Sans", sans-serif;
+  }
+  
+  h1 {
+    @apply text-2xl sm:text-[32px];
+  }
+
+  h2 {
+    @apply text-xl sm:text-[24px];
+  }
+
+  h3 {
+    @apply text-lg sm:text-[18.72px];
+  }
+
+  h4 {
+    @apply text-base;
+  }
+
+  h5 {
+    @apply text-sm;
+  }
+
+  h6 {
+    @apply text-xs;
+  }
+}
+
+@layer component {
+  .box {
+    @apply bg-gray-200 w-full p-4 h-full rounded-md;
+  }
+}
+
+/* input */
+.input_default {
+  @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] h-14 outline-none border-gray-400 font-light;
+}
+
+.input_mail_default {
+  @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] px-[8px] outline-none border-gray-400 font-light;
+}
+
+.input_success {
+  @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-green-500 !text-green-500 font-light;
+}
+
+.input_error {
+  @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-red-500 !text-red-500 font-light;
+}
+
+.input_disabled {
+  @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none border-gray-300 !bg-gray-100 cursor-not-allowed focus:invisible font-light;
+}
+
+.input-radio-group-default {
+  @apply bg-white py-1 px-2 rounded-xl outline-none border;
+}
+
+/* btn */
+.btn-base {
+  @apply py-1 px-4 rounded-xl h-10 flex flex-wrap items-center justify-center disabled:cursor-not-allowed;
+}
+
+.btn-sm {
+  @apply py-1 px-4 rounded-xl h-8 flex flex-wrap items-center justify-center disabled:cursor-not-allowed;
+}
+
+.btn-base-auto {
+  @apply ml-auto mt-4 sm:mt-auto;
+}
+
+.btn-blue {
+  @apply text-white disabled:!bg-gray-400 duration-300;
+}
+
+.btn-gray {
+  @apply bg-opacity-20;
+}
+
+  .input_default {
+    @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] px-[8px] h-10 outline-none border-gray-400 font-light;
+  }
+
+  .input_mail_default {
+    @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] px-[8px] outline-none border-gray-400 font-light;
+  }
+
+  .input_success {
+    @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-green-500 !text-green-500 font-light;
+  }
+
+  .input_error {
+    @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-red-500 !text-red-500 font-light;
+  }
+
+  .input_disabled {
+    @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none border-gray-300 !bg-gray-100 cursor-not-allowed focus:invisible font-light;
+  }
+
+  .input-radio-group-default {
+    @apply bg-white py-1 px-2 rounded-xl outline-none border;
+  }
+
+  .hr {
+    @apply border-gray-700 mt-2
+  }
+
+.pad-main {
+  @apply px-4 py-2;
+}
+
+.hamburger-menu {
+  @apply h-[2px] w-full bg-black rounded transition-all duration-300
+}
