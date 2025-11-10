@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <section className="w-full">
       <div className="flex flex-col items-center">
-        <h2 className="w-fit font-semibold px-6 py-2 rounded-full bg-yellow-300">
+        <h2 className="w-fit font-semibold px-6 py-2 rounded-full bg-yellow-300 text-nowrap">
           FINANCIAL CALCULATORS
         </h2>
         <p className="pt-8 text-center">
