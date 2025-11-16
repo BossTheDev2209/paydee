@@ -1,5 +1,10 @@
 import ManageRoutes from "./routers/ManageRoutes";
+import { ThemeProvider } from "./context/ThemeContext";
 
 export default function App() {
-  return <ManageRoutes />;
+  return (
+    <ThemeProvider>
+      <ManageRoutes />
+    </ThemeProvider>
+  );
 }

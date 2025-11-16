@@ -35,8 +35,8 @@ export default function Financial() {
 
   return (
     <section className="w-full">
-      <h1 className="font-bold">Financial Profile</h1>
-      <p>some detail</p>
+      <h1 className="font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">Financial Profile</h1>
+      <p className="text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">some detail</p>
       <Formik
         initialValues={{
           age: "",
@@ -58,12 +58,12 @@ export default function Financial() {
             <div className="w-full flex flex-wrap">
               {/* personal detail */}
               <section className="w-full md:w-6/12 p-4">
-                <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
-                  <p className="text-xl">
-                    <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
+                <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
+                  <p className="text-xl text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2] dark:bg-[#3d3d3d] transition-colors duration-300"></i>
                     Personal
                   </p>
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
                       required
                       title="อายุ"
@@ -82,7 +82,7 @@ export default function Financial() {
                     />
                   </div>
 
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextSelect
                       required
                       title="สถานะ"
@@ -101,7 +101,7 @@ export default function Financial() {
                     />
                   </div>
 
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextSelect
                       required
                       title="ประเทศ"
@@ -119,7 +119,7 @@ export default function Financial() {
                     />
                   </div>
 
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
                       required
                       title="เป้าหมายทางการเงิน"
@@ -139,13 +139,13 @@ export default function Financial() {
 
               {/* financial profile */}
               <section className="w-full md:w-6/12 p-4">
-                <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
-                  <p className="text-xl">
-                    <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
+                <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
+                  <p className="text-xl text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2] dark:bg-[#3d3d3d] transition-colors duration-300"></i>
                     Financial Detail
                   </p>
 
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
                       required
                       title="รายได้ต่อเดือน (บาท)"
@@ -163,7 +163,7 @@ export default function Financial() {
                       error={errors.salary}
                     />
                   </div>
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
                       required
                       title="ค่าใช้จ่ายต่อเดือน (บาท)"
@@ -181,7 +181,7 @@ export default function Financial() {
                       error={errors.expenses}
                     />
                   </div>
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
                       required
                       title="เงินออมปัจจุบัน (บาท)"
@@ -199,7 +199,7 @@ export default function Financial() {
                       error={errors.saving}
                     />
                   </div>
-                  <div className="w-full pad-main">
+                  <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
                       required
                       title="หนี้สินต่อเดือน (บาท)"
@@ -225,7 +225,7 @@ export default function Financial() {
             <div className="w-full flex gap-4 justify-center">
               <button
                 type="reset"
-                className="btn-base bg-[#f2f2f2] border shadow-sm"
+                className="btn-base text-[#f2f1f1] dark:text-[#3d3d3d] bg-[#979797] dark:bg-[#f2f1f1] border shadow-sm"
               >
                 reset
               </button>
