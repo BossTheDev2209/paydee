@@ -14,40 +14,58 @@ export default function Financial() {
     { id: 1, label: "นักเรียน/นักศึกษา" },
     { id: 2, label: "พนักงานประจำ" },
     { id: 3, label: "ฟรีแลนซ์" },
+    { id: 4, label: "ว่างงาน" },
   ];
   const country = [
     { id: 1, label: "ไทย" },
     { id: 2, label: "สหราชอณาจักร" },
     { id: 3, label: "สหรัฐอเมริกา" },
   ];
+
+  const validationSchema = Yup.object({
+    age: Yup.string().required("กรุณากรอกข้อมูล"),
+    status: Yup.number().required("กรุณาเลือกสถานะ"),
+    country: Yup.number().required("กรุณาเลือกประเทศ"),
+    optional: Yup.string().required("กรุณากรอกข้อมูล"),
+    salary: Yup.string().required("กรุณากรอกข้อมูล"),
+    expenses: Yup.string().required("กรุณากรอกข้อมูล"),
+    saving: Yup.string().required("กรุณากรอกข้อมูล"),
+    debt: Yup.string().required("กรุณากรอกข้อมูล"),
+  });
+
   return (
     <section className="w-full">
       <h1 className="font-bold">Financial Profile</h1>
       <p>some detail</p>
-
-      <div className="w-full flex flex-wrap">
-        {/* personal detail */}
-        <section className="w-full md:w-6/12 p-4">
-          <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
-            <p className="text-xl">
-              <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
-              Personal
-            </p>
-            <Formik
-              initialValues={{
-                age: "",
-                status: "",
-                country: "",
-                optional: "",
-              }}
-              onSubmit={(values) => {
-                console.log("a", values);
-              }}
-            >
-              {({ setFieldValue, values, errors, touched }) => (
-                <Form>
+      <Formik
+        initialValues={{
+          age: "",
+          status: "",
+          country: "",
+          optional: "",
+          salary: "",
+          expenses: "",
+          saving: "",
+          debt: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          console.log("a", values);
+        }}
+      >
+        {({ setFieldValue, values, errors, touched }) => (
+          <Form className="w-full">
+            <div className="w-full flex">
+              {/* personal detail */}
+              <section className="w-full md:w-6/12 p-4">
+                <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
+                  <p className="text-xl">
+                    <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
+                    Personal
+                  </p>
                   <div className="w-full pad-main">
                     <TextField
+                      required
                       title="อายุ"
                       id="age"
                       name="age"
@@ -59,32 +77,43 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
+                      touched={touched.age}
+                      error={errors.age}
                     />
                   </div>
 
                   <div className="w-full pad-main">
                     <TextSelect
+                      required
                       title="สถานะ"
                       name="status"
                       options={status}
                       value={selected.status}
-                      onChange={(item) =>
-                        setSelected((prev) => ({ ...prev, status: [item] }))
-                      }
+                      onChange={(item) => {
+                        setSelected((prev) => ({ ...prev, status: [item] }));
+                        setFieldValue("status", item.id);
+                      }}
+                      onBlur={() => setFieldTouched("country", true)}
                       optionValue="id"
                       optionLabel={(item) => item.label}
+                      touched={touched.status}
+                      error={errors.status}
                     />
                   </div>
 
                   <div className="w-full pad-main">
                     <TextSelect
+                      required
                       title="ประเทศ"
-                      name="status"
+                      name="country"
                       options={country}
                       value={selected.country}
-                      onChange={(item) =>
-                        setSelected((prev) => ({ ...prev, country: [item] }))
-                      }
+                      onChange={(item) => {
+                        setSelected((prev) => ({ ...prev, country: [item] }));
+                        setFieldValue("country", item.id);
+                      }}
+                      touched={touched.country}
+                      error={errors.country}
                       optionValue="id"
                       optionLabel={(item) => item.label}
                     />
@@ -92,6 +121,7 @@ export default function Financial() {
 
                   <div className="w-full pad-main">
                     <TextField
+                      required
                       title="เป้าหมายทางการเงิน"
                       id="optional"
                       name="optional"
@@ -100,36 +130,24 @@ export default function Financial() {
                       onChange={(e) =>
                         setFieldValue("optional", e.target.value)
                       }
+                      touched={touched.optional}
+                      error={errors.optional}
                     />
                   </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </section>
+                </div>
+              </section>
 
-        {/* financial detail */}
-        <section className="w-full md:w-6/12 p-4">
-          <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
-            <p className="text-xl">
-              <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
-              Financial Detail
-            </p>
-            <Formik
-              initialValues={{
-                salary: "",
-                expenses: "",
-                saving: "",
-                debt: "",
-              }}
-              onSubmit={(values) => {
-                console.log("a", values);
-              }}
-            >
-              {({ setFieldValue, values, errors, touched }) => (
-                <Form>
+              {/* financial profile */}
+              <section className="w-full md:w-6/12 p-4">
+                <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
+                  <p className="text-xl">
+                    <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
+                    Financial Detail
+                  </p>
+
                   <div className="w-full pad-main">
                     <TextField
+                      required
                       title="รายได้ต่อเดือน (บาท)"
                       id="salary"
                       name="salary"
@@ -141,10 +159,13 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
+                      touched={touched.salary}
+                      error={errors.salary}
                     />
                   </div>
                   <div className="w-full pad-main">
                     <TextField
+                      required
                       title="ค่าใช้จ่ายต่อเดือน (บาท)"
                       id="expenses"
                       name="expenses"
@@ -156,10 +177,13 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
+                      touched={touched.expenses}
+                      error={errors.expenses}
                     />
                   </div>
                   <div className="w-full pad-main">
                     <TextField
+                      required
                       title="เงินออมปัจจุบัน (บาท)"
                       id="saving"
                       name="saving"
@@ -171,10 +195,13 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
+                      touched={touched.saving}
+                      error={errors.saving}
                     />
                   </div>
                   <div className="w-full pad-main">
                     <TextField
+                      required
                       title="หนี้สินต่อเดือน (บาท)"
                       id="debt"
                       name="debt"
@@ -186,22 +213,32 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
+                      touched={touched.debt}
+                      error={errors.debt}
                     />
                   </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </section>
-      </div>
-          <div className="w-full flex gap-4 justify-center">
-            <button type="reset" className="btn-base bg-[#f2f2f2] border shadow-sm">
-              reset
-            </button>
-            <button type="submit" className="btn-base bg-[#ffcc22] border shadow-sm">
-              save
-            </button>
-          </div>
+                </div>
+              </section>
+            </div>
+
+            {/* btn */}
+            <div className="w-full flex gap-4 justify-center">
+              <button
+                type="reset"
+                className="btn-base bg-[#f2f2f2] border shadow-sm"
+              >
+                reset
+              </button>
+              <button
+                type="submit"
+                className="btn-base bg-[#ffcc22] border shadow-sm"
+              >
+                save
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </section>
   );
 }

@@ -36,6 +36,7 @@ function TextSelect({
   onChange = false,
   onSearch = false,
   onFocus = false,
+  onBlur = false,
   optionValue = "value",
   tooltip = false,
   optionLabel = false,
@@ -125,7 +126,9 @@ function TextSelect({
     if (isMulti) {
       if (isMultiDefault) return isMultiDefault;
       if (value.length === 1) {
-        return SetValue(value.map(optionLabel ? optionLabel : (a) => a["label"]));
+        return SetValue(
+          value.map(optionLabel ? optionLabel : (a) => a["label"])
+        );
       }
       return `${value.length} รายการ`;
     }
@@ -172,9 +175,11 @@ function TextSelect({
         <div className="flex justify-between">
           <label
             htmlFor={`select-${name}`}
-            className={title ? `${titleClassName} font-light line-clamp-1` : "hidden"}
+            className={
+              title ? `${titleClassName} font-light line-clamp-1` : "hidden"
+            }
           >
-            {title} {required && <span className="text-red-main">*</span>}
+            {title} {required && <span className="text-red-500">*</span>}
           </label>
           {titleElement && titleElement}
         </div>
@@ -193,10 +198,18 @@ function TextSelect({
               value?.length > 0 && Array.isArray(value)
                 ? isMulti
                   ? isMultiDefault || `${value.length} รายการ`
-                  : SetValue(value.map(optionLabel ? optionLabel : (a) => a["label"]))
+                  : SetValue(
+                      value.map(optionLabel ? optionLabel : (a) => a["label"])
+                    )
                 : placeholder || "- เลือก -"
             }
-            selectType={typeof (value?.length > 0 && Array.isArray(value) && value.map(optionLabel ? optionLabel : (a) => a["label"])[0])}
+            selectType={
+              typeof (
+                value?.length > 0 &&
+                Array.isArray(value) &&
+                value.map(optionLabel ? optionLabel : (a) => a["label"])[0]
+              )
+            }
             name={name}
             className={`${className || "input_default pr-8"} ${
               disabled ? "input_disabled pr-8" : ""
@@ -207,6 +220,7 @@ function TextSelect({
               setShowAll(false);
               onFocus && onFocus();
             }}
+            onBlur={onBlur}
           />
           <i className="fas fa-angle-down -ml-6 fill-current text-gray-600 text-base"></i>
           {tooltip && showSelectTooltip && (
@@ -258,7 +272,8 @@ function TextSelect({
                   key={optionValue ? item[optionValue] : index}
                   className={`p-2 rounded-md my-[2px] hover:bg-[#2C4150] hover:text-white cursor-pointer font-light ${
                     Array.isArray(value) &&
-                    value.filter((a) => a[optionValue] === item[optionValue]).length > 0 &&
+                    value.filter((a) => a[optionValue] === item[optionValue])
+                      .length > 0 &&
                     "bg-[#2C4150] text-white"
                   }`}
                   onClick={() => {
@@ -278,7 +293,9 @@ function TextSelect({
                 className="p-2 rounded-md text-center hover:bg-blue-s5 cursor-pointer"
                 onClick={() => setShowAll(!showAll)}
               >
-                <span>{showAll ? "-- แสดงน้อยลง --" : "-- แสดงทั้งหมด --"}</span>
+                <span>
+                  {showAll ? "-- แสดงน้อยลง --" : "-- แสดงทั้งหมด --"}
+                </span>
               </li>
             )}
           </ul>
