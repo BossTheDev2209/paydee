@@ -6,12 +6,12 @@ import { useState } from "react";
 export default function DetailedMode({ calculate, switchMode }) {
   return (
     <div className="w-full">
-      <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
+      <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
         {/* <p className="text-xl">
               <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
               Personal
             </p> */}
-        <p className="text-3xl font-bold"> Detailed Mode </p>
+        <p className="text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> Detailed Mode </p>
         <Formik
           initialValues={{
             salary: "",
@@ -30,7 +30,7 @@ export default function DetailedMode({ calculate, switchMode }) {
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="รายได้ต่อเดือน (บาท)"
                   id="salary"
@@ -45,7 +45,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="โบนัส (บาท)"
                   id="bonus"
@@ -60,7 +60,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="รายได้เสริมต่อเดือน (บาท)"
                   id="extraIncome"
@@ -75,7 +75,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="ค่าใช้จ่ายต่อเดือน (บาท)"
                   id="expenses"
@@ -90,7 +90,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="ค่าเดินทางต่อเดือน (บาท)"
                   id="commutingCost"
@@ -105,7 +105,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="ค่าที่พักต่อเดือน (บาท)"
                   id="housingCost"
@@ -120,7 +120,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="หนี้สินขั้นต่ำต่อเดือน (บาท)"
                   id="debt"
@@ -135,7 +135,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="ภาษี (ร้อยละ)"
                   id="tax"
@@ -147,7 +147,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   }
                 />
               </div>
-              <div className="w-full pad-main">
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="ค่าลดหย่อน (บาท)"
                   id="deduction"
@@ -169,7 +169,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                 </button>
                 <button
                   type="button"
-                  className="w-full btn-base bg-[#f2f2f2]"
+                  className="w-full btn-base bg-[#f2f1f1]"
                   onClick={switchMode}
                 >
                   สลับไปยัง Quick Mode
