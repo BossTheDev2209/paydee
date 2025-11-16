@@ -14,15 +14,18 @@ export default function Header() {
     { label: "Home", path: "/" },
     { label: "Salary After Tax", path: "/salary-aftertax" },
     { label: "Saving Goal", path: "/saving-goal" },
+    { label: "Financial Profile", path: "/financial" },
   ];
 
   return (
     <div className="w-full">
-      <section className="w-full bg-white text-black h-38 flex flex-col justify-center lg:static">
-        <div className="w-full justify-between hidden lg:flex p-4">
-          <div className="w-2/12 flex flex-col items-center">
-            <h1 className="text-2xl font-bold">PayDee</h1>
-            <p>calculator</p>
+      <section className="w-full bg-[#fdfdfd] shadow-sm shadow-[#ffcc00]/40 text-black h-38 flex flex-col justify-center lg:static">
+        <div className="w-full hidden lg:flex p-4">
+          <div className="w-6/12 flex gap-2 items-center">
+            <div className="w-2/12 flex flex-col items-center rounded-lg">
+              <h1 className="text-2xl font-bold">PayDee</h1>
+              <p>เพย์ดี</p>
+            </div>
           </div>
 
           {/* <div className="flex gap-4 items-center">
@@ -32,13 +35,11 @@ export default function Header() {
             <p>Sustainability</p>
           </div> */}
 
-          <div className="flex gap-4 items-center text-2xl">
-            <p>
-              <i className="fa-solid fa-calculator"></i>
-            </p>
-            <p>
-              <i className="fa-solid fa-sack-dollar"></i>
-            </p>
+          <div className="w-6/12 flex gap-2 items-center justify-end">
+          <button className="bg-[#f2f2f2] px-2 rounded-full"><i className="fa-solid fa-globe text-xl"></i></button>
+          <button className="btn-base bg-[#f2f2f2]">about us</button>
+          <Link to='/financial'> <button className="btn-base bg-[#ffcc00]">Financial Profile</button> </Link> 
+          <button className="bg-[#f2f2f2] px-2 rounded-full"><i className="fa-solid fa-moon text-2xl"></i></button>
           </div>
         </div>
 

@@ -4,8 +4,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* color */
+:root {
+  --color-dark-text: #3d3d3d;
+  --color-dark-darker-bg: #f2f2f2;
+  --color-dark-lighter-bg: #fdfdfd;
+  --color-dark-alt: #979797;
+  --color-dark-primary: #ffcc00;
+
+  --color-light-text: #283e4b;
+  --color-light-darker-bg: #283e4b;
+  --color-light-lighter-bg: #283e4b;
+  --color-light-alt: #283e4b;
+  --color-light-primary: #283e4b;
+}
+
 @layer base {
   body {
+    @apply bg-[#f2f2f2];
     font-family: "Alan Sans", sans-serif;
   }
   
