@@ -55,7 +55,7 @@ export default function Financial() {
       >
         {({ setFieldValue, values, errors, touched }) => (
           <Form className="w-full">
-            <div className="w-full flex">
+            <div className="w-full flex flex-wrap">
               {/* personal detail */}
               <section className="w-full md:w-6/12 p-4">
                 <div className="w-full p-4 bg-[#fdfdfd] rounded-lg mt-10">
