@@ -3,7 +3,17 @@ import { Form, Formik } from "formik";
 import TextField from "../../components/TextField";
 import { useState } from "react";
 
+function loadData() {
+  try {
+    const saved = localStorage.getItem("financial-form");
+    return saved ? JSON.parse(saved) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 export default function DetailedMode({ calculate, switchMode }) {
+  const savedData = loadData();
   return (
     <div className="w-full">
       <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
@@ -14,12 +24,12 @@ export default function DetailedMode({ calculate, switchMode }) {
         <p className="text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> Detailed Mode </p>
         <Formik
           initialValues={{
-            salary: "",
+            salary: savedData?.salary || "",
             extraIncome: "",
             bonus: "",
             housingCost: "",
             commutingCost: "",
-            expenses: "",
+            expenses: savedData?.expenses || "",
             debt: "",
             tax: "",
             deduction: "",

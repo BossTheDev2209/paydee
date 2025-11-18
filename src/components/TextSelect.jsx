@@ -213,6 +213,7 @@ function TextSelect({
             name={name}
             className={`${className || "input_default pr-8"} ${
               disabled ? "input_disabled pr-8" : ""
+              
             } ${tooltip ? "cursor-pointer" : ""}`}
             onClick={() => {
               setOpen(!open);
@@ -237,7 +238,7 @@ function TextSelect({
           )}
         </div>
         <div
-          className={`border rounded-md shadow-sm p-2 w-full absolute z-[50] bg-white ${
+          className={`border rounded-md shadow-sm p-2 w-full absolute z-[50] bg-white dark:bg-[#353535] ${
             !open && "hidden"
           }`}
         >
@@ -248,7 +249,7 @@ function TextSelect({
                 autoComplete="off"
                 id={`search-${name}`}
                 value={searchKey}
-                className="w-full py-1 font-light rounded-lg outline-none h-10 px-2 border border-gray-400 pl-9 -ml-7"
+                className="w-full py-1 font-light dark:bg-[#3d3d3d] rounded-lg outline-none h-10 px-2 border border-gray-400 pl-9 -ml-7"
                 onChange={(e) => {
                   const keySearch = e.target.value || "";
                   onSearch && onSearch(keySearch);
@@ -270,7 +271,7 @@ function TextSelect({
               data.slice(0, showAll ? data.length : 50).map((item, index) => (
                 <li
                   key={optionValue ? item[optionValue] : index}
-                  className={`p-2 rounded-md my-[2px] hover:bg-[#2C4150] hover:text-white cursor-pointer font-light ${
+                  className={`p-2 rounded-md my-[2px] hover:bg-[#ffcc00] hover:text-[#3d3d3d] cursor-pointer font-light ${
                     Array.isArray(value) &&
                     value.filter((a) => a[optionValue] === item[optionValue])
                       .length > 0 &&

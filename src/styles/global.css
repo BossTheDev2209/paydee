@@ -44,7 +44,7 @@
 
 /* input */
 .input_default {
-  @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] h-14 outline-none border-gray-400 font-light;
+  @apply flex w-full items-center justify-center rounded-md border bg-white dark:bg-[#3d3d3d] py-[8px] h-14 outline-none border-gray-400 font-light;
 }
 
 .input_mail_default {
@@ -69,19 +69,15 @@
 
 /* btn */
 .btn-base {
-  @apply py-1 px-4 rounded-xl h-10 flex flex-wrap items-center justify-center disabled:cursor-not-allowed;
+  @apply btn-click py-1 px-4 rounded-xl h-10 flex flex-wrap items-center justify-center disabled:cursor-not-allowed;
 }
 
 .btn-sm {
   @apply py-1 px-4 rounded-xl h-8 flex flex-wrap items-center justify-center disabled:cursor-not-allowed;
 }
 
-.btn-base-auto {
-  @apply ml-auto mt-4 sm:mt-auto;
-}
-
-.btn-blue {
-  @apply text-white disabled:!bg-gray-400 duration-300;
+.btn-click {
+  @apply active:scale-95
 }
 
 .btn-gray {
@@ -122,4 +118,12 @@
 
 .hamburger-menu {
   @apply h-[2px] w-full bg-black rounded transition-all duration-300
+}
+
+@keyframes fade {
+  0% { opacity: 0; transform: scale(.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-fade {
+  animation: fade .2s ease-out;
 }

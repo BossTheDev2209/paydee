@@ -24,10 +24,12 @@ export default function Header() {
       <section className="w-full bg-[#fdfdfd] dark:bg-[#202121] shadow-sm shadow-[#ffcc00]/40 text-[#3d3d3d] dark:text-[#f2f1f1] h-38 flex flex-col justify-center lg:static transition-colors duration-300">
         <div className="w-full hidden lg:flex p-4">
           <div className="w-6/12 flex gap-2 items-center">
-            <div className="w-2/12 flex flex-col items-center rounded-lg">
-              <h1 className="text-2xl font-bold">PayDee</h1>
-              <p>เพย์ดี</p>
-            </div>
+            <Link to="/" className="w-2/12 flex flex-col items-center">
+              <div className="w-full">
+                <h1 className="text-2xl font-bold text-center">PayDee</h1>
+                <p className="text-center">เพย์ดี</p>
+              </div>
+            </Link>
           </div>
 
           {/* <div className="flex gap-4 items-center">
@@ -38,10 +40,25 @@ export default function Header() {
           </div> */}
 
           <div className="w-6/12 flex gap-2 items-center justify-end">
-          <button className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors"><i className="fa-solid fa-globe text-xl"></i></button>
-          <button className="btn-base bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors">about us</button>
-          <Link to='/financial'> <button className="btn-base bg-[#ffcc00] dark:bg-[#ffcc00] text-[#3d3d3d] dark:text-[#202121] transition-colors">Financial Profile</button> </Link> 
-          <button onClick={toggleTheme} className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors"><i className={`fa-solid ${isDark ? 'fa-sun' : 'fa-moon'} text-2xl`}></i></button>
+            <button className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors">
+              <i className="fa-solid fa-globe text-xl"></i>
+            </button>
+            <button className="btn-base bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors">
+              about us
+            </button>
+            <Link to="/financial">
+              <button className="btn-base bg-[#ffcc00] dark:bg-[#ffcc00] text-[#3d3d3d] dark:text-[#202121] transition-colors">
+                Financial Profile
+              </button>
+            </Link>
+            <button
+              onClick={toggleTheme}
+              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors"
+            >
+              <i
+                className={`fa-solid ${isDark ? "fa-sun" : "fa-moon"} text-2xl`}
+              ></i>
+            </button>
           </div>
         </div>
 
@@ -67,18 +84,25 @@ export default function Header() {
             </div>
           </button>
 
-          <div className="flex flex-col items-center h-full">
-            <h1 className="text-2xl font-bold">PayDee</h1>
-            <p className="text-nowrap">calculator</p>
-          </div>
+          <Link to="/" className="flex flex-col items-center">
+            <div className="w-full">
+              <h1 className="text-2xl font-bold text-center">PayDee</h1>
+              <p className="text-nowrap text-center">เพย์ดี</p>
+            </div>
+          </Link>
 
-          <div className="flex gap-4 items-center text-xl">
-            <p>
-              <i className="fa-solid fa-calculator"></i>
-            </p>
-            <p>
-              <i className="fa-solid fa-sack-dollar"></i>
-            </p>
+          <div className="w-fit flex gap-4 justify-center">
+            <button className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors">
+              <i className="fa-solid fa-globe text-xl"></i>
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors"
+            >
+              <i
+                className={`fa-solid ${isDark ? "fa-sun" : "fa-moon"} text-2xl`}
+              ></i>
+            </button>
           </div>
         </div>
 
@@ -95,7 +119,9 @@ export default function Header() {
                 key={index}
                 onClick={handleClick}
                 className={`cursor-pointer flex justify-center items-center h-10 rounded-xl transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#303030] border-[#979797] dark:border-[#303030] hover:border ${
-                  currentpPath === item.path ? "font-bold bg-[#f2f2f2] dark:bg-[#303030] border border-[#979797] dark:border-[#303030]" : ""
+                  currentpPath === item.path
+                    ? "font-bold bg-[#f2f2f2] dark:bg-[#303030] border border-[#979797] dark:border-[#303030]"
+                    : ""
                 }`}
               >
                 {item.label}

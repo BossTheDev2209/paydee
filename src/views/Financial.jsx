@@ -4,12 +4,37 @@ import { Form, Formik } from "formik";
 import TextField from "../components/TextField";
 import TextSelect from "../components/TextSelect";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+function AutoModal({ show, title, message }) {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-xl w-[90%] max-w-sm shadow-lg animate-fade">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <p className="mt-2">{message}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Financial() {
+  const navigate = useNavigate();
+  const [modal, setModal] = useState(false);
   const [selected, setSelected] = useState({
     status: [],
     country: [],
   });
+
+  const handleSave = (values) => {
+    console.log("save:", values);
+    setModal(true);
+    setTimeout(() => {
+      setModal(false);
+      navigate("/");
+    }, 1500);
+  }
   const status = [
     { id: 1, label: "นักเรียน/นักศึกษา" },
     { id: 2, label: "พนักงานประจำ" },
@@ -22,16 +47,16 @@ export default function Financial() {
     { id: 3, label: "สหรัฐอเมริกา" },
   ];
 
-  const validationSchema = Yup.object({
-    age: Yup.string().required("กรุณากรอกข้อมูล"),
-    status: Yup.number().required("กรุณาเลือกสถานะ"),
-    country: Yup.number().required("กรุณาเลือกประเทศ"),
-    optional: Yup.string().required("กรุณากรอกข้อมูล"),
-    salary: Yup.string().required("กรุณากรอกข้อมูล"),
-    expenses: Yup.string().required("กรุณากรอกข้อมูล"),
-    saving: Yup.string().required("กรุณากรอกข้อมูล"),
-    debt: Yup.string().required("กรุณากรอกข้อมูล"),
-  });
+  // const validationSchema = Yup.object({
+  //   age: Yup.string().required("กรุณากรอกข้อมูล"),
+  //   status: Yup.number().required("กรุณาเลือกสถานะ"),
+  //   country: Yup.number().required("กรุณาเลือกประเทศ"),
+  //   optional: Yup.string().required("กรุณากรอกข้อมูล"),
+  //   salary: Yup.string().required("กรุณากรอกข้อมูล"),
+  //   expenses: Yup.string().required("กรุณากรอกข้อมูล"),
+  //   saving: Yup.string().required("กรุณากรอกข้อมูล"),
+  //   debt: Yup.string().required("กรุณากรอกข้อมูล"),
+  // });
 
   return (
     <section className="w-full">
@@ -48,9 +73,10 @@ export default function Financial() {
           saving: "",
           debt: "",
         }}
-        validationSchema={validationSchema}
+        // validationSchema={validationSchema}
         onSubmit={(values) => {
-          console.log("a", values);
+          localStorage.setItem("financial-form", JSON.stringify(values));
+          console.log("saved", values);
         }}
       >
         {({ setFieldValue, values, errors, touched }) => (
@@ -65,7 +91,6 @@ export default function Financial() {
                   </p>
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
-                      required
                       title="อายุ"
                       id="age"
                       name="age"
@@ -77,14 +102,13 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
-                      touched={touched.age}
-                      error={errors.age}
+                      // touched={touched.age}
+                      // error={errors.age}
                     />
                   </div>
 
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextSelect
-                      required
                       title="สถานะ"
                       name="status"
                       options={status}
@@ -96,14 +120,13 @@ export default function Financial() {
                       onBlur={() => setFieldTouched("country", true)}
                       optionValue="id"
                       optionLabel={(item) => item.label}
-                      touched={touched.status}
-                      error={errors.status}
+                      // touched={touched.status}
+                      // error={errors.status}
                     />
                   </div>
 
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextSelect
-                      required
                       title="ประเทศ"
                       name="country"
                       options={country}
@@ -112,8 +135,8 @@ export default function Financial() {
                         setSelected((prev) => ({ ...prev, country: [item] }));
                         setFieldValue("country", item.id);
                       }}
-                      touched={touched.country}
-                      error={errors.country}
+                      // touched={touched.country}
+                      // error={errors.country}
                       optionValue="id"
                       optionLabel={(item) => item.label}
                     />
@@ -121,7 +144,6 @@ export default function Financial() {
 
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
-                      required
                       title="เป้าหมายทางการเงิน"
                       id="optional"
                       name="optional"
@@ -130,8 +152,8 @@ export default function Financial() {
                       onChange={(e) =>
                         setFieldValue("optional", e.target.value)
                       }
-                      touched={touched.optional}
-                      error={errors.optional}
+                      // touched={touched.optional}
+                      // error={errors.optional}
                     />
                   </div>
                 </div>
@@ -147,7 +169,6 @@ export default function Financial() {
 
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
-                      required
                       title="รายได้ต่อเดือน (บาท)"
                       id="salary"
                       name="salary"
@@ -159,13 +180,12 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
-                      touched={touched.salary}
-                      error={errors.salary}
+                      // touched={touched.salary}
+                      // error={errors.salary}
                     />
                   </div>
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
-                      required
                       title="ค่าใช้จ่ายต่อเดือน (บาท)"
                       id="expenses"
                       name="expenses"
@@ -177,13 +197,12 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
-                      touched={touched.expenses}
-                      error={errors.expenses}
+                      // touched={touched.expenses}
+                      // error={errors.expenses}
                     />
                   </div>
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
-                      required
                       title="เงินออมปัจจุบัน (บาท)"
                       id="saving"
                       name="saving"
@@ -195,13 +214,12 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
-                      touched={touched.saving}
-                      error={errors.saving}
+                      // touched={touched.saving}
+                      // error={errors.saving}
                     />
                   </div>
                   <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <TextField
-                      required
                       title="หนี้สินต่อเดือน (บาท)"
                       id="debt"
                       name="debt"
@@ -213,8 +231,8 @@ export default function Financial() {
                           e.target.value.replace(/[^0-9]/g, "")
                         )
                       }
-                      touched={touched.debt}
-                      error={errors.debt}
+                      // touched={touched.debt}
+                      // error={errors.debt}
                     />
                   </div>
                 </div>
@@ -224,6 +242,7 @@ export default function Financial() {
             {/* btn */}
             <div className="w-full flex gap-4 justify-center">
               <button
+              onClick={() => localStorage.removeItem("financial-form")}
                 type="reset"
                 className="btn-base text-[#f2f1f1] dark:text-[#3d3d3d] bg-[#979797] dark:bg-[#f2f1f1] border shadow-sm"
               >

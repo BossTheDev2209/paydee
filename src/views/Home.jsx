@@ -41,7 +41,7 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 mt-10 mb-10">
-          <button className="btn-base bg-[#fdfdfd] text-[#3d3d3d] dark:bg-[#202121] dark:text-[#f2f1f1] transition-colors duration-300">เริ่มต้นใช้งาน</button>
+         <a href="#calculate"> <button className="btn-base bg-[#fdfdfd] text-[#3d3d3d] dark:bg-[#202121] dark:text-[#f2f1f1] transition-colors duration-300">เริ่มต้นใช้งาน</button> </a> 
           <Link to="/financial">
             <button className="btn-base bg-[#ffcc00]">
               ไปกรอก financial profile
@@ -50,7 +50,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full flex flex-wrap md:flex-nowrap">
+      <div id="calculate" className="w-full flex flex-wrap md:flex-nowrap">
         {calculator.map((item, idx) => (
           <div key={idx} className="w-full flex">
             <div className="w-full py-4 md:px-4 flex">
