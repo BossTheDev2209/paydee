@@ -64,7 +64,7 @@ export default function Header() {
 
         {/* sm nav */}
         <div className="fixed top-0 bg-[#fdfdfd] dark:bg-[#2b2b2b] z-50 flex items-center justify-between w-full gap-2 pr-2 lg:hidden p-4 transition-colors duration-300">
-          <button onClick={toggleMenu} className="relative cursor-pointer">
+          <button onClick={toggleMenu} className="w-4/12 relative cursor-pointer">
             <div className="relative flex flex-col justify-between w-5 h-3 mt-1">
               <span
                 className={`hamburger-menu dark:bg-white ${
@@ -84,23 +84,23 @@ export default function Header() {
             </div>
           </button>
 
-          <Link to="/" className="flex flex-col items-center">
+          <Link to="/" className="w-4/12 flex flex-col items-center">
             <div className="w-full">
               <h1 className="text-2xl font-bold text-center">PayDee</h1>
               <p className="text-nowrap text-center">เพย์ดี</p>
             </div>
           </Link>
 
-          <div className="w-fit flex gap-4 justify-center">
+          <div className="w-4/12 flex gap-2 justify-end">
             <button className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors">
               <i className="fa-solid fa-globe text-xl"></i>
             </button>
             <button
               onClick={toggleTheme}
-              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors"
+              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 py-1 rounded-full transition-colors"
             >
               <i
-                className={`fa-solid ${isDark ? "fa-sun" : "fa-moon"} text-2xl`}
+                className={`fa-solid ${isDark ? "fa-sun" : "fa-moon"} text-xl`}
               ></i>
             </button>
           </div>

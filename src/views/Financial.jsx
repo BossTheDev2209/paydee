@@ -21,7 +21,7 @@ function AutoModal({ show, title, message }) {
 
 export default function Financial() {
   const navigate = useNavigate();
-  const [modal, setModal] = useState(false);
+  // const [modal, setModal] = useState(false);
   const [selected, setSelected] = useState({
     status: [],
     country: [],
@@ -29,12 +29,12 @@ export default function Financial() {
 
   const handleSave = (values) => {
     console.log("save:", values);
-    setModal(true);
+    // setModal(true);
     setTimeout(() => {
-      setModal(false);
+      // setModal(false);
       navigate("/");
-    }, 1500);
-  }
+    });
+  };
   const status = [
     { id: 1, label: "นักเรียน/นักศึกษา" },
     { id: 2, label: "พนักงานประจำ" },
@@ -60,8 +60,12 @@ export default function Financial() {
 
   return (
     <section className="w-full">
-      <h1 className="font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">Financial Profile</h1>
-      <p className="text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">some detail</p>
+      <h1 className="font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+        Financial Profile
+      </h1>
+      <p className="text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+        สำหรับผู้ที่ประสงค์กรอกเพื่อเพิ่มความสะดวกรวดเร็วในการใช้งาน แบบฟอร์มนี้จะบันทึกข้อมูลไว้ใช้กรอกอัตโนมัติเมื่อเจอคำถามเดิม
+      </p>
       <Formik
         initialValues={{
           age: "",
@@ -77,6 +81,7 @@ export default function Financial() {
         onSubmit={(values) => {
           localStorage.setItem("financial-form", JSON.stringify(values));
           console.log("saved", values);
+          handleSave(values);
         }}
       >
         {({ setFieldValue, values, errors, touched }) => (
@@ -242,7 +247,7 @@ export default function Financial() {
             {/* btn */}
             <div className="w-full flex gap-4 justify-center">
               <button
-              onClick={() => localStorage.removeItem("financial-form")}
+                onClick={() => localStorage.removeItem("financial-form")}
                 type="reset"
                 className="btn-base text-[#f2f1f1] dark:text-[#3d3d3d] bg-[#979797] dark:bg-[#f2f1f1] border shadow-sm"
               >

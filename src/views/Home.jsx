@@ -44,7 +44,7 @@ export default function Home() {
          <a href="#calculate"> <button className="btn-base bg-[#fdfdfd] text-[#3d3d3d] dark:bg-[#202121] dark:text-[#f2f1f1] transition-colors duration-300">เริ่มต้นใช้งาน</button> </a> 
           <Link to="/financial">
             <button className="btn-base bg-[#ffcc00]">
-              ไปกรอก financial profile
+              กรอก financial profile
             </button>
           </Link>
         </div>
