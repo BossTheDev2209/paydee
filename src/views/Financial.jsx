@@ -60,10 +60,10 @@ export default function Financial() {
 
   return (
     <section className="w-full">
-      <h1 className="font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+      <h1 className="text-lg md:text-2xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
         Financial Profile
       </h1>
-      <p className="text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+      <p className="text-sm md:text-lg text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
         สำหรับผู้ที่ประสงค์กรอกเพื่อเพิ่มความสะดวกรวดเร็วในการใช้งาน แบบฟอร์มนี้จะบันทึกข้อมูลไว้ใช้กรอกอัตโนมัติเมื่อเจอคำถามเดิม
       </p>
       <Formik
