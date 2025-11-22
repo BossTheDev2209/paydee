@@ -1,4 +1,5 @@
 import MainLayout from "../layout/MainLayout";
+import AboutUs from "../views/AboutUs.jsx";
 import Financial from "../views/Financial.jsx";
 import Home from "../views/Home";
 import SalaryAfterTax from '../views/SalaryAfterTax.jsx';
@@ -13,6 +14,7 @@ const allRoutes = [
       { path: "/salary-aftertax", element: <SalaryAfterTax /> },
       { path: "/saving-goal", element: <SavingGoal /> },
       { path: "/financial", element: <Financial /> },
+      { path: "/about-us", element: <AboutUs /> },
     ],
   },
 ];

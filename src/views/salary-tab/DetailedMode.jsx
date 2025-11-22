@@ -21,7 +21,7 @@ export default function DetailedMode({ calculate, switchMode }) {
               <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
               Personal
             </p> */}
-        <p className="text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> Detailed Mode </p>
+        <p className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> Detailed Mode </p>
         <Formik
           initialValues={{
             salary: savedData?.salary || "",
@@ -162,7 +162,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   title="ค่าลดหย่อน (บาท)"
                   id="deduction"
                   name="deduction"
-                  placeholder="10"
+                  placeholder="1000"
                   value={values.deduction}
                   onChange={(e) =>
                     setFieldValue("deduction", e.target.value.replace(/[^0-9]/g, ""))

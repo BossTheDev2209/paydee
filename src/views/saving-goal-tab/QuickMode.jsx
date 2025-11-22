@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import TextField from "../../components/TextField";
 import TextSelect from "../../components/TextSelect";
 import { useState } from "react";
-import js from "@eslint/js";
+// import js from "@eslint/js";
 
 function loadData() {
   try {
@@ -24,7 +24,7 @@ export default function QuickMode({ calculate, switchMode }) {
     { id: 3, label: "รายเดือน" },
   ];
 
-  const savedData = loadData();
+  // const savedData = loadData();
   return (
     <div className="w-full">
       <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
@@ -32,7 +32,7 @@ export default function QuickMode({ calculate, switchMode }) {
               <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
               Personal
             </p> */}
-        <p className="text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+        <p className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
           Quick Mode
         </p>
         <Formik

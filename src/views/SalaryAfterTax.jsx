@@ -36,14 +36,14 @@ export default function SalaryAfterTax() {
   };
   return (
     <section className="w-full">
-      <h1 className="font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">Salary After Tax</h1>
-      <h3 className="text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+      <h1 className="text-lg md:text-2xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">Salary After Tax</h1>
+      <h3 className="text-sm md:text-lg text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
         คำนวณรายได้สุทธิหลังหักภาษีและค่าใช้จ่าย
       </h3>
 
       <div className="w-full flex justify-center">
         {/* personal detail */}
-        <section className="w-full md:w-10/12 p-4">
+        <section className="w-full md:w-10/12">
           {mode === "quick" ? (
             <QuickMode
               calculate={calculate}
@@ -57,7 +57,7 @@ export default function SalaryAfterTax() {
           )}
 
           <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-            <h1 className="font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> ผลลัพธ์ </h1>
+            <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> ผลลัพธ์ </h1>
             {loading ? (
               <div className="flex justify-center items-center h-40">
                 <h1 className="text-5xl">

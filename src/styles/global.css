@@ -8,7 +8,7 @@
 @layer base {
   body {
     @apply bg-[#f2f2f2] dark:bg-[#303030] transition-colors duration-300;
-    font-family: "Alan Sans", sans-serif;
+    font-family: "Prompt", sans-serif;
   }
   
   h1 {
