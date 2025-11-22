@@ -1,10 +1,18 @@
 import { useState } from "react";
 import QuickMode from "./salary-tab/QuickMode";
 import DetailedMode from "./salary-tab/DetailedMode";
+import { Link } from "react-router-dom";
 
 export default function AboutUs() {
   return (
     <section className="w-full flex flex-col items-center">
+      <Link to="/" className="w-full">
+        <p className="w-full text-start text-base md:text-xl mb-8 text-[#979797] transition-colors duration-300">
+          <i class="fa-solid fa-arrow-left-long pr-6"></i>
+          Back to Home
+        </p>
+      </Link>
+      
       <h1 className="w-full md:w-10/12 text-2xl md:text-4xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
         About Paydee
       </h1>
@@ -32,7 +40,9 @@ export default function AboutUs() {
               <li>ใช้งานฟรี ไม่มีค่าใช้จ่าย</li>
             </ul>
             <hr className="my-6" />
-            <p className="text-sm md:text-lg text-[#979797] dark:text-[#979797] transition-colors duration-300 text-nowrap">Developed by YDP Fellowship (Team 7)</p>
+            <p className="text-sm md:text-lg text-[#979797] dark:text-[#979797] transition-colors duration-300 text-nowrap">
+              Developed by YDP Fellowship (Team 7)
+            </p>
           </div>
         </section>
       </div>

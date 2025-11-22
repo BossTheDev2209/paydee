@@ -1,6 +1,7 @@
 import { useState } from "react";
 import QuickMode from "./saving-goal-tab/QuickMode";
 import DetailedMode from "./saving-goal-tab/DetailedMode";
+import { Link } from "react-router-dom";
 
 function formatDuration(days) {
   if (days < 7) return `${days} วัน`;
@@ -54,22 +55,28 @@ export default function SavingGoal() {
 
       // quick mode
       const totalQuick = target / amount;
-      const durationQuick = formatDuration(totalQuick);
-      console.log(totalQuick);
+      const totalDays = totalQuick * daysPerSave;
+      const duration = formatDuration(totalDays);
+      console.log(totalDays);
 
       // detailed mode
       const remaining = target - saving;
       const timeDetailed = remaining / amount;
       const totalDetailed = timeDetailed * daysPerSave;
-      const durationDetailed = formatDuration(totalDetailed);
       console.log(totalDetailed);
 
-      setResult({ totalQuick, totalDetailed, durationDetailed, durationQuick });
+      setResult({ totalQuick, totalDetailed, duration });
       setLoading(false);
     });
   };
   return (
     <section className="w-full">
+      <Link to="/" className="w-full">
+        <p className="w-full text-start text-base md:text-xl mb-8 text-[#979797] transition-colors duration-300">
+          <i class="fa-solid fa-arrow-left-long pr-6"></i>
+          Back to Home
+        </p>
+      </Link>
       <h1 className="text-lg md:text-2xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
         Saving Goal
       </h1>
@@ -110,7 +117,7 @@ export default function SavingGoal() {
                       ระยะเวลา
                     </h2>
                     <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {result.totalQuick.toLocaleString()} วัน
+                      {result.duration}
                     </h2>
                   </p>
                   {/* <p className="flex flex-wrap justify-between pad-main">

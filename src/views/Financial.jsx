@@ -5,19 +5,20 @@ import TextField from "../components/TextField";
 import TextSelect from "../components/TextSelect";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function AutoModal({ show, title, message }) {
-  if (!show) return null;
+// function AutoModal({ show, title, message }) {
+//   if (!show) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-xl w-[90%] max-w-sm shadow-lg animate-fade">
-        <h2 className="text-xl font-semibold">{title}</h2>
-        <p className="mt-2">{message}</p>
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+//       <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-xl w-[90%] max-w-sm shadow-lg animate-fade">
+//         <h2 className="text-xl font-semibold">{title}</h2>
+//         <p className="mt-2">{message}</p>
+//       </div>
+//     </div>
+//   );
+// }
 
 export default function Financial() {
   const navigate = useNavigate();
@@ -60,11 +61,19 @@ export default function Financial() {
 
   return (
     <section className="w-full">
+      <Link to="/" className="w-full">
+        <p className="w-full text-start text-base md:text-xl mb-8 text-[#979797] transition-colors duration-300">
+          <i class="fa-solid fa-arrow-left-long pr-6"></i>
+          Back to Home
+        </p>
+      </Link>
+      
       <h1 className="text-lg md:text-2xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
         Financial Profile
       </h1>
       <p className="text-sm md:text-lg text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-        สำหรับผู้ที่ประสงค์กรอกเพื่อเพิ่มความสะดวกรวดเร็วในการใช้งาน แบบฟอร์มนี้จะบันทึกข้อมูลไว้ใช้กรอกอัตโนมัติเมื่อเจอคำถามเดิม
+        สำหรับผู้ที่ประสงค์กรอกเพื่อเพิ่มความสะดวกรวดเร็วในการใช้งาน
+        แบบฟอร์มนี้จะบันทึกข้อมูลไว้ใช้กรอกอัตโนมัติเมื่อเจอคำถามเดิม
       </p>
       <Formik
         initialValues={{
