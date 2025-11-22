@@ -211,7 +211,7 @@ export default function Financial() {
                       title="เงินออมปัจจุบัน (บาท)"
                       id="saving"
                       name="saving"
-                      placeholder="50000"
+                      placeholder="5000"
                       value={values.saving}
                       onChange={(e) =>
                         setFieldValue(

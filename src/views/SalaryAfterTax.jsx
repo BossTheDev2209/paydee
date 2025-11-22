@@ -68,26 +68,26 @@ export default function SalaryAfterTax() {
               <>
                 <div className="">
                   <p className="flex flex-wrap justify-between pad-main">
-                    <h2 className="w-full md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> รายได้สุทธิต่อเดือน </h2>
-                    <h2 className="w-full md:w-6/12 md:text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> รายได้สุทธิต่อเดือน </h2>
+                    <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       {result.quickNet.toLocaleString()} บาท
                     </h2>
                   </p>
                   <p className="flex flex-wrap justify-between pad-main">
-                    <h2 className="w-full md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> รายได้สุทธิต่อปี </h2>
-                    <h2 className="w-full md:w-6/12 md:text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> รายได้สุทธิต่อปี </h2>
+                    <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       {result.netYear.toLocaleString()} บาท
                     </h2>
                   </p>
                   <p className="flex flex-wrap justify-between pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <h2 className="w-full md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> หักภาษี </h2>
-                    <h2 className="w-full md:w-6/12 md:text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> หักภาษี </h2>
+                    <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       {result.netTax.toLocaleString()} บาท
                     </h2>
                   </p>
                   <p className="flex flex-wrap justify-between pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <h2 className="w-full md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> ภาษีต่อปี </h2>
-                    <h2 className="w-full md:w-6/12 md:text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> ภาษีต่อปี </h2>
+                    <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       {result.taxYear.toLocaleString()} บาท
                     </h2>
                   </p>

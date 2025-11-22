@@ -33,7 +33,7 @@ export default function Home() {
     <div className="w-full">
       <div className="w-full flex flex-col items-center">
         <span className="text-lg md:text-2xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-          เครื่องคิดเลข <span className="text-[#ffcc00]">ทางการเงิน</span>
+          เครื่องคิดเลข<span className="text-[#ffcc00]">ทางการเงิน</span>
         </span>
         <p className="text-xs md:text-base text-center text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
           ใช้เครื่องคำนวณของเราเพื่อช่วยปรับปรุงงบประมาณรายเดือนของคุณ

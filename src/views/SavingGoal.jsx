@@ -106,10 +106,10 @@ export default function SavingGoal() {
               <>
                 <div className="">
                   <p className="flex flex-wrap justify-between pad-main">
-                    <h2 className="w-full md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       ระยะเวลา
                     </h2>
-                    <h2 className="w-full md:w-6/12 md:text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       {result.totalQuick.toLocaleString()} วัน
                     </h2>
                   </p>
