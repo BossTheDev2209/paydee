@@ -63,7 +63,7 @@ export default function Header() {
             >
               <i
                 className={`fa-solid ${
-                  isDark ? "fa-sun px-1.5 py-0.5" : "fa-moon px-2 py-0.5"
+                  isDark ? "fa-sun px-2 py-1" : "fa-moon px-2 py-0.5"
                 } text-md md:text-2xl`}
               ></i>
             </button>
@@ -112,11 +112,11 @@ export default function Header() {
             </button>
             <button
               onClick={toggleTheme}
-              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 py-1 rounded-full transition-colors"
+              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-colors"
             >
               <i
                 className={`fa-solid ${
-                  isDark ? "fa-sun" : "fa-moon"
+                  isDark ? "fa-sun px-2 py-1" : "fa-moon px-2 py-0.5"
                 } text-base`}
               ></i>
             </button>
