@@ -98,7 +98,7 @@ export default function QuickMode({ calculate, switchMode }) {
                 <button
                   type="button"
                   className="w-full btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values)}
+                  onClick={() => calculate(values, "quick")}
                 >
                   คำนวณ
                 </button>

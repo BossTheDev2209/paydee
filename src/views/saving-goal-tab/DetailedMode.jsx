@@ -76,13 +76,13 @@ export default function DetailedMode({ calculate, switchMode }) {
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="เงินออมปัจจุบัน (บาท)"
-                  id="amount"
-                  name="amount"
+                  id="saving"
+                  name="saving"
                   placeholder="5000"
-                  value={values.amount}
+                  value={values.saving}
                   onChange={(e) =>
                     setFieldValue(
-                      "amount",
+                      "saving",
                       e.target.value.replace(/[^0-9]/g, "")
                     )
                   }
@@ -91,13 +91,13 @@ export default function DetailedMode({ calculate, switchMode }) {
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
                   title="จำนวนออมต่อครั้ง (บาท)"
-                  id="saving"
-                  name="saving"
+                  id="amount"
+                  name="amount"
                   placeholder="1000"
-                  value={values.saving}
+                  value={values.amount}
                   onChange={(e) =>
                     setFieldValue(
-                      "saving",
+                      "amount",
                       e.target.value.replace(/[^0-9]/g, "")
                     )
                   }
@@ -178,7 +178,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                 <button
                   type="button"
                   className="w-full btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values)}
+                  onClick={() => calculate(values, "detailed")}
                 >
                   คำนวณ
                 </button>

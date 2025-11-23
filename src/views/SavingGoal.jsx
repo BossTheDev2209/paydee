@@ -10,13 +10,13 @@ function formatDuration(days) {
   const months = Math.floor(days / 30);
   const years = Math.floor(days / 365);
 
-  // ถ้าน้อยกว่า 30 วัน → แสดงเป็นสัปดาห์
+  // น้อยกว่า 30 วัน → แสดงเป็นสัปดาห์
   if (days < 30) return `${weeks} สัปดาห์`;
 
-  // ถ้าน้อยกว่า 365 วัน → แสดงเป็นเดือน
+  // น้อยกว่า 365 วัน → แสดงเป็นเดือน
   if (days < 365) return `${months} เดือน`;
 
-  // ถ้ามากกว่า 1 ปี → แสดงปี + เดือน
+  // มากกว่า 1 ปี → แสดงปี + เดือน
   const remainingAfterYears = days - years * 365;
   const extraMonths = Math.floor(remainingAfterYears / 30);
 
@@ -32,7 +32,7 @@ export default function SavingGoal() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  const calculate = (values) => {
+  const calculate = (values, mode) => {
     setLoading(true);
     setTimeout(() => {
       const target = Number(values.target);
@@ -54,22 +54,26 @@ export default function SavingGoal() {
 
       // quick mode
       const totalQuick = target / amount;
-      const totalDays = totalQuick * daysPerSave;
-      console.log(totalDays);
+      console.log(totalQuick);
 
       // detailed mode
-      const remaining = target - saving;
-      const timeDetailed = remaining / amount;
-      const totalDetailed = timeDetailed * daysPerSave;
+      const totalDetailed = (target - saving) / amount;
+      const year = (salary - (expenses + debt)) * 12;
+      const mount = (year - (tax / 100) * year) / 12;
+      const remaining = mount - (expenses + debt + amount);
+      console.log(remaining);
       console.log(totalDetailed);
 
-      const durationQuick = formatDuration(totalDays);
-      const durationDetailed = formatDuration(totalDetailed);
+      const totalDays =
+        mode === "quick"
+          ? totalQuick * daysPerSave
+          : totalDetailed * daysPerSave;
+      const duration = formatDuration(totalDays);
+      console.log(totalDays);
 
       setResult({
-        totalQuick,
-        totalDetailed,
-        duration: mode === "quick" ? durationQuick : durationDetailed,
+        duration,
+        remaining,
       });
       setLoading(false);
     });
@@ -94,11 +98,13 @@ export default function SavingGoal() {
         <section className="w-full md:w-10/12">
           {mode === "quick" ? (
             <QuickMode
+              key="quick"
               calculate={calculate}
               switchMode={() => setMode("detailed")}
             />
           ) : (
             <DetailedMode
+              key="detailed"
               calculate={calculate}
               switchMode={() => setMode("quick")}
             />
@@ -126,12 +132,11 @@ export default function SavingGoal() {
                     </h2>
                   </p>
                   {/* <p className="flex flex-wrap justify-between pad-main">
-                    <h2 className="w-full md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      
-                      รายได้สุทธิต่อปี
+                    <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                      เงินคงเหลือหลังจากออม
                     </h2>
-                    <h2 className="w-full md:w-6/12 md:text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {result.totalQuick.toLocaleString()} บาท
+                    <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                      {result.remaining}
                     </h2>
                   </p> */}
                 </div>
