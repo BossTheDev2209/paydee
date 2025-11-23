@@ -223,7 +223,7 @@ function TextSelect({
             }}
             onBlur={onBlur}
           />
-          <i className="fas fa-angle-down -ml-6 fill-current text-gray-600 text-base"></i>
+          <i className="fas fa-angle-down -ml-6 fill-current text-base"></i>
           {tooltip && showSelectTooltip && (
             <div
               className="absolute z-[9999] bg-gray-600 text-white text-[16px] py-1 px-2 rounded whitespace-nowrap pointer-events-none"
