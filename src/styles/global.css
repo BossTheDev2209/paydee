@@ -119,11 +119,3 @@
 .hamburger-menu {
   @apply h-[2px] w-full bg-black rounded transition-all duration-300
 }
-
-@keyframes fade {
-  0% { opacity: 0; transform: scale(.95); }
-  100% { opacity: 1; transform: scale(1); }
-}
-.animate-fade {
-  animation: fade .2s ease-out;
-}

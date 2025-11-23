@@ -8,7 +8,7 @@ export default function SalaryAfterTax() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  const calculate = (values) => {
+  const calculate = (values, mode) => {
     setLoading(true);
     setTimeout(() => {
       const salary = Number(values.salary);
@@ -22,29 +22,31 @@ export default function SalaryAfterTax() {
       const deduction = Number(values.deduction);
 
       // quick mode
-      const netTax = (tax / 100) * salary;
-      const quickNet = salary - (netTax + expenses);
-      const netYear = quickNet * 12;
-      const taxYear = netTax * 12;
-      console.log(quickNet);
+      const Qnet = (salary - expenses) * 12;
 
       // detailed mode
-      const detailedNet =
-        salary +
-        bonus +
-        extraIncome -
-        (commutingCost + housingCost + debt + netTax) -
-        deduction;
+      const Dnet =
+        (salary +
+          bonus +
+          extraIncome -
+          (commutingCost + housingCost + debt + deduction + expenses)) *
+        12;
+
+      const netTax =
+        mode === "quick" ? (tax / 100) * Qnet : (tax / 100) * Dnet;
+      const netMount =
+        mode === "quick" ? (Qnet - netTax) / 12 : (Dnet - netTax) / 12;
+      const netYearAfterTax =
+        mode === "quick" ? Qnet - netTax : Dnet - netTax;
+
+      console.log(netTax);
+      console.log(netMount);
+      console.log(netYearAfterTax);
 
       setResult({
-        salary,
-        tax,
-        expenses,
         netTax,
-        quickNet,
-        netYear,
-        taxYear,
-        detailedNet,
+        netMount,
+        netYearAfterTax,
       });
       setLoading(false);
     });
@@ -69,20 +71,21 @@ export default function SalaryAfterTax() {
         <section className="w-full md:w-10/12">
           {mode === "quick" ? (
             <QuickMode
-              calculate={calculate}
+              key="quick"
+              calculate={(values) => calculate(values, "quick")}
               switchMode={() => setMode("detailed")}
             />
           ) : (
             <DetailedMode
-              calculate={calculate}
+              key="detailed"
+              calculate={(values) => calculate(values, "detailed")}
               switchMode={() => setMode("quick")}
             />
           )}
 
           <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
             <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-              {" "}
-              ผลลัพธ์{" "}
+              ผลลัพธ์
             </h1>
             {loading ? (
               <div className="flex justify-center items-center h-40">
@@ -95,38 +98,26 @@ export default function SalaryAfterTax() {
                 <div className="">
                   <p className="flex flex-wrap justify-between pad-main">
                     <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {" "}
-                      รายได้สุทธิต่อเดือน{" "}
+                      รายได้สุทธิต่อเดือน
                     </h2>
                     <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {result.quickNet.toLocaleString()} บาท
+                      {result.netMount.toLocaleString()} บาท
                     </h2>
                   </p>
                   <p className="flex flex-wrap justify-between pad-main">
                     <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {" "}
-                      รายได้สุทธิต่อปี{" "}
+                      รายได้สุทธิต่อปี
                     </h2>
                     <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {result.netYear.toLocaleString()} บาท
+                      {result.netYearAfterTax.toLocaleString()} บาท
                     </h2>
                   </p>
                   <p className="flex flex-wrap justify-between pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {" "}
-                      หักภาษี{" "}
+                      ภาษีต่อปี
                     </h2>
                     <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       {result.netTax.toLocaleString()} บาท
-                    </h2>
-                  </p>
-                  <p className="flex flex-wrap justify-between pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <h2 className="text-base md:text-xl md:w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {" "}
-                      ภาษีต่อปี{" "}
-                    </h2>
-                    <h2 className="text-base md:text-xl md:w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {result.taxYear.toLocaleString()} บาท
                     </h2>
                   </p>
                 </div>

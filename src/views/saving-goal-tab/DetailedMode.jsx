@@ -164,7 +164,7 @@ export default function DetailedMode({ calculate, switchMode }) {
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
-                  title="อัตราดอกเบี้ย (% ต่อปี - optional)"
+                  title="ภาษีต่อปี (ร้อยละ)"
                   id="tax"
                   name="tax"
                   placeholder="20000"

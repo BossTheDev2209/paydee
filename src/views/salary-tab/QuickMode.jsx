@@ -70,7 +70,7 @@ export default function QuickMode({ calculate, switchMode }) {
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
-                  title="ภาษี (ร้อยละ)"
+                  title="ภาษีต่อปี (ร้อยละ)"
                   id="tax"
                   name="tax"
                   placeholder="10"
@@ -84,7 +84,7 @@ export default function QuickMode({ calculate, switchMode }) {
                 <button
                   type="button"
                   className="w-full btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values)}
+                  onClick={() => calculate(values, "quick")}
                 >
                   คำนวณ
                 </button>

@@ -43,7 +43,6 @@ export default function SavingGoal() {
       const expenses = Number(values.expenses);
       const debt = Number(values.debt);
       const tax = Number(values.tax);
-      // const durationText = formatDuration(totalDays);
 
       const freq = [
         { id: 1, days: 1 },
@@ -56,7 +55,6 @@ export default function SavingGoal() {
       // quick mode
       const totalQuick = target / amount;
       const totalDays = totalQuick * daysPerSave;
-      const duration = formatDuration(totalDays);
       console.log(totalDays);
 
       // detailed mode
@@ -65,7 +63,14 @@ export default function SavingGoal() {
       const totalDetailed = timeDetailed * daysPerSave;
       console.log(totalDetailed);
 
-      setResult({ totalQuick, totalDetailed, duration });
+      const durationQuick = formatDuration(totalDays);
+      const durationDetailed = formatDuration(totalDetailed);
+
+      setResult({
+        totalQuick,
+        totalDetailed,
+        duration: mode === "quick" ? durationQuick : durationDetailed,
+      });
       setLoading(false);
     });
   };

@@ -17,11 +17,9 @@ export default function DetailedMode({ calculate, switchMode }) {
   return (
     <div className="w-full">
       <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-        {/* <p className="text-xl">
-              <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
-              Personal
-            </p> */}
-        <p className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300"> Detailed Mode </p>
+        <p className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+          Detailed Mode
+        </p>
         <Formik
           initialValues={{
             salary: savedData?.salary || "",
@@ -138,16 +136,13 @@ export default function DetailedMode({ calculate, switchMode }) {
                   placeholder="20000"
                   value={values.debt}
                   onChange={(e) =>
-                    setFieldValue(
-                      "debt",
-                      e.target.value.replace(/[^0-9]/g, "")
-                    )
+                    setFieldValue("debt", e.target.value.replace(/[^0-9]/g, ""))
                   }
                 />
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
-                  title="ภาษี (ร้อยละ)"
+                  title="ภาษีต่อปี (ร้อยละ)"
                   id="tax"
                   name="tax"
                   placeholder="10"
@@ -165,7 +160,10 @@ export default function DetailedMode({ calculate, switchMode }) {
                   placeholder="1000"
                   value={values.deduction}
                   onChange={(e) =>
-                    setFieldValue("deduction", e.target.value.replace(/[^0-9]/g, ""))
+                    setFieldValue(
+                      "deduction",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
                   }
                 />
               </div>
@@ -173,7 +171,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                 <button
                   type="button"
                   className="w-full btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values)}
+                  onClick={() => calculate(values, "detailed")}
                 >
                   คำนวณ
                 </button>
