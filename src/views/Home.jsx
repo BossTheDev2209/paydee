@@ -7,14 +7,14 @@ export default function Home() {
   const calculator = [
     {
       id: 1,
-      img: AI,
+      isAi: false,
       path: "/salary-aftertax",
       title: "รายได้สุทธิหลังเสียภาษี",
       details: "คำนวณรายได้หลังหักภาษี",
     },
     {
       id: 2,
-      img: AI,
+      isAi: true,
       path: "/saving-goal",
       title: "เป้าหมายการออม",
       details: "คำนวณเป้าหมายการออม",
@@ -31,11 +31,11 @@ export default function Home() {
 
   return (
     <div className="w-full">
-      <div className="w-full flex flex-col items-center">
-        <span className="text-lg md:text-2xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+      <div className="w-full mt-16 p-8 flex flex-col items-center">
+        <span className="text-2xl md:text-5xl sm:text-4xl my-3 font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
           เครื่องคิดเลข<span className="text-[#ffcc00]">ทางการเงิน</span>
         </span>
-        <p className="text-xs md:text-base text-center text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+        <p className="text-xs md:text-base sm:text-sm text-center text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
           ใช้เครื่องคำนวณของเราเพื่อช่วยปรับปรุงงบประมาณรายเดือนของคุณ
           เปรียบเทียบต้นทุน และวางแผนอนาคตของคุณ
         </p>
