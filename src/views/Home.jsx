@@ -5,8 +5,8 @@ import "slick-carousel/slick/slick-theme.css";
 
 import Salary from "../images/salary.png";
 import Saving from "../images/saving.png";
-import AI from "../images/Ai_icon.png";
 import { useTheme } from "../context/ThemeContext";
+import AI from "../images/Ai_icon.png";
 export default function Home() {
   const calculator = [
     {
@@ -118,12 +118,10 @@ export default function Home() {
             key={calc.id}
           >
             {/* Top-left AI icon */}
-            <div className="absolute top-4 left-4">
-              {calc.isAi ? (
-                <img src={AI} alt="AI" className="w-14 h-14 rounded-full" />
-              ) : (
-                <img src=""/>
-              )}
+              <div className="absolute top-4 left-4">
+                {calc.isAi && (
+                  <img src={AI} alt="AI" className="w-14 h-14 rounded-full" />
+                )}
             </div>
 
               {/* content on left, btn on right */}
