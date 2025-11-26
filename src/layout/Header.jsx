@@ -5,8 +5,8 @@ import { useTheme } from "../context/ThemeContext";
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
-
   const currentpPath = location.pathname;
+
   const toggleMenu = () => setOpen((prev) => !prev);
   const handleClick = () => {
     setOpen(false);

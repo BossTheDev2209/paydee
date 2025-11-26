@@ -31,6 +31,7 @@ export default function SavingGoal() {
   const [mode, setMode] = useState("quick");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const today = new Date();
 
   const calculate = (values, mode) => {
     setLoading(true);
@@ -71,13 +72,28 @@ export default function SavingGoal() {
       const duration = formatDuration(totalDays);
       console.log(totalDays);
 
+      const targetDay = new Date();
+      targetDay.setDate(today.getDate() + totalDays);
+
+      function formatDate(date) {
+        return date.toLocaleDateString("th", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      }
+      console.log(formatDate(targetDay));
+
       setResult({
         duration,
         remaining,
+        targetDay: formatDate(targetDay),
       });
       setLoading(false);
     });
   };
+
   return (
     <section className="w-full">
       <Link to="/" className="w-full">
@@ -129,6 +145,14 @@ export default function SavingGoal() {
                     </h2>
                     <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                       {result.duration}
+                    </h2>
+                  </p>
+                  <p className="flex flex-wrap justify-between pad-main">
+                    <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                      วันที่จะถึงเป้าหมาย
+                    </h2>
+                    <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                      {result.targetDay}
                     </h2>
                   </p>
                   {/* <p className="flex flex-wrap justify-between pad-main">
