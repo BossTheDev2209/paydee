@@ -26,7 +26,7 @@ export default function Header() {
         <div className="w-full hidden md:flex p-4">
           <div className="w-6/12">
             <Link to="/" className="w-full flex gap-2 items-center">
-              <div className="w-fit p-2 bg-[#f2f2f2] dark:bg-[#353535] rounded-lg">
+              <div className="mx-4">
                 <h1 className="text-sm md:text-2xl font-bold">PayDee</h1>
                 <p className="text-xs md:text-lg">เพย์ดี</p>
               </div>
@@ -47,19 +47,19 @@ export default function Header() {
 
           <div className="w-6/12 flex gap-2 items-center justify-end">
             <Link to="/about-us">
-              <button className="btn-base bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors">
+              <button className="btn-base bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 ease-in-out">
                 about us
               </button>
             </Link>
 
             <Link to="/financial">
-              <button className="btn-base bg-[#ffcc00] dark:bg-[#ffcc00] text-[#3d3d3d] dark:text-[#202121] transition-colors">
+              <button className="btn-base bg-[#ffcc00] dark:bg-[#ffcc00] text-[#3d3d3d] dark:text-[#202121] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 ease-in-out">
                 Financial Profile
               </button>
             </Link>
             <button
               onClick={toggleTheme}
-              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-colors"
+              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-colors "
             >
               <i
                 className={`fa-solid ${

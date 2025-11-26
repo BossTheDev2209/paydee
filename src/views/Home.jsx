@@ -94,12 +94,12 @@ export default function Home() {
 
         <div className="w-full md:w-8/12 xl:w-6/12 flex flex-wrap md:flex-nowrap gap-4 justify-center my-10">
           <a href="#calculate" className="w-full md:w-6/12">
-            <button className="w-full btn-base text-[#f2f2f2] dark:text-[#f2f1f1] bg-[#979797] dark:bg-[#353535] border shadow-sm">
+            <button className="w-full btn-base text-[#f2f2f2] dark:text-[#f2f1f1] bg-[#979797] dark:bg-[#353535] border shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 ease-in-out">
               เริ่มต้นใช้งาน
             </button>
           </a>
           <Link to="/financial" className="w-full md:w-6/12">
-            <button className="w-full btn-base bg-[#ffcc22] border shadow-sm">
+            <button className="w-full btn-base bg-[#ffcc22] border shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 ease-in-out">
               กรอก Financial Profile
             </button>
           </Link>
@@ -113,7 +113,7 @@ export default function Home() {
           <Link to={calc.path}>
           <div //dont change the div closing tag idk why
             title={calc.title}
-            className={`w-auto h-60 m-4 rounded-lg shadow-lg hover:shadow-slate-400 dark:hover:shadow-slate-800 dark:hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between p-4 cursor-pointer relative`}
+            className={`w-auto h-60 m-4 rounded-lg shadow-xl hover:shadow-slate-400 dark:hover:shadow-slate-800 dark:hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between p-4 cursor-pointer relative hover:scale-[1.02] transition-transform duration-300 ease-in-out`}
             style={{ backgroundColor: calc.calcColor }}
             key={calc.id}
           >
@@ -130,7 +130,7 @@ export default function Home() {
                   <h2 className="text-[#f2f1f1] font-bold text-2xl">{calc.title}</h2>
                   <p className="text-[#f2f1f1] font-medium text-sm">{calc.details}</p>
                 </div>
-                <button className="text-sm text-[#202121] font-semibold bg-[#ffcc00] px-5 py-2 rounded-full hover:shadow-md transition-shadow flex-shrink-0 whitespace-nowrap">
+                <button className="text-sm text-[#202121] font-semibold bg-[#ffcc00] px-5 py-2 rounded-full hover:shadow-md hover:scale-[1.05] active:scale-[0.98] transition-transform duration-300 ease-in-out transition-shadow flex-shrink-0 whitespace-nowrap">
                   เริ่มการคำนวณ
                 </button>
               </div>
