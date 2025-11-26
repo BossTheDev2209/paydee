@@ -119,3 +119,12 @@
 .hamburger-menu {
   @apply h-[2px] w-full bg-black rounded transition-all duration-300
 }
+
+@media (max-width: 480px) {
+  .slick-slide {
+    width: 100vw !important;
+  }
+  .slick-track {
+    display: flex !important;
+  }
+}

@@ -58,8 +58,8 @@ export default function Home() {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: true,
-          dots: true
-        }
+          dots: true,
+        },
       },
       {
         breakpoint: 600,
@@ -68,7 +68,7 @@ export default function Home() {
           slidesToScroll: 2,
           initialSlide: 2,
           infinite: true,
-        }
+        },
       },
       {
         breakpoint: 480,
@@ -76,11 +76,12 @@ export default function Home() {
           slidesToShow: 1,
           slidesToScroll: 1,
           infinite: true,
-        }
-      }
-    ]
+          centerMode: false,
+        },
+      },
+    ],
   };
-  
+
   return (
     <div className="w-full">
       <div className="w-full mt-16 p-8 flex flex-col items-center">
@@ -106,39 +107,47 @@ export default function Home() {
         </div>
       </div>
 
-      <div id="calculate" className="w-full">
+      <div id="calculate" className="w-full overflow-visible">
+        <Slider {...settings} className="w-full">
+          {calculator.map((calc) => (
+            <div className="w-full">
+              <Link to={calc.path} className="w-full flex p-2 md:p-4">
+                <div //dont change the div closing tag idk why
+                  title={calc.title}
+                  className={`w-full h-60 rounded-lg shadow-xl hover:shadow-slate-400 dark:hover:shadow-slate-800 dark:hover:shadow-xl flex justify-between p-4 cursor-pointer relative hover:scale-[1.02] transition-transform duration-300 ease-in-out`}
+                  style={{ backgroundColor: calc.calcColor }}
+                  key={calc.id}
+                >
+                  {/* Top-left AI icon */}
+                  <div className="absolute top-4 left-4">
+                    {calc.isAi && (
+                      <img
+                        src={AI}
+                        alt="AI"
+                        className="w-14 h-14 rounded-full"
+                      />
+                    )}
+                  </div>
 
-        <Slider {...settings}>
-        {calculator.map((calc) => (
-          <Link to={calc.path}>
-          <div //dont change the div closing tag idk why
-            title={calc.title}
-            className={`w-auto h-60 m-4 rounded-lg shadow-xl hover:shadow-slate-400 dark:hover:shadow-slate-800 dark:hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between p-4 cursor-pointer relative hover:scale-[1.02] transition-transform duration-300 ease-in-out`}
-            style={{ backgroundColor: calc.calcColor }}
-            key={calc.id}
-          >
-            {/* Top-left AI icon */}
-              <div className="absolute top-4 left-4">
-                {calc.isAi && (
-                  <img src={AI} alt="AI" className="w-14 h-14 rounded-full" />
-                )}
-            </div>
-
-              {/* content on left, btn on right */}
-              <div className="flex items-end justify-between gap-4 mt-auto">
-                <div className="flex flex-col gap-1 flex-1">
-                  <h2 className="text-[#f2f1f1] font-bold text-2xl">{calc.title}</h2>
-                  <p className="text-[#f2f1f1] font-medium text-sm">{calc.details}</p>
+                  {/* content on left, btn on right */}
+                  <div className="flex flex-wrap items-end justify-between gap-4 mt-auto">
+                    <div className="w-full flex flex-col gap-1 flex-1">
+                      <h2 className="text-[#f2f1f1] font-bold text-base lg:text-2xl">
+                        {calc.title}
+                      </h2>
+                      <p className="text-[#f2f1f1] font-medium text-sm">
+                        {calc.details}
+                      </p>
+                    </div>
+                    <button className="w-full lg:w-6/12 text-sm text-[#202121] font-semibold bg-[#ffcc00] px-5 py-2 rounded-full hover:shadow-md hover:scale-[1.05] active:scale-[0.98] transition-transform duration-300 ease-in-out flex-shrink-0 whitespace-nowrap">
+                      เริ่มการคำนวณ
+                    </button>
+                  </div>
                 </div>
-                <button className="text-sm text-[#202121] font-semibold bg-[#ffcc00] px-5 py-2 rounded-full hover:shadow-md hover:scale-[1.05] active:scale-[0.98] transition-transform duration-300 ease-in-out transition-shadow flex-shrink-0 whitespace-nowrap">
-                  เริ่มการคำนวณ
-                </button>
-              </div>
+              </Link>
             </div>
-          </Link>
-        ))}
+          ))}
         </Slider>
-        
       </div>
     </div>
   );
