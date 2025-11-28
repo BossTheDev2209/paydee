@@ -120,11 +120,20 @@
   @apply h-[2px] w-full bg-black rounded transition-all duration-300
 }
 
+/* slick slide ปรับขนาดตามจำนวน slide */
+.slick-slide {
+  padding: 0 8px; /* spacing ระหว่าง slide */
+  box-sizing: border-box;
+}
+
+/* container ของ slider */
+#calculate {
+  overflow: hidden;
+}
+
+/* mobile adjustments */
 @media (max-width: 480px) {
   .slick-slide {
-    width: 100vw !important;
-  }
-  .slick-track {
-    display: flex !important;
+    width: 100% !important; /* mobile 1 card ต่อหน้า */
   }
 }

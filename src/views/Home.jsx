@@ -7,7 +7,24 @@ import Salary from "../images/salary.png";
 import Saving from "../images/saving.png";
 import { useTheme } from "../context/ThemeContext";
 import AI from "../images/Ai_icon.png";
+import { useRef } from "react";
+
 export default function Home() {
+  const containerRef = useRef(null);
+  const cardWidth = 300;
+
+  const scrollRight = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({ left: cardWidth, behavior: "smooth" });
+    }
+  };
+
+  const scrollLeft = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({ left: -cardWidth, behavior: "smooth" });
+    }
+  };
+
   const calculator = [
     {
       id: 1,
@@ -44,48 +61,48 @@ export default function Home() {
   ];
 
   //setting carousel here!!
-  var settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          infinite: true,
-          centerMode: false,
-        },
-      },
-    ],
-  };
+  // const settings = {
+  //   dots: true,
+  //   infinite: false,
+  //   speed: 500,
+  //   slidesToShow: 4,
+  //   slidesToScroll: 4,
+  //   initialSlide: 0,
+  //   responsive: [
+  //     {
+  //       breakpoint: 1024,
+  //       settings: {
+  //         slidesToShow: 3,
+  //         slidesToScroll: 3,
+  //         infinite: true,
+  //         dots: true,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 600,
+  //       settings: {
+  //         slidesToShow: 2,
+  //         slidesToScroll: 2,
+  //         initialSlide: 2,
+  //         infinite: true,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 480,
+  //       settings: {
+  //         slidesToShow: 1,
+  //         slidesToScroll: 1,
+  //         infinite: true,
+  //         centerMode: false,
+  //       },
+  //     },
+  //   ],
+  // };
 
   return (
     <div className="w-full">
       <div className="w-full mt-16 p-8 flex flex-col items-center">
-        <span className="text-2xl md:text-5xl sm:text-4xl my-3 font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+        <span className="text-nowrap text-2xl md:text-5xl sm:text-4xl my-3 font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
           เครื่องคิดเลข<span className="text-[#ffcc00]">ทางการเงิน</span>
         </span>
         <p className="text-xs md:text-base sm:text-sm text-center text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
@@ -107,8 +124,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div id="calculate" className="w-full overflow-visible">
-        <Slider {...settings} className="w-full">
+      <div id="calculate" className="w-full overflow-hidden">
+        {/* <Slider {...settings} className="w-full">
           {calculator.map((calc) => (
             <div className="w-full">
               <Link to={calc.path} className="w-full flex p-2 md:p-4">
@@ -119,7 +136,7 @@ export default function Home() {
                   key={calc.id}
                 >
                   {/* Top-left AI icon */}
-                  <div className="absolute top-4 left-4">
+        {/* <div className="absolute top-4 left-4">
                     {calc.isAi && (
                       <img
                         src={AI}
@@ -127,10 +144,10 @@ export default function Home() {
                         className="w-14 h-14 rounded-full"
                       />
                     )}
-                  </div>
+                  </div> */}
 
-                  {/* content on left, btn on right */}
-                  <div className="flex flex-wrap items-end justify-between gap-4 mt-auto">
+        {/* content on left, btn on right */}
+        {/* <div className="flex flex-wrap items-end justify-between gap-4 mt-auto">
                     <div className="w-full flex flex-col gap-1 flex-1">
                       <h2 className="text-[#f2f1f1] font-bold text-base lg:text-2xl">
                         {calc.title}
@@ -147,7 +164,61 @@ export default function Home() {
               </Link>
             </div>
           ))}
-        </Slider>
+        </Slider> */}
+
+        <div className="w-full flex relative">
+          <button
+            className="absolute top-1/2 -translate-y-1/2 z-10 p-2 bg-[#ffcc00] rounded-full shadow
+               left-2 block lg:hidden"
+            onClick={scrollLeft}
+          >
+            <i className="fa-solid fa-angle-left bg-[#ffcc00] px-1.5 py-1 rounded-full"></i>
+          </button>
+
+          <div className="px-10 w-full flex overflow-x-hidden scroll-smooth"
+          ref={containerRef}
+          >
+            {calculator.map((item, idx) => (
+              <div key={idx} className="w-full p-4 flex">
+                <Link to={item.path} className="w-full flex">
+                  <div
+                    className="w-full flex flex-col justify-end p-4 rounded-lg overflow-hidden"
+                    style={{ backgroundColor: item.calcColor }}
+                  >
+                    <section className="w-full h-6/12">
+                      {item.isAi && (
+                        <img
+                          src={AI}
+                          alt="AI"
+                          className="w-4/12 rounded-full"
+                        />
+                      )}
+                    </section>
+
+                    <section className="w-full h-6/12">
+                      <p className="text-sm font-semibold tex-nowrap truncate">
+                        {item.title}
+                      </p>
+                      <p className="text-xs text-nowrap truncate">
+                        {item.details}
+                      </p>
+                      <button className="overflow-hidden truncate w-full text-nowrap bg-[#ffcc00] border rounded-full mt-4 text-sm font-semibold py-1 px-2">
+                        เริ่มการคำนวณ
+                      </button>
+                    </section>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+          <button
+            className="absolute top-1/2 -translate-y-1/2 z-10 p-2 bg-[#ffcc00] rounded-full shadow
+               right-2 block lg:hidden"
+            onClick={scrollRight}
+          >
+            <i className="fa-solid fa-angle-right bg-[#ffcc00] px-1.5 py-1 rounded-full"></i>
+          </button>
+        </div>
       </div>
     </div>
   );
