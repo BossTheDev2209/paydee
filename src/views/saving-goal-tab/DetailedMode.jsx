@@ -1,4 +1,3 @@
-import React from "react";
 import { Form, Formik } from "formik";
 import TextField from "../../components/TextField";
 import TextSelect from "../../components/TextSelect";
@@ -20,9 +19,9 @@ export default function DetailedMode({ calculate, switchMode }) {
   });
 
   const frequency = [
-    { id: 1, label: "รายวัน"},
-    { id: 2, label: "รายสัปดาห์"},
-    { id: 3, label: "รายเดือน"},
+    { id: 1, label: "รายวัน" },
+    { id: 2, label: "รายสัปดาห์" },
+    { id: 3, label: "รายเดือน" },
   ];
 
   // // ดึง item ที่ตรงกับ values.frequency
@@ -33,13 +32,9 @@ export default function DetailedMode({ calculate, switchMode }) {
   return (
     <div className="w-full">
       <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-        {/* <p className="text-xl">
-              <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
-              Personal
-            </p> */}
-        <p className="text-lg md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+        <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
           Detailed Mode
-        </p>
+        </h1>
         <Formik
           initialValues={{
             target: "",
@@ -47,9 +42,10 @@ export default function DetailedMode({ calculate, switchMode }) {
             amount: "",
             frequency: "",
             salary: savedData?.salary || "",
-            expenses: savedData?.expenses || "",
-            debt: "",
-            tax: "",
+            food: savedData?.food || "",
+            commutingCost: savedData?.commutingCost || "",
+            housingCost: savedData?.housingCost || "",
+            internetCost: savedData?.internetCost || "",
           }}
           onSubmit={(values) => {
             console.log("a", values);
@@ -105,7 +101,7 @@ export default function DetailedMode({ calculate, switchMode }) {
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextSelect
-                  title="ความถึ่ในการออม"
+                  title="ความถี่ในการออม"
                   name="frequency"
                   options={frequency}
                   value={selected.frequency}
@@ -120,7 +116,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                 />
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                <h3 className="font-bold mb-2 my-8">รายได้และค่าใช้จ่าย</h3>
+                <h3 className="font-bold mb-2 my-8">รายได้</h3>
                 <TextField
                   title="รายได้ต่อเดือน"
                   id="salary"
@@ -137,14 +133,14 @@ export default function DetailedMode({ calculate, switchMode }) {
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
-                  title="ค่าใช้จ่ายต่อเดือน"
-                  id="expenses"
-                  name="expenses"
-                  placeholder="15000"
-                  value={values.expenses}
+                  title="โบนัส"
+                  id="bonus"
+                  name="bonus"
+                  placeholder="5000"
+                  value={values.bonus}
                   onChange={(e) =>
                     setFieldValue(
-                      "expenses",
+                      "bonus",
                       e.target.value.replace(/[^0-9]/g, "")
                     )
                   }
@@ -152,25 +148,74 @@ export default function DetailedMode({ calculate, switchMode }) {
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
-                  title="หนี้สินต่อเดือน"
-                  id="debt"
-                  name="debt"
-                  placeholder="20000"
-                  value={values.debt}
+                  title="รายได้เสริมต่อเดือน"
+                  id="extraIncome"
+                  name="extraIncome"
+                  placeholder="5000"
+                  value={values.extraIncome}
                   onChange={(e) =>
-                    setFieldValue("debt", e.target.value.replace(/[^0-9]/g, ""))
+                    setFieldValue(
+                      "extraIncome",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
+                  }
+                />
+              </div>
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <h3 className="font-bold mb-2 my-8">รายจ่าย</h3>
+                <TextField
+                  title="ค่าอาหารต่อเดือน"
+                  id="food"
+                  name="food"
+                  placeholder="1000"
+                  value={values.food}
+                  onChange={(e) =>
+                    setFieldValue("food", e.target.value.replace(/[^0-9]/g, ""))
                   }
                 />
               </div>
               <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                 <TextField
-                  title="ภาษีต่อปี (ร้อยละ)"
-                  id="tax"
-                  name="tax"
-                  placeholder="20000"
-                  value={values.tax}
+                  title="ค่าเดินทางต่อเดือน"
+                  id="commutingCost"
+                  name="commutingCost"
+                  placeholder="1500"
+                  value={values.commutingCost}
                   onChange={(e) =>
-                    setFieldValue("tax", e.target.value.replace(/[^0-9]/g, ""))
+                    setFieldValue(
+                      "commutingCost",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
+                  }
+                />
+              </div>
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <TextField
+                  title="ค่าที่พักอาศัยต่อเดือน"
+                  id="housingCost"
+                  name="housingCost"
+                  placeholder="6000"
+                  value={values.housingCost}
+                  onChange={(e) =>
+                    setFieldValue(
+                      "housingCost",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
+                  }
+                />
+              </div>
+              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <TextField
+                  title="ค่าโทรศัพท์หรืออินเทอร์เน็ตต่อเดือน"
+                  id="internetCost"
+                  name="internetCost"
+                  placeholder="2000"
+                  value={values.internetCost}
+                  onChange={(e) =>
+                    setFieldValue(
+                      "internetCost",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
                   }
                 />
               </div>

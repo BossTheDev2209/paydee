@@ -17,9 +17,9 @@ export default function DetailedMode({ calculate, switchMode }) {
   return (
     <div className="w-full">
       <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-        <p className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+        <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
           Detailed Mode
-        </p>
+        </h1>
         <Formik
           initialValues={{
             salary: savedData?.salary || "",

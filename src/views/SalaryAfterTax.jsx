@@ -32,12 +32,10 @@ export default function SalaryAfterTax() {
           (commutingCost + housingCost + debt + deduction + expenses)) *
         12;
 
-      const netTax =
-        mode === "quick" ? (tax / 100) * Qnet : (tax / 100) * Dnet;
+      const netTax = mode === "quick" ? (tax / 100) * Qnet : (tax / 100) * Dnet;
       const netMount =
         mode === "quick" ? (Qnet - netTax) / 12 : (Dnet - netTax) / 12;
-      const netYearAfterTax =
-        mode === "quick" ? Qnet - netTax : Dnet - netTax;
+      const netYearAfterTax = mode === "quick" ? Qnet - netTax : Dnet - netTax;
 
       console.log(netTax);
       console.log(netMount);
@@ -84,7 +82,7 @@ export default function SalaryAfterTax() {
           )}
 
           <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-            <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+            <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
               ผลลัพธ์
             </h1>
             {loading ? (

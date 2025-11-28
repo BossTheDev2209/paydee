@@ -90,11 +90,11 @@ export default function SavingGoal() {
         const endDate = targetDay;
         const startMoney = mode === "quick" ? 0 : saving;
         const midMoney = (startMoney + target) / 2;
-  
+
         const midDate = new Date(
           startDate.getTime() + (totalDays / 2) * 86400000
         );
-  
+
         return [
           { name: formatDate(startDate), amount: startMoney },
           { name: formatDate(midDate), amount: midMoney },
@@ -102,7 +102,6 @@ export default function SavingGoal() {
         ];
       };
 
-      
       setResult({
         duration,
         remaining,
@@ -146,7 +145,7 @@ export default function SavingGoal() {
           )}
 
           <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-            <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+            <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
               ผลลัพธ์
             </h1>
             {loading ? (
@@ -180,10 +179,72 @@ export default function SavingGoal() {
                     <LineChartComponent data={result.chartData} />
                   </div>
                 </div>
+                {mode === "detailed" ? (
+                  <>
+                    <h1 className="text-xl md:text-3xl font-bold text-[#f2f1f1] w-full bg-[#52b2bf] rounded-lg p-1 text-center mb-4 mt-10">
+                      AI Insight
+                    </h1>
+                    <p className="text-lg md:text-2xl font-semibold flex flex-wrap justify-between pad-main text-[#d0312d]">
+                      สิ่งที่ควรปรับปรุง
+                    </p>
+                    <p className="flex flex-wrap justify-between pad-main">
+                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        ค่าใช้จ่ายอาหร
+                      </h2>
+                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        สูงกว่าเฉลี่ย 34 %
+                      </h2>
+                    </p>
+                    <p className="flex flex-wrap justify-between pad-main">
+                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        สถานะรายจ่าย
+                      </h2>
+                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        ไม่สม่ำเสมอ
+                      </h2>
+                    </p>
+                    <p className="flex flex-wrap justify-between pad-main">
+                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        งบเริ่มต้น
+                      </h2>
+                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        น้อยเกินไป
+                      </h2>
+                    </p>
+
+
+                    <hr className="my-4"/>
+                    <p className="text-lg md:text-2xl font-semibold flex flex-wrap justify-between pad-main text-[#52b2bf]">
+                      สิ่งที่แนะนำ
+                    </p>
+                    <p className="flex flex-wrap justify-between pad-main">
+                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        ค่าใช้จ่ายอาหร
+                      </h2>
+                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        ควรลด 20 บาท/วัน
+                      </h2>
+                    </p>
+                    <p className="flex flex-wrap justify-between pad-main">
+                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        สถานะรายจ่าย
+                      </h2>
+                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        เปลี่ยนวิธีการออมเป็นแบบทยอย
+                      </h2>
+                    </p>
+                    <p className="flex flex-wrap justify-between pad-main">
+                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        งบเริ่มต้น
+                      </h2>
+                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                        ควรลดหมวดโทรศัพท์ 200 บาท/เดือน
+                      </h2>
+                    </p>
+                  </>
+                ) : null}
               </>
-            ) : (
-              <h1> </h1>
-            )}
+            ) : null}
           </div>
         </section>
       </div>
