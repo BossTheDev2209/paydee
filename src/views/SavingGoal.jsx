@@ -2,7 +2,7 @@ import { useState } from "react";
 import QuickMode from "./saving-goal-tab/QuickMode";
 import DetailedMode from "./saving-goal-tab/DetailedMode";
 import { Link } from "react-router-dom";
-
+import LineChartComponent from "../components/LineChart";
 function formatDuration(days) {
   if (days < 7) return `${days} วัน`;
 
@@ -155,14 +155,12 @@ export default function SavingGoal() {
                       {result.targetDay}
                     </h2>
                   </p>
-                  {/* <p className="flex flex-wrap justify-between pad-main">
-                    <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      เงินคงเหลือหลังจากออม
-                    </h2>
-                    <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                      {result.remaining}
-                    </h2>
-                  </p> */}
+
+
+                  {/* line chart */}
+                  <div className="mt-10">
+                    <LineChartComponent />
+                  </div>
                 </div>
               </>
             ) : (

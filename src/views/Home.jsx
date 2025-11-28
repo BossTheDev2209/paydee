@@ -11,7 +11,7 @@ import { useRef } from "react";
 
 export default function Home() {
   const containerRef = useRef(null);
-  const cardWidth = 300;
+  const cardWidth = 127;
 
   const scrollRight = () => {
     if (containerRef.current) {
