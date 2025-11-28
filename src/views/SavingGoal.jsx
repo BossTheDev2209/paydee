@@ -85,10 +85,29 @@ export default function SavingGoal() {
       }
       console.log(formatDate(targetDay));
 
+      const generateChartData = () => {
+        const startDate = today;
+        const endDate = targetDay;
+        const startMoney = mode === "quick" ? 0 : saving;
+        const midMoney = (startMoney + target) / 2;
+  
+        const midDate = new Date(
+          startDate.getTime() + (totalDays / 2) * 86400000
+        );
+  
+        return [
+          { name: formatDate(startDate), amount: startMoney },
+          { name: formatDate(midDate), amount: midMoney },
+          { name: formatDate(endDate), amount: target },
+        ];
+      };
+
+      
       setResult({
         duration,
         remaining,
         targetDay: formatDate(targetDay),
+        chartData: generateChartData(),
       });
       setLoading(false);
     });
@@ -156,10 +175,9 @@ export default function SavingGoal() {
                     </h2>
                   </p>
 
-
                   {/* line chart */}
                   <div className="mt-10">
-                    <LineChartComponent />
+                    <LineChartComponent data={result.chartData} />
                   </div>
                 </div>
               </>
