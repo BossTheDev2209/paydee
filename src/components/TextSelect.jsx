@@ -19,12 +19,8 @@ export function Select({ selectType = "", ...props }) {
 }
 
 function TextSelect({
-  titleClassName = "",
   options,
   value,
-  required = false,
-  disabled = false,
-  isMultiDefault = "",
   name = "",
   placeholder = "",
   isLoading = false,
@@ -36,13 +32,10 @@ function TextSelect({
   onChange = false,
   onSearch = false,
   onFocus = false,
-  onBlur = false,
   optionValue = "value",
   tooltip = false,
-  optionLabel = false,
   title = "",
-  isMulti = false,
-  titleElement,
+
   ...props
 }) {
   const ref = useRef(null);
@@ -58,16 +51,12 @@ function TextSelect({
     if (open) {
       document.getElementById(`search-${name}`)?.focus();
       if (options?.length > 0) {
-        const result = options.map((item) => {
-          return {
-            [optionValue]: item[optionValue],
-            labelOptions: options
-              .filter((a) => a[optionValue] === item[optionValue])
-              .map(optionLabel ? optionLabel : (a) => a["label"])
-              .toString(),
-            options: item,
-          };
-        });
+        const result = options.map((item) => ({
+          [optionValue]: item[optionValue],
+          labelOptions: item.label,
+          options: item,
+        }));
+
         setData(
           searchKey
             ? result.filter((a) =>
@@ -81,7 +70,7 @@ function TextSelect({
         setData([]);
       }
     }
-  }, [name, open, optionLabel, optionValue, options, searchKey, value]);
+  }, [name, open, optionValue, options, searchKey, value]);
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
@@ -92,70 +81,36 @@ function TextSelect({
       }
     };
     document.addEventListener("mousedown", checkIfClickedOutside);
+
     return () => {
       document.removeEventListener("mousedown", checkIfClickedOutside);
     };
   }, [open]);
 
-  function SetValue(data) {
-    let value = "";
-    if (data.length > 0) {
-      if (data.length === 1) {
-        if (Array.isArray(data[0])) {
-          value = data[0]
-            .join(" ")
-            .split(" ")
-            .filter((a) => a !== "")
-            .join(" ");
-        } else {
-          value = data[0]
-            .split(" ")
-            .filter((a) => a !== "")
-            .join(" ");
-        }
-      } else {
-        value = data;
-      }
-    }
-    return value;
-  }
-
-  const getTooltipContent = () => {
-    if (!value?.length) return placeholder || "- เลือก -";
-
-    if (isMulti) {
-      if (isMultiDefault) return isMultiDefault;
-      if (value.length === 1) {
-        return SetValue(
-          value.map(optionLabel ? optionLabel : (a) => a["label"])
-        );
-      }
-      return `${value.length} รายการ`;
-    }
-
-    return SetValue(value.map(optionLabel ? optionLabel : (a) => a["label"]));
+  const getDisplayValue = () => {
+    if (!value) return placeholder || "- เลือก -";
+    return value.label || placeholder || "- เลือก -";
   };
 
-  const handleSelectTooltip = (action, e) => {
+  const getTooltipContent = () => {
+    if (!value) return placeholder || "- เลือก -";
+    return value.label;
+  };
+
+  const handleTooltip = (action, e) => {
     if (!tooltip) return;
 
-    switch (action) {
-      case "enter":
-        if (!disabled) {
-          setShowSelectTooltip(true);
-          if (e) updateTooltipPosition(e);
-        }
-        break;
-      case "move":
-        if (showSelectTooltip && e) {
-          updateTooltipPosition(e);
-        }
-        break;
-      case "leave":
-        setShowSelectTooltip(false);
-        break;
-      default:
-        break;
+    if (action === "enter") {
+      setShowSelectTooltip(true);
+      updateTooltipPosition(e);
+    }
+
+    if (action === "move" && showSelectTooltip) {
+      updateTooltipPosition(e);
+    }
+
+    if (action === "leave") {
+      setShowSelectTooltip(false);
     }
   };
 
@@ -172,58 +127,43 @@ function TextSelect({
   return (
     <Fragment>
       <div className="w-full relative" ref={ref}>
-        <div className="flex justify-between">
+        {/* title */}
+        {title && (
           <label
             htmlFor={`select-${name}`}
-            className={
-              title ? `${titleClassName} font-light line-clamp-1` : "hidden"
-            }
+            className="font-light line-clamp-1"
           >
-            {title} {required && <span className="text-red-500">*</span>}
+            {title}
           </label>
-          {titleElement && titleElement}
-        </div>
+        )}
+
+        {/* select box */}
         <div
           className="flex items-center relative"
           ref={selectRef}
-          onMouseEnter={(e) => handleSelectTooltip("enter", e)}
-          onMouseMove={(e) => handleSelectTooltip("move", e)}
-          onMouseLeave={() => handleSelectTooltip("leave")}
+          onMouseEnter={(e) => handleTooltip("enter", e)}
+          onMouseMove={(e) => handleTooltip("move", e)}
+          onMouseLeave={() => handleTooltip("leave")}
         >
           <Select
             {...props}
             id={`select-${name}`}
-            disabled={disabled}
-            value={
-              value?.length > 0 && Array.isArray(value)
-                ? isMulti
-                  ? isMultiDefault || `${value.length} รายการ`
-                  : SetValue(
-                      value.map(optionLabel ? optionLabel : (a) => a["label"])
-                    )
-                : placeholder || "- เลือก -"
-            }
-            selectType={
-              typeof (
-                value?.length > 0 &&
-                Array.isArray(value) &&
-                value.map(optionLabel ? optionLabel : (a) => a["label"])[0]
-              )
-            }
+            value={getDisplayValue()}
+            selectType="string"
             name={name}
             className={`${className || "input_default pr-8"} ${
-              disabled ? "input_disabled pr-8" : ""
-              
-            } ${tooltip ? "cursor-pointer" : ""}`}
+              tooltip ? "cursor-pointer" : ""
+            }`}
             onClick={() => {
               setOpen(!open);
               setSearchKey("");
               setShowAll(false);
               onFocus && onFocus();
             }}
-            onBlur={onBlur}
           />
+
           <i className="fas fa-angle-down -ml-6 fill-current text-base"></i>
+
           {tooltip && showSelectTooltip && (
             <div
               className="absolute z-[9999] bg-gray-600 text-white text-[16px] py-1 px-2 rounded whitespace-nowrap pointer-events-none"
@@ -237,6 +177,8 @@ function TextSelect({
             </div>
           )}
         </div>
+
+        {/* dropdown */}
         <div
           className={`border rounded-md shadow-sm p-2 w-full absolute z-[50] bg-white dark:bg-[#353535] ${
             !open && "hidden"
@@ -258,45 +200,40 @@ function TextSelect({
               />
             </div>
           )}
-          <ul className={`list-none max-h-64 ${open ? "overflow-y-auto" : ""}`}>
+
+          <ul className="list-none max-h-64 overflow-y-auto">
             {isLoading ? (
-              <li className="p-2 rounded-md">
-                <span>{messageLoading}</span>
-              </li>
+              <li className="p-2">{messageLoading}</li>
             ) : data.length === 0 ? (
-              <li className={`p-2 rounded-md ${messageNoDataStyle}`}>
-                <span>{messageNoData}</span>
+              <li className={`p-2 ${messageNoDataStyle}`}>
+                {messageNoData}
               </li>
             ) : (
-              data.slice(0, showAll ? data.length : 50).map((item, index) => (
-                <li
-                  key={optionValue ? item[optionValue] : index}
-                  className={`p-2 rounded-md my-[2px] hover:bg-[#ffcc00] hover:text-[#3d3d3d] cursor-pointer font-light ${
-                    Array.isArray(value) &&
-                    value.filter((a) => a[optionValue] === item[optionValue])
-                      .length > 0 &&
-                    "bg-[#2C4150] text-white"
-                  }`}
-                  onClick={() => {
-                    onChange && onChange(item.options);
-                    setOpen(false);
-                    setSearchKey("");
-                    setShowAll(false);
-                    document.getElementById(`select-${name}`)?.focus();
-                  }}
-                >
-                  {item.labelOptions}
-                </li>
-              ))
+              data
+                .slice(0, showAll ? data.length : 50)
+                .map((item) => (
+                  <li
+                    key={item[optionValue]}
+                    className="p-2 rounded-md my-[2px] hover:bg-[#ffcc00] hover:text-[#3d3d3d] cursor-pointer font-light"
+                    onClick={() => {
+                      onChange && onChange(item.options);
+                      setOpen(false);
+                      setSearchKey("");
+                      setShowAll(false);
+                      document.getElementById(`select-${name}`)?.focus();
+                    }}
+                  >
+                    {item.labelOptions}
+                  </li>
+                ))
             )}
-            {data.length > 50 && !isLoading && (
+
+            {data.length > 50 && (
               <li
-                className="p-2 rounded-md text-center hover:bg-blue-s5 cursor-pointer"
+                className="p-2 text-center cursor-pointer"
                 onClick={() => setShowAll(!showAll)}
               >
-                <span>
-                  {showAll ? "-- แสดงน้อยลง --" : "-- แสดงทั้งหมด --"}
-                </span>
+                {showAll ? "-- แสดงน้อยลง --" : "-- แสดงทั้งหมด --"}
               </li>
             )}
           </ul>

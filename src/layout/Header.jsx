@@ -31,7 +31,7 @@ export default function Header() {
                 <p className="text-xs md:text-lg">เพย์ดี</p>
               </div>
               <div>
-                <button className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-colors">
+                <button className="hover:bg-[#f2f2f2] hover:dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-colors">
                   <i className="fa-solid fa-globe px-2 py-1 text-2xl"></i>
                 </button>
               </div>
@@ -47,7 +47,7 @@ export default function Header() {
 
           <div className="w-6/12 flex gap-2 items-center justify-end">
             <Link to="/about-us">
-              <button className="btn-base bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 ease-in-out">
+              <button className="btn-base hover:bg-[#f2f2f2] dark:hover:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 ease-in-out">
                 about us
               </button>
             </Link>
@@ -59,7 +59,7 @@ export default function Header() {
             </Link>
             <button
               onClick={toggleTheme}
-              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-colors "
+              className="hover:bg-[#f2f2f2] hover:dark:bg-[#353535] hover:scale-105 duration-300 text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-all"
             >
               <i
                 className={`fa-solid ${
@@ -107,16 +107,16 @@ export default function Header() {
           </Link>
 
           <div className="w-4/12 flex gap-1 justify-end">
-            <button className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors">
+            <button className="hover:bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] px-2 rounded-full transition-colors">
               <i className="fa-solid fa-globe text-base"></i>
             </button>
             <button
               onClick={toggleTheme}
-              className="bg-[#f2f2f2] dark:bg-[#353535] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-colors"
+              className="hover:bg-[#f2f2f2] hover:dark:bg-[#353535] hover:scale-105 duration-300 text-[#3d3d3d] dark:text-[#f2f1f1] rounded-full transition-all"
             >
               <i
                 className={`fa-solid ${
-                  isDark ? "fa-sun px-2 py-1" : "fa-moon px-2 py-0.5"
+                  isDark ? "fa-sun px-2 py-1" : "fa-moon px-2 py-0.5 "
                 } text-base`}
               ></i>
             </button>

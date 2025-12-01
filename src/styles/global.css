@@ -47,20 +47,12 @@
   @apply flex w-full items-center justify-center rounded-md border bg-white dark:bg-[#3d3d3d] py-[8px] h-14 outline-none border-gray-400 font-light;
 }
 
-.input_mail_default {
-  @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] px-[8px] outline-none border-gray-400 font-light;
-}
-
 .input_success {
   @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-green-500 !text-green-500 font-light;
 }
 
 .input_error {
   @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-red-500 !text-red-500 font-light;
-}
-
-.input_disabled {
-  @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none border-gray-300 !bg-gray-100 cursor-not-allowed focus:invisible font-light;
 }
 
 .input-radio-group-default {
@@ -72,24 +64,12 @@
   @apply btn-click py-1 px-4 rounded-xl h-10 flex flex-wrap items-center justify-center disabled:cursor-not-allowed;
 }
 
-.btn-sm {
-  @apply py-1 px-4 rounded-xl h-8 flex flex-wrap items-center justify-center disabled:cursor-not-allowed;
-}
-
 .btn-click {
   @apply active:scale-95
 }
 
-.btn-gray {
-  @apply bg-opacity-20;
-}
-
   .input_default {
     @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] px-[8px] h-10 outline-none border-gray-400 font-light;
-  }
-
-  .input_mail_default {
-    @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] px-[8px] outline-none border-gray-400 font-light;
   }
 
   .input_success {
@@ -98,10 +78,6 @@
 
   .input_error {
     @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-red-500 !text-red-500 font-light;
-  }
-
-  .input_disabled {
-    @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none border-gray-300 !bg-gray-100 cursor-not-allowed focus:invisible font-light;
   }
 
   .input-radio-group-default {

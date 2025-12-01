@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Formik } from "formik";
 import TextField from "../../components/TextField";
-import TextSelect from "../../components/TextSelect";
+import RadioGroup from "../../components/RadioGroup";
 import { useState } from "react";
 // import js from "@eslint/js";
 
@@ -15,23 +15,11 @@ function loadData() {
 }
 
 export default function QuickMode({ calculate, switchMode }) {
-  const [selected, setSelected] = useState({
-    frequency: [],
-  });
-  const frequency = [
-    { id: 1, label: "รายวัน" },
-    { id: 2, label: "รายสัปดาห์" },
-    { id: 3, label: "รายเดือน" },
-  ];
-
+  const [frequency, setFrequency] = useState("day");
   // const savedData = loadData();
   return (
     <div className="w-full">
       <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-        {/* <p className="text-xl">
-              <i className="fa-regular fa-user p-2 rounded-full bg-[#f2f2f2]"></i>
-              Personal
-            </p> */}
         <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
           Quick Mode
         </h1>
@@ -48,66 +36,86 @@ export default function QuickMode({ calculate, switchMode }) {
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                <TextField
-                  title="เป้าหมายการออม (บาท)"
-                  id="target"
-                  name="target"
-                  placeholder="30000"
-                  value={values.target}
-                  onChange={(e) =>
-                    setFieldValue(
-                      "target",
-                      e.target.value.replace(/[^0-9]/g, "")
-                    )
-                  }
-                />
-              </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                <TextField
-                  title="จำนวนเงินออมต่อครั้ง (บาท)"
-                  id="amount"
-                  name="amount"
-                  placeholder="20000"
-                  value={values.amount}
-                  onChange={(e) =>
-                    setFieldValue(
-                      "amount",
-                      e.target.value.replace(/[^0-9]/g, "")
-                    )
-                  }
-                />
-              </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                <TextSelect
-                  title="ความถึ่ในการออม"
-                  name="frequency"
-                  options={frequency}
-                  value={selected.frequency}
-                  onChange={(item) => {
-                    setSelected((prev) => ({ ...prev, frequency: [item] }));
-                    setFieldValue("frequency", item.id);
-                  }}
-                  // touched={touched.country}
-                  // error={errors.country}
-                  optionValue="id"
-                  optionLabel={(item) => item.label}
-                />
-              </div>
-              <div className="w-full pad-main flex flex-wrap gap-2">
+              <section className="w-full p-2 bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-lg my-4">
+                <div className="w-full">
+                  <h2 className="w-full text-3xl font-bold my-6 text-[#3d3d3d] dark:text-[#f2f2f1]">
+                    รายได้
+                  </h2>
+                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <p className="w-9/12">ความถี่ในการออม</p>
+                    <div className="w-full md:w-4/12">
+                      <RadioGroup
+                        direction="row"
+                        name="frequency"
+                        value={frequency}
+                        onChange={setFrequency}
+                        options={[
+                          { label: "รายวัน", value: "day" },
+                          { label: "รายสัปดาห์", value: "week" },
+                          { label: "รายเดือน", value: "mounth" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full">
+                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <p className="w-full">เป้าหมายการออม</p>
+                    <div className="w-full md:w-4/12">
+                      <TextField
+                        id="target"
+                        name="target"
+                        placeholder="30000"
+                        value={values.target}
+                        onChange={(e) =>
+                          setFieldValue(
+                            "target",
+                            e.target.value.replace(/[^0-9]/g, "")
+                          )
+                        }
+                      />
+                    </div>
+                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
+                  </div>
+                </div>
+
+                <div className="w-full">
+                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <p className="w-full">จำนวนเงินออมต่อครั้ง</p>
+                    <div className="w-full md:w-4/12">
+                      <TextField
+                        id="amount"
+                        name="amount"
+                        placeholder="5000"
+                        value={values.amount}
+                        onChange={(e) =>
+                          setFieldValue(
+                            "amount",
+                            e.target.value.replace(/[^0-9]/g, "")
+                          )
+                        }
+                      />
+                    </div>
+                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
+                  </div>
+                </div>
+              </section>
+
+              {/* btn */}
+              <div className="mt-8 w-full justify-between pad-main flex gap-2">
                 <button
                   type="button"
-                  className="w-full btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values, "quick")}
+                  className="w-4/12 btn-base bg-[#f2f1f1]"
+                  onClick={switchMode}
                 >
-                  คำนวณ
+                  กลับ
                 </button>
                 <button
                   type="button"
-                  className="w-full btn-base bg-[#f2f1f1]"
-                  onClick={switchMode}
+                  className="w-4/12 btn-base bg-[#ffcc00]"
+                  onClick={() => calculate(values, "detailed")}
                 >
-                  สลับไปยัง Detailed Mode
+                  คำนวณ
                 </button>
               </div>
             </Form>

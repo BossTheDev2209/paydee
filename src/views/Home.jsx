@@ -11,7 +11,7 @@ import { useRef } from "react";
 
 export default function Home() {
   const containerRef = useRef(null);
-  const cardWidth = 127;
+  const cardWidth = 250;
 
   const scrollRight = () => {
     if (containerRef.current) {
@@ -175,39 +175,56 @@ export default function Home() {
             <i className="fa-solid fa-angle-left bg-[#ffcc00] px-1.5 py-1 rounded-full"></i>
           </button>
 
-          <div className="px-10 w-full flex overflow-x-hidden scroll-smooth"
-          ref={containerRef}
+          <div
+            className="px-10 w-full flex overflow-x-hidden scroll-smooth"
+            ref={containerRef}
           >
             {calculator.map((item, idx) => (
               <div key={idx} className="w-full p-4 flex">
-                <Link to={item.path} className="w-full flex">
+                <div className="w-full flex">
                   <div
-                    className="w-full flex flex-col justify-end p-4 rounded-lg overflow-hidden"
+                    className="relative group w-full h-48 flex flex-col justify-end p-4 rounded-lg overflow-hidden hover:scale-105 active: transition-all duration-300"
                     style={{ backgroundColor: item.calcColor }}
                   >
-                    <section className="w-full h-6/12">
+                    <div className="w-full content group-hover:blur-sm group-active:blur-sm">
+                      <section className="w-full h-6/12">
                       {item.isAi && (
-                        <img
-                          src={AI}
-                          alt="AI"
-                          className="w-4/12 rounded-full"
-                        />
+                        <img src={AI} alt="AI" className="absolute top-4 left-4 w-10 rounded-full" />
                       )}
                     </section>
 
                     <section className="w-full h-6/12">
-                      <p className="text-sm font-semibold tex-nowrap truncate">
+                      <p className="text-lg md:text-xl font-semibold tex-nowrap truncate">
                         {item.title}
                       </p>
                       <p className="text-xs text-nowrap truncate">
                         {item.details}
                       </p>
-                      <button className="overflow-hidden truncate w-full text-nowrap bg-[#ffcc00] border rounded-full mt-4 text-sm font-semibold py-1 px-2">
+                      {/* <button className="overflow-hidden xl:hidden truncate w-full text-nowrap bg-[#ffcc00] border rounded-full mt-4 text-sm font-semibold py-1 px-2">
                         เริ่มการคำนวณ
+                      </button> */}
+                    </section>
+                    </div>
+                    
+
+                    {/* btn */}
+                    <section className="absolute top-[23px] left-0 mt-8 w-full pad-main flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-300 text-sm md:text-lg text-nowrap">
+                      <button
+                        type="button"
+                        className="w-full btn-base bg-[#f2f1f1]"
+                      >
+                        Quick Mode
+                      </button>
+                      <button
+                        type="button"
+                        className="w-full btn-base bg-[#ffcc00]"
+                      >
+                        Detailed Mode
                       </button>
                     </section>
+
                   </div>
-                </Link>
+                </div>
               </div>
             ))}
           </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Formik } from "formik";
 import TextField from "../../components/TextField";
 import { useState } from "react";
+import * as Yup from "yup";
 
 function loadData() {
   try {
@@ -13,6 +14,10 @@ function loadData() {
 }
 
 export default function DetailedMode({ calculate, switchMode }) {
+  const validationSchema = Yup.object({
+    salary: Yup.string().required("กรุณากรอกข้อมูล"),
+  });
+
   const savedData = loadData();
   return (
     <div className="w-full">
@@ -32,15 +37,19 @@ export default function DetailedMode({ calculate, switchMode }) {
             tax: "",
             deduction: "",
           }}
+          validationSchema={validationSchema}
           onSubmit={(values) => {
             console.log("a", values);
           }}
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <span className="flex w-full gap-2">
+                  <p className="">รายได้ต่อเดือน</p>
+                  <p className="text-red-500">(required)</p>
+                </span>
                 <TextField
-                  title="รายได้ต่อเดือน (บาท)"
                   id="salary"
                   name="salary"
                   placeholder="30000"
@@ -51,11 +60,14 @@ export default function DetailedMode({ calculate, switchMode }) {
                       e.target.value.replace(/[^0-9]/g, "")
                     )
                   }
+                  error={errors.salary}
+                  touched={touched.salary}
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">โบนัส</p>
                 <TextField
-                  title="โบนัส (บาท)"
                   id="bonus"
                   name="bonus"
                   placeholder="5000"
@@ -67,13 +79,14 @@ export default function DetailedMode({ calculate, switchMode }) {
                     )
                   }
                 />
+                <p className="w-fit px-2 text-end">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">รายได้เสริม</p>
                 <TextField
-                  title="รายได้เสริมต่อเดือน (บาท)"
                   id="extraIncome"
                   name="extraIncome"
-                  placeholder="1270"
+                  placeholder="5000"
                   value={values.extraIncome}
                   onChange={(e) =>
                     setFieldValue(
@@ -82,13 +95,14 @@ export default function DetailedMode({ calculate, switchMode }) {
                     )
                   }
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">ค่าใช้จ่ายต่อเดือน</p>
                 <TextField
-                  title="ค่าใช้จ่ายต่อเดือน (บาท)"
                   id="expenses"
                   name="expenses"
-                  placeholder="20000"
+                  placeholder="1000"
                   value={values.expenses}
                   onChange={(e) =>
                     setFieldValue(
@@ -97,13 +111,14 @@ export default function DetailedMode({ calculate, switchMode }) {
                     )
                   }
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">ค่าเดินทางต่อเดือน</p>
                 <TextField
-                  title="ค่าเดินทางต่อเดือน (บาท)"
                   id="commutingCost"
                   name="commutingCost"
-                  placeholder="20000"
+                  placeholder="1000"
                   value={values.commutingCost}
                   onChange={(e) =>
                     setFieldValue(
@@ -112,13 +127,14 @@ export default function DetailedMode({ calculate, switchMode }) {
                     )
                   }
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">ค่าเดินทางต่อเดือน</p>
                 <TextField
-                  title="ค่าที่พักต่อเดือน (บาท)"
                   id="housingCost"
                   name="housingCost"
-                  placeholder="20000"
+                  placeholder="1000"
                   value={values.housingCost}
                   onChange={(e) =>
                     setFieldValue(
@@ -127,34 +143,37 @@ export default function DetailedMode({ calculate, switchMode }) {
                     )
                   }
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">หนี้สินต่อเดือน</p>
                 <TextField
-                  title="หนี้สินขั้นต่ำต่อเดือน (บาท)"
                   id="debt"
                   name="debt"
-                  placeholder="20000"
+                  placeholder="1000"
                   value={values.debt}
                   onChange={(e) =>
                     setFieldValue("debt", e.target.value.replace(/[^0-9]/g, ""))
                   }
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">หนี้สินต่อเดือน</p>
                 <TextField
-                  title="ภาษีต่อปี (ร้อยละ)"
-                  id="tax"
-                  name="tax"
-                  placeholder="10"
-                  value={values.tax}
+                  id="debt"
+                  name="debt"
+                  placeholder="1000"
+                  value={values.debt}
                   onChange={(e) =>
-                    setFieldValue("tax", e.target.value.replace(/[^0-9]/g, ""))
+                    setFieldValue("debt", e.target.value.replace(/[^0-9]/g, ""))
                   }
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">ค่าลดหย่อน</p>
                 <TextField
-                  title="ค่าลดหย่อน (บาท)"
                   id="deduction"
                   name="deduction"
                   placeholder="1000"
@@ -166,10 +185,27 @@ export default function DetailedMode({ calculate, switchMode }) {
                     )
                   }
                 />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
+              </div>
+              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                <p className="w-full">ค่าใช้จ่ายเบ็ดเตล็ด</p>
+                <TextField
+                  id="miscel"
+                  name="miscel"
+                  placeholder="1000"
+                  value={values.miscel}
+                  onChange={(e) =>
+                    setFieldValue(
+                      "miscel",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
+                  }
+                />
+                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
               <div className="w-full pad-main flex flex-wrap gap-2">
                 <button
-                  type="button"
+                  type="submit"
                   className="w-full btn-base bg-[#ffcc00]"
                   onClick={() => calculate(values, "detailed")}
                 >
