@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import TextField from "../../components/TextField";
 import RadioGroup from "../../components/RadioGroup";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 // import js from "@eslint/js";
 
 function loadData() {
@@ -15,6 +16,7 @@ function loadData() {
 }
 
 export default function QuickMode({ calculate, switchMode }) {
+  const navigate = useNavigate();
   const [frequency, setFrequency] = useState("day");
   // const savedData = loadData();
   return (
@@ -106,7 +108,7 @@ export default function QuickMode({ calculate, switchMode }) {
                 <button
                   type="button"
                   className="w-4/12 btn-base bg-[#f2f1f1]"
-                  onClick={switchMode}
+                  onClick={() => navigate("/")}
                 >
                   กลับ
                 </button>

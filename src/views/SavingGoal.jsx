@@ -1,7 +1,7 @@
 import { useState } from "react";
 import QuickMode from "./saving-goal-tab/QuickMode";
 import DetailedMode from "./saving-goal-tab/DetailedMode";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import LineChartComponent from "../components/LineChart";
 function formatDuration(days) {
   if (days < 7) return `${days} วัน`;
@@ -28,6 +28,8 @@ function formatDuration(days) {
 }
 
 export default function SavingGoal() {
+  const [params] = useSearchParams();
+  const Mode = params.get("mode");
   const [mode, setMode] = useState("quick");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -130,17 +132,17 @@ export default function SavingGoal() {
       <div className="w-full flex justify-center">
         {/* personal detail */}
         <section className="w-full md:w-10/12">
-          {mode === "quick" ? (
+          {Mode === "quick" ? (
             <QuickMode
               key="quick"
               calculate={calculate}
-              switchMode={() => setMode("detailed")}
+              // switchMode={() => setMode("detailed")}
             />
           ) : (
             <DetailedMode
               key="detailed"
               calculate={calculate}
-              switchMode={() => setMode("quick")}
+              // switchMode={() => setMode("quick")}
             />
           )}
 

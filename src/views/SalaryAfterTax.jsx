@@ -1,9 +1,11 @@
 import { useState } from "react";
 import QuickMode from "./salary-tab/QuickMode";
 import DetailedMode from "./salary-tab/DetailedMode";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 export default function SalaryAfterTax() {
+  const [params] = useSearchParams();
+  const Mode = params.get("mode");
   const [mode, setMode] = useState("quick");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -67,17 +69,15 @@ export default function SalaryAfterTax() {
       <div className="w-full flex justify-center">
         {/* personal detail */}
         <section className="w-full md:w-10/12">
-          {mode === "quick" ? (
+          {Mode === "quick" ? (
             <QuickMode
               key="quick"
               calculate={(values) => calculate(values, "quick")}
-              switchMode={() => setMode("detailed")}
             />
           ) : (
             <DetailedMode
               key="detailed"
               calculate={(values) => calculate(values, "detailed")}
-              switchMode={() => setMode("quick")}
             />
           )}
 

@@ -2,6 +2,7 @@ import { Form, Formik } from "formik";
 import TextField from "../../components/TextField";
 import { useState } from "react";
 import RadioGroup from "../../components/RadioGroup";
+import { useNavigate } from "react-router-dom";
 
 function loadData() {
   try {
@@ -13,6 +14,7 @@ function loadData() {
 }
 
 export default function DetailedMode({ calculate, switchMode }) {
+  const navigate  = useNavigate();
   const [frequency, setFrequency] = useState("day");
   const savedData = loadData();
   const [selected, setSelected] = useState({
@@ -278,7 +280,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                 <button
                   type="button"
                   className="w-4/12 btn-base bg-[#f2f1f1]"
-                  onClick={switchMode}
+                  onClick={() => navigate("/")}
                 >
                   กลับ
                 </button>

@@ -4,6 +4,7 @@ import TextField from "../../components/TextField";
 import { useState } from "react";
 import js from "@eslint/js";
 import * as Yup from "yup";
+import  { useNavigate } from "react-router-dom";
 
 function loadData() {
   try {
@@ -15,6 +16,7 @@ function loadData() {
 }
 
 export default function QuickMode({ calculate, switchMode }) {
+  const navigate = useNavigate();
   const validationSchema = Yup.object({
     salary: Yup.string().required("กรุณากรอกข้อมูล"),
   });
@@ -77,20 +79,22 @@ export default function QuickMode({ calculate, switchMode }) {
                 />
                 <p className="w-fit px-2 text-end hidden md:block">บาท</p>
               </div>
-              <div className="w-full pad-main flex flex-wrap gap-2">
+
+              {/* btn */}
+              <div className="mt-8 w-full justify-between pad-main flex gap-2">
                 <button
-                  type="submit"
-                  className="w-full btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values, "quick")}
+                  type="button"
+                  className="w-4/12 btn-base bg-[#f2f1f1]"
+                  onClick={() => navigate("/")}
                 >
-                  คำนวณ
+                  กลับ
                 </button>
                 <button
                   type="button"
-                  className="w-full btn-base bg-[#f2f1f1]"
-                  onClick={switchMode}
+                  className="w-4/12 btn-base bg-[#ffcc00]"
+                  onClick={() => calculate(values, "detailed")}
                 >
-                  สลับไปยัง Detailed Mode
+                  คำนวณ
                 </button>
               </div>
             </Form>

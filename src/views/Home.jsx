@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -10,6 +10,7 @@ import AI from "../images/Ai_icon.png";
 import { useRef } from "react";
 
 export default function Home() {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
   const cardWidth = 250;
 
@@ -188,41 +189,51 @@ export default function Home() {
                   >
                     <div className="w-full content group-hover:blur-sm group-active:blur-sm">
                       <section className="w-full h-6/12">
-                      {item.isAi && (
-                        <img src={AI} alt="AI" className="absolute top-4 left-4 w-10 rounded-full" />
-                      )}
-                    </section>
+                        {item.isAi && (
+                          <img
+                            src={AI}
+                            alt="AI"
+                            className="absolute top-4 left-4 w-10 rounded-full"
+                          />
+                        )}
+                      </section>
 
-                    <section className="w-full h-6/12">
-                      <p className="text-lg md:text-xl font-semibold tex-nowrap truncate">
-                        {item.title}
-                      </p>
-                      <p className="text-xs text-nowrap truncate">
-                        {item.details}
-                      </p>
-                      {/* <button className="overflow-hidden xl:hidden truncate w-full text-nowrap bg-[#ffcc00] border rounded-full mt-4 text-sm font-semibold py-1 px-2">
+                      <section className="w-full h-6/12">
+                        <p className="text-lg md:text-xl font-semibold tex-nowrap truncate">
+                          {item.title}
+                        </p>
+                        <p className="text-xs text-nowrap truncate">
+                          {item.details}
+                        </p>
+                        {/* <button className="overflow-hidden xl:hidden truncate w-full text-nowrap bg-[#ffcc00] border rounded-full mt-4 text-sm font-semibold py-1 px-2">
                         เริ่มการคำนวณ
                       </button> */}
-                    </section>
+                      </section>
                     </div>
-                    
 
                     {/* btn */}
                     <section className="absolute top-[23px] left-0 mt-8 w-full pad-main flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-300 text-sm md:text-lg text-nowrap">
                       <button
                         type="button"
                         className="w-full btn-base bg-[#f2f1f1]"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`${item.path}?mode=quick`);
+                        }}
                       >
                         Quick Mode
                       </button>
                       <button
                         type="button"
                         className="w-full btn-base bg-[#ffcc00]"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`${item.path}?mode=detailed`);
+                        }}
                       >
                         Detailed Mode
                       </button>
                     </section>
-
                   </div>
                 </div>
               </div>
