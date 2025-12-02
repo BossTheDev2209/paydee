@@ -1,45 +1,87 @@
-// export default function Footer() {
-//   return (
-//     <div className="w-full bg-[#f8cd42]">
-//       <div className="flex flex-wrap justify-between p-8 text-black">
-//         <section className="w-full md:w-6/12 flex flex-col text-md">
-//           <p className="text-lg font-bold"> Join Our Club, Get 15% Off For Your Birthday </p>
-//           <div className="mt-2">
-//             <p className="border p-2 border-black flex justify-between items-center"> Enter Your Emain Address <i className="fa-solid fa-arrow-right"></i> </p>
-//           </div>
-//           <div className="mt-2">
-//             <input type="checkbox" /> By submittng your email, you agree to receive advertising emails from Modimal.
-//           </div>
-//         </section>
+import { Link } from "react-router-dom";
 
-//         <section className="mt-8 md:mt-0 w-full md:w-6/12 flex text-md gap-10 md:pl-10">
-//           <div className="mt-2 ">
-//             <p className="text-lg font-bold"> Help & Support </p>
-//             <p> Orders & Shipping </p>
-//             <p> Returns & Refunds </p>
-//             <p> FAQs </p>
-//             <p> Contact Us </p>
-//           </div>
-//           <div className="mt-2">
-//             <p className="text-lg font-bold"> Join Up </p>
-//             <p> Modimal Club </p>
-//             <p> Careers </p>
-//             <p> Visit Us </p>
-//           </div>
-//         </section>
+export default function Footer() {
+    const currentYear = new Date().getFullYear();
 
-//         <section className="mt-8 w-full flex gap-2 text-md">
-//           <i className="fa-brands fa-instagram"></i>
-//           <i className="fa-brands fa-facebook"></i>
-//           <i className="fa-brands fa-pinterest"></i>
-//           <i className="fa-brands fa-tiktok"></i>
-//         </section>
+    const footerLinks = {
+        เครื่องมือ: [
+            { label: "รายได้สุทธิหลังเสียภาษี", path: "/salary-aftertax" },
+            { label: "เป้าหมายการออม", path: "/saving-goal" },
+            { label: "แนะนำพอร์ตด้วย AI", path: "/ai-port" },
+            { label: "ข้อมูลศูนย์กลาง", path: "/financial" },
+        ],
+        เกี่ยวกับ: [
+            { label: "เกี่ยวกับเรา", path: "/about-us" },
+            { label: "ติดต่อเรา", path: "/contact" },
+        ],
+    };
 
-//         <section className="mt-4 w-full flex gap-2 text-md items-center">
-//           <i className="fa-regular fa-copyright"></i>
-//           <p> 2025 YDP.All Rights Reserved </p>
-//         </section>
-//       </div>
-//     </div>
-//   );
-// }
+    return (
+        <footer className="w-full bg-[#fdfdfd] dark:bg-[#2b2b2b] text-[#2b2b2b] dark:text-[#f2f1f1] transition-colors duration-300 border-t border-[#e0e0e0] dark:border-[#3d3d3d]">
+            <div className="max-w-6xl mx-auto px-4 py-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Brand Section */}
+                    <div className="space-y-4">
+                        <div>
+                            <h2 className="text-2xl font-bold">PayDee</h2>
+                            <p className="text-lg">เพย์ดี</p>
+                        </div>
+                        <p className="text-sm text-[#2b2b2b]/70 dark:text-[#f2f1f1]/70">
+                            เครื่องคิดเลขทางการเงินที่ช่วยคุณวางแผนอนาคตทางการเงินได้อย่างมั่นใจ
+                        </p>
+                    </div>
+
+                    {/* Links Sections */}
+                    {Object.entries(footerLinks).map(([category, links]) => (
+                        <div key={category} className="space-y-4">
+                            <h3 className="text-lg font-bold">{category}</h3>
+                            <ul className="space-y-2">
+                                {links.map((link) => (
+                                    <li key={link.path}>
+                                        <Link
+                                            to={link.path}
+                                            className="text-sm text-[#2b2b2b]/70 dark:text-[#f2f1f1]/70 hover:text-[#ffcc00] dark:hover:text-[#ffcc00] transition-colors"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Bottom Section */}
+                <div className="mt-12 pt-8 border-t border-[#e0e0e0] dark:border-[#3d3d3d] flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p className="text-sm text-[#2b2b2b]/70 dark:text-[#f2f1f1]/70">
+                        © {currentYear} PayDee. All rights reserved.
+                    </p>
+
+                    <div className="flex gap-4">
+                        <a
+                            href="#"
+                            className="text-[#2b2b2b]/70 dark:text-[#f2f1f1]/70 hover:text-[#ffcc00] dark:hover:text-[#ffcc00] transition-colors"
+                            aria-label="Facebook"
+                        >
+                            <i className="fa-brands fa-facebook text-xl"></i>
+                        </a>
+                        <a
+                            href="#"
+                            className="text-[#2b2b2b]/70 dark:text-[#f2f1f1]/70 hover:text-[#ffcc00] dark:hover:text-[#ffcc00] transition-colors"
+                            aria-label="Twitter"
+                        >
+                            <i className="fa-brands fa-twitter text-xl"></i>
+                        </a>
+                        <a
+                            href="#"
+                            className="text-[#2b2b2b]/70 dark:text-[#f2f1f1]/70 hover:text-[#ffcc00] dark:hover:text-[#ffcc00] transition-colors"
+                            aria-label="Instagram"
+                        >
+                            <i className="fa-brands fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+}
