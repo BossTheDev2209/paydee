@@ -1,10 +1,8 @@
 import React from "react";
 import { Form, Formik } from "formik";
-import TextField from "../../components/TextField";
-import { useState } from "react";
-import js from "@eslint/js";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { CalculatorCard, CalculatorSection, CalculatorInput } from "../../components/salary/CalculatorComponents";
 
 function loadData() {
   try {
@@ -22,12 +20,15 @@ export default function QuickMode({ calculate }) {
   });
 
   const savedData = loadData();
+
+  const quickModeFields = [
+    { name: "salary", label: "รายได้ต่อเดือน", placeholder: "30000", required: true },
+    { name: "expenses", label: "ค่าใช้จ่ายต่อเดือน", placeholder: "30000" },
+  ];
+
   return (
-    <div className="w-full">
-      <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-        <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
-          Quick Mode
-        </h1>
+    <div className="w-full mt-10">
+      <CalculatorCard title="Quick Mode">
         <Formik
           initialValues={{
             salary: savedData?.salary || "",
@@ -36,63 +37,36 @@ export default function QuickMode({ calculate }) {
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            // localStorage.setItem("financial-form", JSON.stringify(values));
-            console.log("saved", values);
+            calculate(values, "quick");
           }}
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
-              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                <p className="w-full">
-                  รายได้ต่อเดือน
-                  <span className="text-red-500 font-bold px-1">*</span>
-                </p>
-                <TextField
-                  id="salary"
-                  name="salary"
-                  placeholder="30000"
-                  value={values.salary}
-                  onChange={(e) =>
-                    setFieldValue(
-                      "salary",
-                      e.target.value.replace(/[^0-9]/g, "")
-                    )
-                  }
-                  error={errors.salary}
-                  touched={touched.salary}
-                />
-                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-              </div>
-              <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                <p className="w-full">ค่าใช้จ่ายต่อเดือน</p>
-                <TextField
-                  id="expenses"
-                  name="expenses"
-                  placeholder="30000"
-                  value={values.expenses}
-                  onChange={(e) =>
-                    setFieldValue(
-                      "expenses",
-                      e.target.value.replace(/[^0-9]/g, "")
-                    )
-                  }
-                />
-                <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-              </div>
+              <CalculatorSection>
+                {quickModeFields.map((field) => (
+                  <CalculatorInput
+                    key={field.name}
+                    {...field}
+                    value={values[field.name]}
+                    error={errors[field.name]}
+                    touched={touched[field.name]}
+                    setFieldValue={setFieldValue}
+                    savedValue={savedData?.[field.name]}
+                  />
+                ))}
+              </CalculatorSection>
 
-              {/* btn */}
-              <div className="mt-8 w-full justify-between pad-main flex gap-2">
+              <div className="mt-8 w-full justify-between flex gap-4">
                 <button
                   type="button"
-                  className="w-4/12 btn-base bg-[#f2f1f1]"
+                  className="w-full md:w-1/2 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
                   onClick={() => navigate("/")}
                 >
                   กลับ
                 </button>
                 <button
                   type="submit"
-                  className="w-4/12 btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values, "detailed")}
+                  className="w-full md:w-1/2 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors shadow-md"
                 >
                   คำนวณ
                 </button>
@@ -100,7 +74,7 @@ export default function QuickMode({ calculate }) {
             </Form>
           )}
         </Formik>
-      </div>
+      </CalculatorCard>
     </div>
   );
 }

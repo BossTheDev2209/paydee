@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, Formik } from "formik";
-import TextField from "../../components/TextField";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { CalculatorCard, CalculatorSection, CalculatorInput } from "../../components/salary/CalculatorComponents";
 
 function loadData() {
   try {
@@ -27,12 +27,26 @@ export default function DetailedMode({ calculate }) {
   });
 
   const savedData = loadData();
+
+  const incomeFields = [
+    { name: "salary", label: "รายได้ต่อเดือน", placeholder: "30000", required: true },
+    { name: "bonus", label: "โบนัส", placeholder: "5000" },
+    { name: "extraIncome", label: "รายได้เสริมต่อเดือน", placeholder: "5000" },
+  ];
+
+  const expenseFields = [
+    { name: "housingCost", label: "ค่าที่พักต่อเดือน", placeholder: "30000", required: true },
+    { name: "commutingCost", label: "ค่าเดินทางต่อเดือน", placeholder: "2000", required: true },
+    { name: "debt", label: "หนี้สินขั้นต่ำต่อเดือน", placeholder: "5000", required: true },
+    { name: "food", label: "ค่าอาหารต่อเดือน", placeholder: "1000", required: true },
+    { name: "utilityCost", label: "ค่าสาธารณูปโภคต่อเดือน", placeholder: "1000", required: true },
+    { name: "service", label: "ค่าเบี้ยประกัน/บริการที่จำเป็นต่อเดือน", placeholder: "1000", required: true },
+    { name: "other", label: "ค่าใช้จ่ายเบ็ดเตล็ดอื่น ๆ", placeholder: "1000" },
+  ];
+
   return (
-    <div className="w-full">
-      <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
-        <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
-          Detailed Mode
-        </h1>
+    <div className="w-full mt-10">
+      <CalculatorCard title="Detailed Mode">
         <Formik
           initialValues={{
             salary: savedData?.salary || "",
@@ -50,297 +64,50 @@ export default function DetailedMode({ calculate }) {
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            console.log("a", values);
+            calculate(values, "detailed");
           }}
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
-              {/* รายได้ */}
-              <section className="w-full p-2 bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-lg my-4">
-                <div className="w-full">
-                  <h2 className="w-full text-3xl font-bold my-6 text-[#3d3d3d] dark:text-[#f2f2f1]">
-                    รายได้
-                  </h2>
-                </div>
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">
-                      รายได้ต่อเดือน
-                      <span className="text-red-500 font-bold px-1">*</span>
-                    </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="salary"
-                        name="salary"
-                        placeholder="30000"
-                        value={values.salary}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "salary",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                        touched={touched.salary}
-                        error={errors.salary}
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
+              <CalculatorSection title="รายได้">
+                {incomeFields.map((field) => (
+                  <CalculatorInput
+                    key={field.name}
+                    {...field}
+                    value={values[field.name]}
+                    error={errors[field.name]}
+                    touched={touched[field.name]}
+                    setFieldValue={setFieldValue}
+                    savedValue={savedData?.[field.name]}
+                  />
+                ))}
+              </CalculatorSection>
 
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">โบนัส</p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="bonus"
-                        name="bonus"
-                        placeholder="5000"
-                        value={values.bonus}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "bonus",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
+              <CalculatorSection title="รายจ่าย">
+                {expenseFields.map((field) => (
+                  <CalculatorInput
+                    key={field.name}
+                    {...field}
+                    value={values[field.name]}
+                    error={errors[field.name]}
+                    touched={touched[field.name]}
+                    setFieldValue={setFieldValue}
+                    savedValue={savedData?.[field.name]}
+                  />
+                ))}
+              </CalculatorSection>
 
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">รายได้เสริม</p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="extraIncome"
-                        name="extraIncome"
-                        placeholder="5000"
-                        value={values.extraIncome}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "extraIncome",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* รายจ่าย */}
-              <section className="w-full p-2 bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-lg my-4">
-                <div className="w-full">
-                  <h2 className="w-full text-3xl font-bold my-6 text-[#3d3d3d] dark:text-[#f2f2f1]">
-                    รายจ่าย
-                  </h2>
-                </div>
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">
-                      ค่าที่พักต่อเดือน
-                      <span className="text-red-500 text-xl font-bold px-1">
-                        *
-                      </span>
-                    </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="housingCost"
-                        name="housingCost"
-                        placeholder="30000"
-                        value={values.housingCost}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "housingCost",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                        error={errors.housingCost}
-                        touched={touched.housingCost}
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">
-                      ค่าเดินทางต่อเดือน
-                      <span className="text-red-500 text-xl font-bold px-1">
-                        *
-                      </span>
-                    </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="commutingCost"
-                        name="commutingCost"
-                        placeholder="2000"
-                        value={values.commutingCost}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "commutingCost",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                        error={errors.commutingCost}
-                        touched={touched.commutingCost}
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">
-                      หนี้สินต่อเดือน
-                      <span className="text-red-500 text-xl font-bold px-1">
-                        *
-                      </span>
-                    </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="debt"
-                        name="debt"
-                        placeholder="5000"
-                        value={values.debt}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "debt",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                        error={errors.debt}
-                        touched={touched.debt}
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">
-                      ค่าอาหาร
-                      <span className="text-red-500 text-xl font-bold px-1">
-                        *
-                      </span>
-                    </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="food"
-                        name="food"
-                        placeholder="1000"
-                        value={values.food}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "food",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                        error={errors.food}
-                        touched={touched.food}
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">
-                      ค่าสาธารณูปโภคต่อเดือน
-                      <span className="text-red-500 text-xl font-bold px-1">
-                        *
-                      </span>
-                    </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="utilityCost"
-                        name="utilityCost"
-                        placeholder="1000"
-                        value={values.utilityCost}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "utilityCost",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                        error={errors.utilityCost}
-                        touched={touched.utilityCost}
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">
-                      ค่าประกัน/บริการที่จำเป็นต่อเดือน
-                      <span className="text-red-500 text-xl font-bold px-1">
-                        *
-                      </span>
-                    </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="service"
-                        name="service"
-                        placeholder="1000"
-                        value={values.service}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "service",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                        error={errors.service}
-                        touched={touched.service}
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">ค่าใช้จ่ายเบ็ดเตล็ดอื่น ๆ </p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="other"
-                        name="other"
-                        placeholder="1000"
-                        value={values.other}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "other",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* btn */}
-              <div className="mt-8 w-full justify-between pad-main flex gap-2">
+              <div className="mt-8 w-full justify-between flex gap-4">
                 <button
                   type="button"
-                  className="w-4/12 btn-base bg-[#f2f1f1]"
+                  className="w-full md:w-1/2 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
                   onClick={() => navigate("/")}
                 >
                   กลับ
                 </button>
                 <button
                   type="submit"
-                  className="w-4/12 btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values, "detailed")}
+                  className="w-full md:w-1/2 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors shadow-md"
                 >
                   คำนวณ
                 </button>
@@ -348,7 +115,7 @@ export default function DetailedMode({ calculate }) {
             </Form>
           )}
         </Formik>
-      </div>
+      </CalculatorCard>
     </div>
   );
 }
