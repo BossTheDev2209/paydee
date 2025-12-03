@@ -4,11 +4,16 @@ import DetailedMode from "./salary-tab/DetailedMode";
 import { Link, useSearchParams } from "react-router-dom";
 
 export default function SalaryAfterTax() {
-  const [params] = useSearchParams();
-  const Mode = params.get("mode");
-  const [mode, setMode] = useState("quick");
+  const [params, setParams] = useSearchParams();
+  const modeParam = params.get("mode");
+  const currentMode = modeParam === "detailed" ? "detailed" : "quick";
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+
+  const handleModeChange = (newMode) => {
+    setParams({ mode: newMode });
+    setResult(null); // Clear result when switching modes
+  };
 
   const calculate = (values, mode) => {
     setLoading(true);
@@ -69,7 +74,30 @@ export default function SalaryAfterTax() {
       <div className="w-full flex justify-center">
         {/* personal detail */}
         <section className="w-full md:w-10/12">
-          {Mode === "quick" ? (
+          <div className="flex justify-center my-6">
+            <div className="bg-[#e0e0e0] dark:bg-[#4a4a4a] p-1 rounded-full flex">
+              <button
+                onClick={() => handleModeChange("quick")}
+                className={`px-6 py-2 rounded-full transition-all duration-300 ${currentMode === "quick"
+                    ? "bg-[#ffcc00] text-[#2b2b2b] font-bold shadow-md"
+                    : "text-[#979797] hover:text-[#3d3d3d] dark:hover:text-[#f2f1f1]"
+                  }`}
+              >
+                Quick
+              </button>
+              <button
+                onClick={() => handleModeChange("detailed")}
+                className={`px-6 py-2 rounded-full transition-all duration-300 ${currentMode === "detailed"
+                    ? "bg-[#ffcc00] text-[#2b2b2b] font-bold shadow-md"
+                    : "text-[#979797] hover:text-[#3d3d3d] dark:hover:text-[#f2f1f1]"
+                  }`}
+              >
+                Detailed
+              </button>
+            </div>
+          </div>
+
+          {currentMode === "quick" ? (
             <QuickMode
               key="quick"
               calculate={(values) => calculate(values, "quick")}

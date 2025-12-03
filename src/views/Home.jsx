@@ -69,12 +69,12 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xl justify-center">
-          <button className="flex items-center justify-center px-6 py-3 bg-[#e0e0e0] dark:bg-[#4a4a4a] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-lg font-medium hover:bg-[#d0d0d0] transition-colors w-full sm:w-auto min-w-[200px]" onClick={() => document.getElementById('calculators')?.scrollIntoView({ behavior: 'smooth' })}>
+          <button className="flex items-center justify-center px-6 py-3 bg-[#e0e0e0] dark:bg-[#4a4a4a] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-lg font-medium hover:bg-[#d0d0d0] transition-colors hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 ease-in-out w-full sm:w-auto min-w-[200px]" onClick={() => document.getElementById('calculators')?.scrollIntoView({ behavior: 'smooth' })}>
             <span>เลือกเครื่องคำนวณ</span>
           </button>
 
           <Link to="/financial" className="w-full sm:w-auto">
-            <button className="w-full px-6 py-3 bg-[#ffcc00] text-[#2b2b2b] rounded-lg font-bold hover:bg-[#e6b800] transition-colors shadow-sm min-w-[200px]">
+            <button className="w-full px-6 py-3 bg-[#ffcc00] text-[#2b2b2b] rounded-lg font-bold hover:bg-[#e6b800] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 ease-in-out shadow-sm min-w-[200px]">
               ไปกรอก ข้อมูลศูนย์กลาง
             </button>
           </Link>
