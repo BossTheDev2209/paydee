@@ -100,14 +100,33 @@ export default function DetailedMode({ calculate }) {
               <div className="mt-8 w-full justify-between flex gap-4">
                 <button
                   type="button"
-                  className="w-full md:w-1/2 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
+                  className="w-full md:w-1/3 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
                   onClick={() => navigate("/")}
                 >
                   กลับ
                 </button>
                 <button
+                  type="reset"
+                  className="w-full md:w-1/3 py-3 rounded-lg bg-red-100 text-red-600 font-bold hover:bg-red-200 transition-colors"
+                  onClick={() => {
+                    // Reset form values
+                    setFieldValue("salary", "");
+                    setFieldValue("bonus", "");
+                    setFieldValue("extraIncome", "");
+                    setFieldValue("housingCost", "");
+                    setFieldValue("commutingCost", "");
+                    setFieldValue("debt", "");
+                    setFieldValue("food", "");
+                    setFieldValue("utilityCost", "");
+                    setFieldValue("service", "");
+                    setFieldValue("other", "");
+                  }}
+                >
+                  รีเซต
+                </button>
+                <button
                   type="submit"
-                  className="w-full md:w-1/2 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors shadow-md"
+                  className="w-full md:w-1/3 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors shadow-md"
                 >
                   คำนวณ
                 </button>

@@ -14,6 +14,7 @@
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "formik": "^2.4.9",
+    "framer-motion": "^12.23.25",
     "from": "^0.1.7",
     "lucide-react": "^0.555.0",
     "react": "^19.1.1",

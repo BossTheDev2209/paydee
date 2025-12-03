@@ -3,6 +3,8 @@ import QuickMode from "./salary-tab/QuickMode";
 import DetailedMode from "./salary-tab/DetailedMode";
 import { Link, useSearchParams } from "react-router-dom";
 import { CalculatorCard } from "../components/salary/CalculatorComponents";
+import { motion, AnimatePresence } from "framer-motion";
+import SlotCounter from "../components/ui/SlotCounter";
 
 export default function SalaryAfterTax() {
   const [params, setParams] = useSearchParams();
@@ -114,44 +116,76 @@ export default function SalaryAfterTax() {
         </div>
 
         {/* Results Section */}
-        {(loading || result) && (
-          <CalculatorCard title="ผลลัพธ์" className="animate-fade-in-up">
-            {loading ? (
-              <div className="flex justify-center items-center h-40">
-                <i className="fa-solid fa-spinner text-[#ffcc00] text-4xl animate-spin"></i>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                  <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                    รายได้สุทธิต่อเดือน
-                  </h2>
-                  <h2 className="text-2xl md:text-3xl font-bold text-[#2b2b2b] dark:text-[#ffcc00]">
-                    {result.netMount.toLocaleString()} <span className="text-base font-normal text-gray-500">บาท</span>
-                  </h2>
-                </div>
+        <AnimatePresence>
+          {(loading || result) && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <CalculatorCard title="ผลลัพธ์">
+                {loading ? (
+                  <div className="flex justify-center items-center h-40">
+                    <i className="fa-solid fa-spinner text-[#ffcc00] text-4xl animate-spin"></i>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {/* Conditional Text Animation */}
+                    <div className="text-center mb-6">
+                      {result.netMount > 0 ? (
+                        <motion.div
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.3, type: "spring" }}
+                          className="text-green-600 dark:text-green-400 font-bold text-xl md:text-2xl"
+                        >
+                          🎉 ยินดีด้วย! คุณมีรายได้สุทธิคงเหลือ
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.3, type: "spring" }}
+                          className="text-red-500 font-bold text-xl md:text-2xl"
+                        >
+                          ⚠️ ระวัง! รายจ่ายของคุณเกินรายได้
+                        </motion.div>
+                      )}
+                    </div>
 
-                <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                  <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                    รายได้สุทธิต่อปี
-                  </h2>
-                  <h2 className="text-xl md:text-2xl font-bold text-[#2b2b2b] dark:text-white">
-                    {result.netYearAfterTax.toLocaleString()} <span className="text-base font-normal text-gray-500">บาท</span>
-                  </h2>
-                </div>
+                    <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
+                      <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
+                        รายได้สุทธิต่อเดือน
+                      </h2>
+                      <h2 className="text-2xl md:text-3xl font-bold text-[#2b2b2b] dark:text-[#ffcc00]">
+                        <SlotCounter value={result.netMount} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                      </h2>
+                    </div>
 
-                <div className="flex flex-col md:flex-row justify-between items-center">
-                  <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                    ภาษีต่อปี
-                  </h2>
-                  <h2 className="text-xl md:text-2xl font-bold text-red-500">
-                    {result.netTax.toLocaleString()} <span className="text-base font-normal text-gray-500">บาท</span>
-                  </h2>
-                </div>
-              </div>
-            )}
-          </CalculatorCard>
-        )}
+                    <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
+                      <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
+                        รายได้สุทธิต่อปี
+                      </h2>
+                      <h2 className="text-xl md:text-2xl font-bold text-[#2b2b2b] dark:text-white">
+                        <SlotCounter value={result.netYearAfterTax} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                      </h2>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row justify-between items-center">
+                      <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
+                        ภาษีต่อปี
+                      </h2>
+                      <h2 className="text-xl md:text-2xl font-bold text-red-500">
+                        <SlotCounter value={result.netTax} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                      </h2>
+                    </div>
+                  </div>
+                )}
+              </CalculatorCard>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
