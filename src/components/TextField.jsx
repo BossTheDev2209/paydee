@@ -25,7 +25,7 @@ const TextField = ({
             <label htmlFor={name} className="text-color-blue font-light">
               <h4 className={`line-clamp-1`}>
                 {title}
-                {required && <span className="text-red-500 font-bold">*</span>}
+                {required && <span className="text-red-500 font-bold"></span>}
               </h4>
             </label>
           </div>

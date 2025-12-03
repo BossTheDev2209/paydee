@@ -15,11 +15,7 @@ function loadData() {
 
 export default function DetailedMode({ calculate, switchMode }) {
   const navigate = useNavigate();
-  const [frequency, setFrequency] = useState("day");
   const savedData = loadData();
-  const [selected, setSelected] = useState({
-    frequency: [],
-  });
 
   return (
     <div className="w-full">
