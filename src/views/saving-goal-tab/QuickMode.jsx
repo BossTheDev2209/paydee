@@ -29,7 +29,7 @@ export default function QuickMode({ calculate, switchMode }) {
           initialValues={{
             target: "",
             amount: "",
-            frequency: "",
+            frequency: "day",
           }}
           onSubmit={(values) => {
             // localStorage.setItem("financial-form", JSON.stringify(values));
@@ -49,12 +49,12 @@ export default function QuickMode({ calculate, switchMode }) {
                       <RadioGroup
                         direction="row"
                         name="frequency"
-                        value={frequency}
-                        onChange={setFrequency}
+                        value={values.frequency}
+                        onChange={(value) => setFieldValue("frequency", value)}
                         options={[
                           { label: "รายวัน", value: "day" },
                           { label: "รายสัปดาห์", value: "week" },
-                          { label: "รายเดือน", value: "mounth" },
+                          { label: "รายเดือน", value: "month" },
                         ]}
                       />
                     </div>
@@ -115,7 +115,7 @@ export default function QuickMode({ calculate, switchMode }) {
                 <button
                   type="button"
                   className="w-4/12 btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values, "detailed")}
+                  onClick={() => calculate(values, "quick")}
                 >
                   คำนวณ
                 </button>

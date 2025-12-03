@@ -47,13 +47,20 @@ export default function SavingGoal() {
       const debt = Number(values.debt);
       const tax = Number(values.tax);
 
-      const freq = [
-        { id: 1, days: 1 },
-        { id: 2, days: 7 },
-        { id: 3, days: 30 },
-      ];
-      const selectedFreq = freq.find((f) => f.id === Number(values.frequency));
-      const daysPerSave = selectedFreq ? selectedFreq.days : 0;
+      let daysPerSave = 0;
+      switch (values.frequency) {
+        case "day":
+          daysPerSave = 1;
+          break;
+        case "week":
+          daysPerSave = 7;
+          break;
+        case "month":
+          daysPerSave = 30;
+          break;
+        default:
+          daysPerSave = 1;
+      }
 
       // quick mode
       const totalQuick = target / amount;
@@ -214,8 +221,7 @@ export default function SavingGoal() {
                       </h2>
                     </p>
 
-
-                    <hr className="my-4"/>
+                    <hr className="my-4" />
                     <p className="text-lg md:text-2xl font-semibold flex flex-wrap justify-between pad-main text-[#52b2bf]">
                       สิ่งที่แนะนำ
                     </p>

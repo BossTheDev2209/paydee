@@ -7,22 +7,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-// function AutoModal({ show, title, message }) {
-//   if (!show) return null;
+function AutoModal({ show, title, message }) {
+  if (!show) return null; // ถ้า show = false → ไม่ render modal
 
-//   return (
-//     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-//       <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-xl w-[90%] max-w-sm shadow-lg animate-fade">
-//         <h2 className="text-xl font-semibold">{title}</h2>
-//         <p className="mt-2">{message}</p>
-//       </div>
-//     </div>
-//   );
-// }
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-xl w-[90%] max-w-sm shadow-lg animate-fade">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <p className="mt-2">{message}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Financial() {
+  const [modal, setModal] = useState(false);
   const navigate = useNavigate();
-  // const [modal, setModal] = useState(false);
   const [selected, setSelected] = useState({
     status: [],
     country: [],
@@ -30,11 +30,11 @@ export default function Financial() {
 
   const handleSave = (values) => {
     console.log("save:", values);
-    // setModal(true);
+    setModal(true);
     setTimeout(() => {
-      // setModal(false);
+      setModal(false);
       navigate("/");
-    });
+    }, 1000);
   };
   const status = [
     { id: 1, label: "นักเรียน/นักศึกษา" },
@@ -48,17 +48,6 @@ export default function Financial() {
     { id: 3, label: "สหรัฐอเมริกา" },
   ];
 
-  // const validationSchema = Yup.object({
-  //   age: Yup.string().required("กรุณากรอกข้อมูล"),
-  //   status: Yup.number().required("กรุณาเลือกสถานะ"),
-  //   country: Yup.number().required("กรุณาเลือกประเทศ"),
-  //   optional: Yup.string().required("กรุณากรอกข้อมูล"),
-  //   salary: Yup.string().required("กรุณากรอกข้อมูล"),
-  //   expenses: Yup.string().required("กรุณากรอกข้อมูล"),
-  //   saving: Yup.string().required("กรุณากรอกข้อมูล"),
-  //   debt: Yup.string().required("กรุณากรอกข้อมูล"),
-  // });
-
   return (
     <section className="w-full">
       <Link to="/" className="w-full">
@@ -67,7 +56,7 @@ export default function Financial() {
           Back to Home
         </p>
       </Link>
-      
+
       <h1 className="text-lg md:text-2xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
         Financial Profile
       </h1>
@@ -95,6 +84,14 @@ export default function Financial() {
       >
         {({ setFieldValue, values, errors, touched }) => (
           <Form className="w-full">
+          <div className="bg-[#f2f2f2] text-[#3d3d3d] dark:bg-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300 fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full shadow-lg">
+            <AutoModal
+              show={modal}
+              title="บันทึกข้อมูลสำเร็จ"
+              message="บันทึกข้อมูลเรียบร้อยแล้ว"
+            />
+          </div>
+            
             <div className="w-full flex flex-wrap">
               {/* personal detail */}
               <section className="w-full md:w-6/12 p-4">
