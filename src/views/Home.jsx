@@ -12,7 +12,8 @@ export default function Home() {
       title: "รายได้สุทธิหลังภาษี",
       details: "คำนวณรายได้หลังหักภาษี",
       bgColor: "#67B8FF",
-      icon: "fa-solid fa-money-bill-wave"
+      isAi: true,
+      aiIcon: AI
     },
     {
       id: 2,

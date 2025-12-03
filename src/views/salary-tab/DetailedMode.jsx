@@ -100,7 +100,7 @@ export default function DetailedMode({ calculate }) {
               <div className="mt-8 w-full justify-between flex gap-4">
                 <button
                   type="button"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
+                  className="w-full md:w-1/3 py-3 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-300 transition-colors"
                   onClick={() => navigate("/")}
                 >
                   กลับ

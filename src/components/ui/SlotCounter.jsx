@@ -3,7 +3,7 @@ import { motion, useSpring, useTransform } from "framer-motion";
 
 export default function SlotCounter({ value }) {
     const springValue = useSpring(0, {
-        stiffness: 50,
+        stiffness: 75,
         damping: 15,
         mass: 1,
     });

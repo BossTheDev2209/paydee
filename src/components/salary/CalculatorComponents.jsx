@@ -43,7 +43,7 @@ export const CalculatorInput = ({
     setFieldValue,
     savedValue
 }) => {
-    // Check if the current value matches the saved value from Financial profile
+    // เช็คค่าจาก Financial profile
     const isPrefilled = savedValue && value === savedValue;
 
     return (
@@ -60,7 +60,7 @@ export const CalculatorInput = ({
                     placeholder={placeholder}
                     value={value}
                     onChange={(e) => {
-                        // Default number filtering, can be overridden if needed
+                        // ตัวกรองค่าเป็นตัวเลข
                         const val = e.target.value.replace(/[^0-9]/g, "");
                         setFieldValue(name, val);
                     }}
