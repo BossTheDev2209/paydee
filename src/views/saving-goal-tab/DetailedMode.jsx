@@ -14,12 +14,8 @@ function loadData() {
 }
 
 export default function DetailedMode({ calculate, switchMode }) {
-  const navigate  = useNavigate();
-  const [frequency, setFrequency] = useState("day");
+  const navigate = useNavigate();
   const savedData = loadData();
-  const [selected, setSelected] = useState({
-    frequency: [],
-  });
 
   return (
     <div className="w-full">
@@ -32,13 +28,11 @@ export default function DetailedMode({ calculate, switchMode }) {
             target: "",
             saving: savedData?.saving || "",
             amount: "",
-            frequency: "",
+            frequency: "day",
             salary: savedData?.salary || "",
-            food: savedData?.food || "",
-            commutingCost: savedData?.commutingCost || "",
-            housingCost: savedData?.housingCost || "",
-            utilityCost: savedData?.utilityCost || "",
-            debt: savedData?.debt || "",
+            increase: "",
+            bonus: "",
+            extraIncome: "",
           }}
           onSubmit={(values) => {
             console.log("a", values);
@@ -57,12 +51,12 @@ export default function DetailedMode({ calculate, switchMode }) {
                       <RadioGroup
                         direction="row"
                         name="frequency"
-                        value={frequency}
-                        onChange={setFrequency}
+                        value={values.frequency}
+                        onChange={(value) => setFieldValue("frequency", value)}
                         options={[
                           { label: "รายวัน", value: "day" },
                           { label: "รายสัปดาห์", value: "week" },
-                          { label: "รายเดือน", value: "mounth" },
+                          { label: "รายเดือน", value: "month" },
                         ]}
                       />
                     </div>
@@ -109,111 +103,19 @@ export default function DetailedMode({ calculate, switchMode }) {
                     <p className="w-fit px-2 text-end hidden md:block">บาท</p>
                   </div>
                 </div>
-              </section>
-
-              {/* รายจ่าย */}
-              <section className="w-full p-2 bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-lg my-4">
-                <div className="w-full">
-                  <h2 className="w-full text-3xl font-bold my-6 text-[#3d3d3d] dark:text-[#f2f2f1]">
-                    รายจ่าย
-                  </h2>
-                </div>
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">ค่าอาหารต่อเดือน</p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="food"
-                        name="food"
-                        placeholder="2000"
-                        value={values.food}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "food",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
 
                 <div className="w-full">
                   <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">ค่าเดินทางต่อเดือน</p>
+                    <p className="w-full">รายได้ต่อเดือน</p>
                     <div className="w-full md:w-4/12">
                       <TextField
-                        id="commutingCost"
-                        name="commutingCost"
-                        placeholder="2000"
-                        value={values.commutingCost}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "commutingCost",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">ค่าที่พักอาศัยต่อเดือน</p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="housingCost"
-                        name="housingCost"
-                        placeholder="6000"
-                        value={values.housingCost}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "housingCost",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">ค่าสาธารณูปโภคและบริการพื้นฐาน</p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="utilityCost"
-                        name="utilityCost"
-                        placeholder="1000"
-                        value={values.utilityCost}
-                        onChange={(e) =>
-                          setFieldValue(
-                            "utilityCost",
-                            e.target.value.replace(/[^0-9]/g, "")
-                          )
-                        }
-                      />
-                    </div>
-                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">หนี้สิน</p>
-                    <div className="w-full md:w-4/12">
-                      <TextField
-                        id="debt"
-                        name="debt"
+                        id="salary"
+                        name="salary"
                         placeholder="5000"
-                        value={values.debt}
+                        value={values.salary}
                         onChange={(e) =>
                           setFieldValue(
-                            "debt",
+                            "salary",
                             e.target.value.replace(/[^0-9]/g, "")
                           )
                         }
@@ -223,8 +125,7 @@ export default function DetailedMode({ calculate, switchMode }) {
                   </div>
                 </div>
               </section>
-              
-              
+
               {/* การออม */}
               <section className="w-full p-2 bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-lg my-4">
                 <div className="w-full">
@@ -232,6 +133,27 @@ export default function DetailedMode({ calculate, switchMode }) {
                     การออม
                   </h2>
                 </div>
+                <div className="w-full">
+                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <p className="w-full">เป้าหมายการออม</p>
+                    <div className="w-full md:w-4/12">
+                      <TextField
+                        id="target"
+                        name="target"
+                        placeholder="10000"
+                        value={values.target}
+                        onChange={(e) =>
+                          setFieldValue(
+                            "target",
+                            e.target.value.replace(/[^0-9]/g, "")
+                          )
+                        }
+                      />
+                    </div>
+                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
+                  </div>
+                </div>
+
                 <div className="w-full">
                   <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
                     <p className="w-full">เงินเก็บปัจจุบัน</p>
@@ -265,6 +187,27 @@ export default function DetailedMode({ calculate, switchMode }) {
                         onChange={(e) =>
                           setFieldValue(
                             "amount",
+                            e.target.value.replace(/[^0-9]/g, "")
+                          )
+                        }
+                      />
+                    </div>
+                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
+                  </div>
+                </div>
+
+                <div className="w-full">
+                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <p className="w-full">อัตราดอกเบี้ย</p>
+                    <div className="w-full md:w-4/12">
+                      <TextField
+                        id="increase"
+                        name="increase"
+                        placeholder="2000"
+                        value={values.increase}
+                        onChange={(e) =>
+                          setFieldValue(
+                            "increase",
                             e.target.value.replace(/[^0-9]/g, "")
                           )
                         }

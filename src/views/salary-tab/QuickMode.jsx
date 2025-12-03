@@ -4,7 +4,7 @@ import TextField from "../../components/TextField";
 import { useState } from "react";
 import js from "@eslint/js";
 import * as Yup from "yup";
-import  { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function loadData() {
   try {
@@ -15,7 +15,7 @@ function loadData() {
   }
 }
 
-export default function QuickMode({ calculate, switchMode }) {
+export default function QuickMode({ calculate }) {
   const navigate = useNavigate();
   const validationSchema = Yup.object({
     salary: Yup.string().required("กรุณากรอกข้อมูล"),
@@ -43,10 +43,10 @@ export default function QuickMode({ calculate, switchMode }) {
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
               <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                <span className="flex w-full gap-2">
-                  <p className="">รายได้ต่อเดือน</p>
-                  <p className="text-red-500">(required)</p>
-                </span>
+                <p className="w-full">
+                  รายได้ต่อเดือน
+                  <span className="text-red-500 font-bold px-1">*</span>
+                </p>
                 <TextField
                   id="salary"
                   name="salary"
@@ -90,7 +90,7 @@ export default function QuickMode({ calculate, switchMode }) {
                   กลับ
                 </button>
                 <button
-                  type="button"
+                  type="submit"
                   className="w-4/12 btn-base bg-[#ffcc00]"
                   onClick={() => calculate(values, "detailed")}
                 >

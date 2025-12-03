@@ -4,7 +4,7 @@ import TextField from "../../components/TextField";
 import RadioGroup from "../../components/RadioGroup";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import js from "@eslint/js";
+import * as Yup from "yup";
 
 function loadData() {
   try {
@@ -17,8 +17,12 @@ function loadData() {
 
 export default function QuickMode({ calculate, switchMode }) {
   const navigate = useNavigate();
-  const [frequency, setFrequency] = useState("day");
-  // const savedData = loadData();
+
+  const validationSchema = Yup.object({
+    target: Yup.string().required("กรุณากรอกข้อมูล"),
+    amount: Yup.string().required("กรุณากรอกข้อมูล"),
+  });
+
   return (
     <div className="w-full">
       <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
@@ -29,10 +33,10 @@ export default function QuickMode({ calculate, switchMode }) {
           initialValues={{
             target: "",
             amount: "",
-            frequency: "",
+            frequency: "day",
           }}
+          validationSchema={validationSchema}
           onSubmit={(values) => {
-            // localStorage.setItem("financial-form", JSON.stringify(values));
             console.log("saved", values);
           }}
         >
@@ -49,12 +53,12 @@ export default function QuickMode({ calculate, switchMode }) {
                       <RadioGroup
                         direction="row"
                         name="frequency"
-                        value={frequency}
-                        onChange={setFrequency}
+                        value={values.frequency}
+                        onChange={(value) => setFieldValue("frequency", value)}
                         options={[
                           { label: "รายวัน", value: "day" },
                           { label: "รายสัปดาห์", value: "week" },
-                          { label: "รายเดือน", value: "mounth" },
+                          { label: "รายเดือน", value: "month" },
                         ]}
                       />
                     </div>
@@ -62,7 +66,10 @@ export default function QuickMode({ calculate, switchMode }) {
                 </div>
                 <div className="w-full">
                   <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">เป้าหมายการออม</p>
+                    <p className="w-full">
+                      เป้าหมายการออม
+                      <span className="text-red-500 font-bold px-1">*</span>
+                    </p>
                     <div className="w-full md:w-4/12">
                       <TextField
                         id="target"
@@ -75,6 +82,8 @@ export default function QuickMode({ calculate, switchMode }) {
                             e.target.value.replace(/[^0-9]/g, "")
                           )
                         }
+                        error={errors.target}
+                        touched={touched.target}
                       />
                     </div>
                     <p className="w-fit px-2 text-end hidden md:block">บาท</p>
@@ -83,7 +92,10 @@ export default function QuickMode({ calculate, switchMode }) {
 
                 <div className="w-full">
                   <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    <p className="w-full">จำนวนเงินออมต่อครั้ง</p>
+                    <p className="w-full">
+                      จำนวนเงินออมต่อครั้ง
+                      <span className="text-red-500 font-bold px-1">*</span>
+                    </p>
                     <div className="w-full md:w-4/12">
                       <TextField
                         id="amount"
@@ -96,6 +108,8 @@ export default function QuickMode({ calculate, switchMode }) {
                             e.target.value.replace(/[^0-9]/g, "")
                           )
                         }
+                        error={errors.amount}
+                        touched={touched.amount}
                       />
                     </div>
                     <p className="w-fit px-2 text-end hidden md:block">บาท</p>
@@ -113,9 +127,9 @@ export default function QuickMode({ calculate, switchMode }) {
                   กลับ
                 </button>
                 <button
-                  type="button"
+                  type="submit"
                   className="w-4/12 btn-base bg-[#ffcc00]"
-                  onClick={() => calculate(values, "detailed")}
+                  onClick={() => calculate(values, "quick")}
                 >
                   คำนวณ
                 </button>
