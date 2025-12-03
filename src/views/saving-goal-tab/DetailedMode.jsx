@@ -30,11 +30,9 @@ export default function DetailedMode({ calculate, switchMode }) {
             amount: "",
             frequency: "day",
             salary: savedData?.salary || "",
-            food: savedData?.food || "",
-            commutingCost: savedData?.commutingCost || "",
-            housingCost: savedData?.housingCost || "",
-            utilityCost: savedData?.utilityCost || "",
-            debt: savedData?.debt || "",
+            increase: "",
+            bonus: "",
+            extraIncome: "",
           }}
           onSubmit={(values) => {
             console.log("a", values);
@@ -189,6 +187,27 @@ export default function DetailedMode({ calculate, switchMode }) {
                         onChange={(e) =>
                           setFieldValue(
                             "amount",
+                            e.target.value.replace(/[^0-9]/g, "")
+                          )
+                        }
+                      />
+                    </div>
+                    <p className="w-fit px-2 text-end hidden md:block">บาท</p>
+                  </div>
+                </div>
+
+                <div className="w-full">
+                  <div className="w-full flex flex-wrap md:flex-nowrap items-center pad-main text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
+                    <p className="w-full">อัตราดอกเบี้ย</p>
+                    <div className="w-full md:w-4/12">
+                      <TextField
+                        id="increase"
+                        name="increase"
+                        placeholder="2000"
+                        value={values.increase}
+                        onChange={(e) =>
+                          setFieldValue(
+                            "increase",
                             e.target.value.replace(/[^0-9]/g, "")
                           )
                         }
