@@ -26,7 +26,7 @@ export default function Home() {
     {
       id: 3,
       path: "/ai-port",
-      title: "แนะนำพอร์ตด้วย AI",
+      title: "ตัวอย่างแนวโน้มจำลองตลาดหลักทรัพย์",
       details: "แนะนำหุ้นที่เหมาะกับคุณ",
       bgColor: "#FF8CA2",
       isAi: true,
@@ -41,7 +41,7 @@ export default function Home() {
       icon: "fa-solid fa-hand-holding-dollar"
     }
   ];
-
+  {/*mockup*/}
   const category1 = [
     { id: 101, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
     { id: 102, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
@@ -58,7 +58,7 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-screen pb-20 bg-[#f2f2f2] dark:bg-[#303030]">
-      {/* Hero Section */}
+      {/*Hero*/}
       <div className="w-full pt-20 pb-12 px-4 flex flex-col items-center text-center animate-fade-in">
         <h1 className="text-3xl md:text-5xl font-bold text-[#3d3d3d] dark:text-[#f2f1f1] mb-4">
           เครื่องคิดเลข<span className="text-[#ffcc00]">ทางการเงิน</span>
@@ -81,7 +81,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Content Sections */}
+      {/*Content*/}
       <div id="calculators" className="max-w-6xl mx-auto px-4 space-y-8">
 
         <SectionContainer title="ยอดนิยม">

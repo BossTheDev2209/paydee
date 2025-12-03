@@ -46,6 +46,12 @@ export default function Header() {
               </button>
             </Link>
 
+            <Link to="Policy">
+              <button className="btn-base hover:bg-[#f2f2f2] dark:hover:bg-[#353535] text-[#2b2b2b] dark:text-[#f2f1f1] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                ข้อกำหนดในการใช้งาน
+              </button>
+            </Link>
+
             <Link to="/financial">
               <button className="btn-base bg-[#ffcc00] dark:bg-[#ffcc00] text-[#2b2b2b] dark:text-[#2b2b2b] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
                 ข้อมูลศูนย์กลาง
@@ -125,8 +131,8 @@ export default function Header() {
                 key={index}
                 onClick={handleClick}
                 className={`cursor-pointer flex justify-center items-center h-10 rounded-xl transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#303030] border-[#979797] dark:border-[#303030] hover:border ${currentpPath === item.path
-                    ? "font-bold bg-[#f2f2f2] dark:bg-[#303030] border border-[#979797] dark:border-[#303030]"
-                    : ""
+                  ? "font-bold bg-[#f2f2f2] dark:bg-[#303030] border border-[#979797] dark:border-[#303030]"
+                  : ""
                   }`}
               >
                 {item.label}
