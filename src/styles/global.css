@@ -183,5 +183,8 @@
   color: #ffcc00 !important;
 }
 
+.recharts-surface {
+  @apply md:p-4;
+}
 
 

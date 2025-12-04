@@ -5,6 +5,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import LineChartComponent from "../components/LineChart";
 import Calendar from "react-calendar";
 import "../styles/calendar.css";
+import Policy from "./Policy";
 
 function formatDuration(days) {
   if (days < 7) return `${days} วัน`;
@@ -31,6 +32,7 @@ function formatDuration(days) {
 }
 
 export default function SavingGoal() {
+  const [modal, setModal] = useState(false);
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [estimatedSaving, setEstimatedSaving] = useState(null);
@@ -54,6 +56,14 @@ export default function SavingGoal() {
       month: "long",
       year: "numeric",
     });
+  }
+
+  function formatShortDate(date) {
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // เดือน +1 เพราะ getMonth() เริ่มจาก 0
+    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2); // เอา 2 หลักสุดท้ายของปี
+
+    return `${month}/${day}/${year}`; // mm/dd/yy
   }
 
   const calculateSavingUntil = (targetDate, amountPerSave, frequency) => {
@@ -153,9 +163,9 @@ export default function SavingGoal() {
         );
 
         return [
-          { name: formatDate(startDate), amount: startMoney },
-          { name: formatDate(midDate), amount: midMoney },
-          { name: formatDate(endDate), amount: target },
+          { name: formatShortDate(startDate), date: startDate, amount: startMoney },
+          { name: formatShortDate(midDate), date: midDate, amount: midMoney },
+          { name: formatShortDate(endDate), date: endDate, amount: target },
         ];
       };
 
@@ -248,8 +258,13 @@ export default function SavingGoal() {
             id="result"
             className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10"
           >
-            <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
+            <h1 className="flex justify-center items-center gap-2 text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
               ผลลัพธ์
+              <button onClick={() => setModal(true)}>
+                <span className="text-center ">
+                  <i className="fa-solid fa-circle-info"></i>
+                </span>
+              </button>
             </h1>
             {loading ? (
               <div className="flex justify-center items-center h-40">
@@ -260,15 +275,12 @@ export default function SavingGoal() {
             ) : result ? (
               <>
                 <p className="pad-main flex flex-col items-center gap-y-4">
-                  {" "}
                   <h2 className="font-semibold text-xl md:text-2xl text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                    {" "}
-                    คุณจะถึงเป้าหมายในวันที่{" "}
-                  </h2>{" "}
+                    คุณจะถึงเป้าหมายในวันที่
+                  </h2>
                   <h2 className="p-2 px-4 rounded-lg font-semibold bg-[#ffcc00] text-[#3d3d3d] text-base md:text-xl transition-colors duration-300">
-                    {" "}
-                    {formatDate(result.targetDay)}{" "}
-                  </h2>{" "}
+                    {formatDate(result.targetDay)}
+                  </h2>
                 </p>
                 <div className="">
                   <div className="w-full flex flex-col items-center my-10">
@@ -299,6 +311,9 @@ export default function SavingGoal() {
                       }}
                       value={value}
                       activeStartDate={activeStartDate}
+                      onActiveStartDateChange={({ activeStartDate }) => {
+                        setActiveStartDate(activeStartDate);
+                      }}
                       tileClassName={({ date, view }) => {
                         if (result) {
                           const targetDate = result.targetDay;
@@ -327,84 +342,37 @@ export default function SavingGoal() {
                   </div>
 
                   {/* line chart */}
-                  <div className="mt-10">
+                  <div className="mt-10 md:p-10">
                     <h2 className="text-center text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300 font-semibold px-10 py-4">
                       กราฟแสดงความเติบโตของเงินออม
                     </h2>
                     <LineChartComponent
                       data={result.chartData}
-                      extraData={true}
+                      selectedDate={selectedDate}
+                      estimatedSaving={estimatedSaving}
+                      formatDate={formatShortDate}
                     />
                   </div>
                 </div>
-                {currentMode === "detailed" ? (
-                  <>
-                    <h1 className="text-xl md:text-3xl font-bold text-[#f2f1f1] w-full bg-[#52b2bf] rounded-lg p-1 text-center mb-4 mt-10">
-                      AI Insight
-                    </h1>
-                    <p className="text-lg md:text-2xl font-semibold flex flex-wrap justify-between pad-main text-[#d0312d]">
-                      สิ่งที่ควรปรับปรุง
-                    </p>
-                    <p className="flex flex-wrap justify-between pad-main">
-                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        ค่าใช้จ่ายอาหร
-                      </h2>
-                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        สูงกว่าเฉลี่ย 34 %
-                      </h2>
-                    </p>
-                    <p className="flex flex-wrap justify-between pad-main">
-                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        สถานะรายจ่าย
-                      </h2>
-                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        ไม่สม่ำเสมอ
-                      </h2>
-                    </p>
-                    <p className="flex flex-wrap justify-between pad-main">
-                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        งบเริ่มต้น
-                      </h2>
-                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        น้อยเกินไป
-                      </h2>
-                    </p>
-
-                    <hr className="my-4" />
-                    <p className="text-lg md:text-2xl font-semibold flex flex-wrap justify-between pad-main text-[#52b2bf]">
-                      สิ่งที่แนะนำ
-                    </p>
-                    <p className="flex flex-wrap justify-between pad-main">
-                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        ค่าใช้จ่ายอาหร
-                      </h2>
-                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        ควรลด 20 บาท/วัน
-                      </h2>
-                    </p>
-                    <p className="flex flex-wrap justify-between pad-main">
-                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        สถานะรายจ่าย
-                      </h2>
-                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        เปลี่ยนวิธีการออมเป็นแบบทยอย
-                      </h2>
-                    </p>
-                    <p className="flex flex-wrap justify-between pad-main">
-                      <h2 className="text-base md:text-xl w-6/12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        งบเริ่มต้น
-                      </h2>
-                      <h2 className="text-base md:text-xl w-6/12 text-end text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                        ควรลดหมวดโทรศัพท์ 200 บาท/เดือน
-                      </h2>
-                    </p>
-                  </>
-                ) : null}
               </>
             ) : null}
           </div>
         </section>
       </div>
+      {/* modal */}
+      {modal && (
+        <div className="transition-all duration-300 fixed inset-0  bg-white dark:bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="flex flex-col gap-4 ">
+            <button
+              className="bg-[#ffcc00] p-4 rounded-lg"
+              onClick={() => setModal(false)}
+            >
+              ปิด
+            </button>
+            <Policy />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
