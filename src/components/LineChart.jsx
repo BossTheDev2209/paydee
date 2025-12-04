@@ -10,7 +10,7 @@ import {
   Legend,
 } from "recharts";
 
-const LineChartComponent = ({ data }) => {
+const LineChartComponent = ({ data, extraData }) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
@@ -22,7 +22,7 @@ const LineChartComponent = ({ data }) => {
         <Legend />
 
         <Line type="monotone" dataKey='amount' stroke="#cc9900" />
-        {/* <Line type="monotone" dataKey='new' stroke="#add8e6" /> */}
+        {extraData && <Line type="monotone" dataKey='extraAmount' stroke="#add8e6" name="ออมถึงวันเลือก" /> }
       </LineChart>
     </ResponsiveContainer>
   );
