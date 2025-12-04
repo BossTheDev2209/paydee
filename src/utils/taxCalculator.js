@@ -9,6 +9,7 @@ export const calculateTax = (values, mode) => {
   // 2. Base Allowance
   let allowances = 60000; // Taxpayer
 
+  
   // Family Status
   const familyStatus = values.familyStatus || "single";
   if (familyStatus === "married-no-income") {
