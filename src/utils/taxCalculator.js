@@ -2,14 +2,13 @@ export const calculateTax = (values, mode) => {
   // 1. Annual Income
   // Values are now pre-normalized to annual in the form components
   const annualSalary = Number(values.salary || values.monthlySalary || 0);
-  const annualBonusExtra = Number(values.monthlyBonusExtra || 0);
-  
+  const annualBonusExtra = Number(values.monthlyBonusExtra || 0) * 12;
+
   const annualIncome = annualSalary + annualBonusExtra;
 
   // 2. Base Allowance
   let allowances = 60000; // Taxpayer
 
-  
   // Family Status
   const familyStatus = values.familyStatus || "single";
   if (familyStatus === "married-no-income") {
@@ -75,7 +74,7 @@ export const calculateTax = (values, mode) => {
     // Re-reading prompt: "Quick Mode uses a subset of Detailed Mode input. Missing fields = treated as zero."
     // But then "Checkbox investments map to... Provident...". 
     // If the UI doesn't have it, it's 0.
-    provident = 0; 
+    provident = 0;
   } else {
     provident = Number(values.provident || 0);
   }
@@ -85,14 +84,14 @@ export const calculateTax = (values, mode) => {
   // Social Security (Not explicitly mentioned in prompt rules but usually standard. 
   // Prompt says "DEDUCTIONS (CLAMP RULES)..." and lists specific ones. 
   // It doesn't mention Social Security. I will strictly follow the prompt and NOT add Social Security unless it was in the list.)
-  
+
   // Sum deductions so far
   totalDeductions = lifeInsurance + parentsHealthInsurance + ssf + rmf + provident;
 
   // Donation
   // Donation is calculated AFTER other deductions because it's based on "taxable_income_before_donation"
   const taxableBeforeDonation = Math.max(annualIncome - allowances - totalDeductions, 0);
-  
+
   let donation = 0;
   if (mode === "detailed") {
     donation = Number(values.donation || 0);
@@ -118,31 +117,17 @@ export const calculateTax = (values, mode) => {
     { limit: Infinity, rate: 0.35 },
   ];
 
-  let remainingIncome = taxableIncome;
   let previousLimit = 0;
 
-  for (const bracket of brackets) {
-    if (remainingIncome <= 0) break;
-
-    const range = bracket.limit - previousLimit;
-    const taxableAmount = Math.min(remainingIncome, range); // This logic is slightly wrong for standard iteration.
-    
-    // Correct Iteration Logic:
-    // We need to calculate tax for the income falling INTO this bracket.
-    // Actually, easier way:
-    
-    // Let's restart tax calc loop
-  }
-  
   tax = 0;
   previousLimit = 0;
   for (const bracket of brackets) {
-      const range = bracket.limit - previousLimit;
-      if (taxableIncome > previousLimit) {
-          const taxableInThisBracket = Math.min(taxableIncome - previousLimit, range);
-          tax += taxableInThisBracket * bracket.rate;
-      }
-      previousLimit = bracket.limit;
+    const range = bracket.limit - previousLimit;
+    if (taxableIncome > previousLimit) {
+      const taxableInThisBracket = Math.min(taxableIncome - previousLimit, range);
+      tax += taxableInThisBracket * bracket.rate;
+    }
+    previousLimit = bracket.limit;
   }
 
   // 6. Final Output
@@ -152,20 +137,38 @@ export const calculateTax = (values, mode) => {
   const netIncomeMonthAfterTax = netIncomeYearAfterTax / 12;
   const effectiveRate = annualIncome > 0 ? taxYear / annualIncome : 0;
 
+  // 7. Expense Calculation (Detailed Mode only, does NOT affect tax)
+  const monthlyExpenses =
+    Number(values.housingCost || 0) +
+    Number(values.transportCost || 0) +
+    Number(values.debtPayment || 0) +
+    Number(values.foodCost || 0) +
+    Number(values.utilitiesCost || 0) +
+    Number(values.insuranceServiceCost || 0) +
+    Number(values.miscCost || 0);
+
+  const yearlyExpenses = monthlyExpenses * 12;
+
+  // 8. Cashflow Calculation
+  const remainingCashYear = netIncomeYearAfterTax - yearlyExpenses;
+  const remainingCashMonth = remainingCashYear / 12;
+
   return {
     annual_income: annualIncome,
-    total_deductions: totalDeductions + allowances, // "total_deductions" in output usually means everything that reduces taxable income? Or just the specific deductions? 
-    // Prompt says "taxable_income = max(annual_income - total_deductions, 0)" in the "TAXABLE INCOME" section.
-    // But in the "DEDUCTIONS" section it lists specific items.
-    // And "BASE ALLOWANCE" is separate.
-    // However, standard accounting: Taxable = Income - Expenses(none here) - Allowances - Deductions.
-    // I will return the sum of Allowances + Deductions as "total_deductions" to match the likely expectation of "how much was deducted from income".
-    
+    allowances,
+    deductions: totalDeductions,
+    total_tax_shield: allowances + totalDeductions,
+
     taxable_income: taxableIncome,
     tax_year: taxYear,
     tax_month: taxMonth,
     net_income_year_after_tax: netIncomeYearAfterTax,
     net_income_month_after_tax: netIncomeMonthAfterTax,
-    effective_rate: effectiveRate
+    effective_rate: effectiveRate,
+    // Expense and cashflow fields
+    total_monthly_expenses: monthlyExpenses,
+    total_yearly_expenses: yearlyExpenses,
+    remaining_cash_year: remainingCashYear,
+    remaining_cash_month: remainingCashMonth
   };
 };

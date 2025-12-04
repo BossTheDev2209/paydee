@@ -22,6 +22,12 @@ export default function DetailedMode({ calculate, loading }) {
 
   const validationSchema = Yup.object({
     monthlySalary: Yup.string().required("กรุณากรอกข้อมูล"),
+    housingCost: Yup.string().required("กรุณากรอกข้อมูล"),
+    transportCost: Yup.string().required("กรุณากรอกข้อมูล"),
+    debtPayment: Yup.string().required("กรุณากรอกข้อมูล"),
+    foodCost: Yup.string().required("กรุณากรอกข้อมูล"),
+    utilitiesCost: Yup.string().required("กรุณากรอกข้อมูล"),
+    insuranceServiceCost: Yup.string().required("กรุณากรอกข้อมูล"),
   });
 
   const savedData = loadData();
@@ -42,6 +48,14 @@ export default function DetailedMode({ calculate, loading }) {
             provident: "",
             parentsHealthInsurance: "",
             donation: "",
+            // Expense fields (monthly)
+            housingCost: "",
+            transportCost: "",
+            debtPayment: "",
+            foodCost: "",
+            utilitiesCost: "",
+            insuranceServiceCost: "",
+            miscCost: "",
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
@@ -67,13 +81,93 @@ export default function DetailedMode({ calculate, loading }) {
                 />
                 <CalculatorInput
                   name="monthlyBonusExtra"
-                  label="โบนัส/รายได้เสริมต่อเดือน"
+                  label="โบนัสรายปี"
                   placeholder="60000"
                   value={values.monthlyBonusExtra}
                   error={errors.monthlyBonusExtra}
                   touched={touched.monthlyBonusExtra}
                   setFieldValue={setFieldValue}
                   unit="บาท/ปี"
+                />
+              </CalculatorSection>
+
+              {/* Expense Section */}
+              <CalculatorSection title="รายจ่าย">
+                <CalculatorInput
+                  name="housingCost"
+                  label="ค่าที่พักต่อเดือน"
+                  placeholder="10000"
+                  required={true}
+                  value={values.housingCost}
+                  error={errors.housingCost}
+                  touched={touched.housingCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="transportCost"
+                  label="ค่าเดินทางต่อเดือน"
+                  placeholder="3000"
+                  required={true}
+                  value={values.transportCost}
+                  error={errors.transportCost}
+                  touched={touched.transportCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="debtPayment"
+                  label="หนี้สินขั้นต่ำต่อเดือน"
+                  placeholder="5000"
+                  required={true}
+                  value={values.debtPayment}
+                  error={errors.debtPayment}
+                  touched={touched.debtPayment}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="foodCost"
+                  label="ค่าอาหารต่อเดือน"
+                  placeholder="8000"
+                  required={true}
+                  value={values.foodCost}
+                  error={errors.foodCost}
+                  touched={touched.foodCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="utilitiesCost"
+                  label="ค่าสาธารณูปโภคต่อเดือน"
+                  placeholder="2000"
+                  required={true}
+                  value={values.utilitiesCost}
+                  error={errors.utilitiesCost}
+                  touched={touched.utilitiesCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="insuranceServiceCost"
+                  label="ค่าเบี้ยประกัน/บริการที่จำเป็นต่อเดือน"
+                  placeholder="1000"
+                  required={true}
+                  value={values.insuranceServiceCost}
+                  error={errors.insuranceServiceCost}
+                  touched={touched.insuranceServiceCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="miscCost"
+                  label="ค่าใช้จ่ายเบ็ดเตล็ดและอื่น ๆ"
+                  placeholder="0"
+                  value={values.miscCost}
+                  error={errors.miscCost}
+                  touched={touched.miscCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
                 />
               </CalculatorSection>
 
@@ -312,6 +406,14 @@ export default function DetailedMode({ calculate, loading }) {
                     setFieldValue("provident", "");
                     setFieldValue("parentsHealthInsurance", "");
                     setFieldValue("donation", "");
+                    // Reset expense fields
+                    setFieldValue("housingCost", "");
+                    setFieldValue("transportCost", "");
+                    setFieldValue("debtPayment", "");
+                    setFieldValue("foodCost", "");
+                    setFieldValue("utilitiesCost", "");
+                    setFieldValue("insuranceServiceCost", "");
+                    setFieldValue("miscCost", "");
                   }}
                 >
                   {isResetting ? (

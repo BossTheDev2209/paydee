@@ -28,7 +28,7 @@ export default function SalaryAfterTax() {
       setLoading(false);
     }, 800);
   };
-  
+
   useEffect(() => {
     if (result) {
       setTimeout(() => {
@@ -116,14 +116,16 @@ export default function SalaryAfterTax() {
                   <div className="space-y-6">
                     {/* Conditional Text Animation */}
                     <div className="text-center mb-6">
-                      {result.net_income_month_after_tax > 0 ? (
+                      {(currentMode === "detailed" && result.total_monthly_expenses > 0 ? result.remaining_cash_month : result.net_income_month_after_tax) > 0 ? (
                         <motion.div
                           initial={{ scale: 0.8, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ delay: 0.3, type: "spring" }}
                           className="text-green-600 dark:text-green-400 font-bold text-xl md:text-2xl"
                         >
-                          ยินดีด้วย! คุณมีรายได้สุทธิคงเหลือ
+                          {currentMode === "detailed" && result.total_monthly_expenses > 0
+                            ? "ยินดีด้วย! คุณมีเงินคงเหลือหลังหักค่าใช้จ่าย"
+                            : "ยินดีด้วย! คุณมีรายได้สุทธิคงเหลือ"}
                         </motion.div>
                       ) : (
                         <motion.div
@@ -154,6 +156,47 @@ export default function SalaryAfterTax() {
                         <SlotCounter value={result.net_income_year_after_tax} /> <span className="text-base font-normal text-gray-500">บาท</span>
                       </h2>
                     </div>
+
+                    {/* Show expense and cashflow info only in Detailed Mode with expenses */}
+                    {currentMode === "detailed" && result.total_monthly_expenses > 0 && (
+                      <>
+                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
+                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
+                            ค่าใช้จ่ายรวมต่อเดือน
+                          </h2>
+                          <h2 className="text-xl md:text-2xl font-bold text-orange-500">
+                            <SlotCounter value={result.total_monthly_expenses} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                          </h2>
+                        </div>
+
+                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
+                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
+                            ค่าใช้จ่ายรวมต่อปี
+                          </h2>
+                          <h2 className="text-xl md:text-2xl font-bold text-orange-500">
+                            <SlotCounter value={result.total_yearly_expenses} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                          </h2>
+                        </div>
+
+                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
+                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
+                            เงินคงเหลือต่อเดือน
+                          </h2>
+                          <h2 className={`text-xl md:text-2xl font-bold ${result.remaining_cash_month >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
+                            <SlotCounter value={result.remaining_cash_month} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                          </h2>
+                        </div>
+
+                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
+                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
+                            เงินคงเหลือต่อปี
+                          </h2>
+                          <h2 className={`text-xl md:text-2xl font-bold ${result.remaining_cash_year >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
+                            <SlotCounter value={result.remaining_cash_year} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                          </h2>
+                        </div>
+                      </>
+                    )}
 
                     <div className="flex flex-col md:flex-row justify-between items-center">
                       <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
