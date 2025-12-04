@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { calculateTax } from "../utils/taxCalculator";
+import { calculateTaxQuick } from "../utils/taxQuick";
+import { calculateTaxDetailed } from "../utils/taxDetailed";
 import QuickMode from "./salary-tab/QuickMode";
 import DetailedMode from "./salary-tab/DetailedMode";
 import { Link, useSearchParams } from "react-router-dom";
@@ -21,9 +22,12 @@ export default function SalaryAfterTax() {
 
   const calculate = (values, mode) => {
     setLoading(true);
-    // Simulate API delay for better UX
     setTimeout(() => {
-      const result = calculateTax(values, mode);
+      const result =
+        mode === "detailed"
+          ? calculateTaxDetailed(values)
+          : calculateTaxQuick(values);
+
       setResult(result);
       setLoading(false);
     }, 800);

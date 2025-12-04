@@ -1,0 +1,54 @@
+﻿=== Thai Tax Engine - Method B Sample Calculations ===
+
+--- QUICK MODE ---
+
+Q1: Salary 85,000/mo, No Bonus, Single
+  Annual Income:    1,020,000
+  Taxable Income:   860,000
+  Tax Year:         87,000
+  Net Year:         933,000
+  Net Month:        77,750
+  Effective Rate:   8.53%
+
+Q2: Salary 85,000/mo, Bonus 200,000/yr, Single
+  Annual Income:    1,220,000
+  Taxable Income:   1,060,000
+  Tax Year:         130,000
+  Net Year:         1,090,000
+  Net Month:        90,833.333
+  Effective Rate:   10.66%
+
+Q3: Salary 90,000/mo, SSF 100k, RMF 100k
+  Annual Income:    1,080,000
+  Deductions:       200,000
+  Taxable Income:   720,000
+  Tax Year:         60,500
+  Net Year:         1,019,500
+
+--- DETAILED MODE ---
+
+D1: Salary 85,000/mo, No Bonus (same as Q1)
+  Tax Year:         87,000
+  Net Year:         933,000
+  (Should match Q1)
+
+D2: Salary 90k/mo, Bonus 200k, 1 child, 2 parents, investments, expenses
+  Annual Income:    1,280,000
+  Allowances:       150,000
+  Deductions:       250,000
+  Taxable Income:   780,000
+  Tax Year:         71,000
+  Net Year:         1,209,000
+  Monthly Expenses: 30,000
+  Yearly Expenses:  360,000
+  Cash Year:        849,000
+  Cash Month:       70,750
+
+D3: Salary 75k/mo, High Expenses (negative cash flow expected)
+  Tax Year:         50,000
+  Net Year:         850,000
+  Monthly Expenses: 70,000
+  Cash Month:       833.333
+  (Cash Month should be negative)
+
+=== End of Sample Calculations ===
