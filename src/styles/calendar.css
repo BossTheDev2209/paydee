@@ -1,0 +1,40 @@
+/* src/styles/calendar.css */
+.react-calendar {
+  @apply w-full md:w-1/2 xl:w-1/3 bg-white dark:bg-[#3d3d3d] border-2 border-[#ffcc00] p-2 text-[#3d3d3d] dark:text-[#f2f2f2] text-center flex flex-col justify-around p-4 rounded-lg;
+}
+
+.react-calendar__tile--active {
+  @apply bg-[#add8e6] dark:text-[#3d3d3d] rounded-lg;
+}
+
+.react-calendar__navigation {
+  @apply flex gap-6 text-xl ;
+}
+
+/* .react-calendar__tile--now {
+  @apply ;
+} */
+
+.target-day {
+  @apply bg-[#ffcc00] dark:text-[#3d3d3d] rounded-lg;
+} 
+
+.react-calendar__tile.react-calendar__month-view__days__day {
+  @apply hover:bg-[#f2f1f1] dark:hover:bg-[#353535] rounded-lg p-2;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  @apply p-2;
+}
+
+.react-calendar__tile.react-calendar__year-view__months__month {
+  @apply p-2;
+}
+
+.react-calendar__tile.react-calendar__decade-view__years__year {
+  @apply p-2;
+}
+
+.react-calendar__tile.react-calendar__century-view__decades__decade {
+  @apply p-2;
+}
