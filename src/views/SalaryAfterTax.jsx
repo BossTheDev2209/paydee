@@ -82,8 +82,8 @@ export default function SalaryAfterTax() {
             <button
               onClick={() => handleModeChange("quick")}
               className={`px-8 py-2.5 rounded-full text-sm md:text-base font-bold transition-all duration-300 ${currentMode === "quick"
-                  ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
-                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
+                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 }`}
             >
               Quick
@@ -91,8 +91,8 @@ export default function SalaryAfterTax() {
             <button
               onClick={() => handleModeChange("detailed")}
               className={`px-8 py-2.5 rounded-full text-sm md:text-base font-bold transition-all duration-300 ${currentMode === "detailed"
-                  ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
-                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
+                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 }`}
             >
               Detailed
