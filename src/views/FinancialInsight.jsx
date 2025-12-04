@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { CalculatorCard, CalculatorSection } from "../components/salary/CalculatorComponents";
 import { motion } from "framer-motion";
 import {
     PieChart,
@@ -76,9 +75,6 @@ export default function FinancialInsight() {
         }
     };
 
-    // Pie chart colors
-    const PIE_COLORS = ["#f59e0b", "#10b981", "#3b82f6"];
-
     // Prepare pie chart data
     const getPieData = () => {
         if (!insightData?.numbers) return [];
@@ -88,17 +84,17 @@ export default function FinancialInsight() {
         return [
             { name: "ค่าใช้จ่ายที่จำเป็น", value: needs, color: "#f59e0b" },
             { name: "ความต้องการส่วนตัว", value: wants, color: "#10b981" },
-            { name: "การออม,การลงทุน", value: savings, color: "#3b82f6" }
+            { name: "การออม/การลงทุน", value: savings, color: "#3b82f6" }
         ];
     };
 
     // Prepare bar chart data
     const getBarData = () => {
         return [
-            { name: "การออม\nการลงทุน", เกณฑ์มาตรฐาน: 20, คุณ: Math.max(0, insightData?.numbers?.actual_savings_pct || 0) },
-            { name: "ความต้องการ\nส่วนตัว", เกณฑ์มาตรฐาน: 30, คุณ: 30 },
-            { name: "ภาระหนี้สินต่อ\nรายได้", เกณฑ์มาตรฐาน: 40, คุณ: insightData?.numbers?.debt_to_income_pct || 0 },
-            { name: "ค่าใช้จ่าย\nจำเป็น", เกณฑ์มาตรฐาน: 50, คุณ: insightData?.numbers?.actual_needs_pct || 0 }
+            { name: "การออม", standard: 20, user: Math.max(0, insightData?.numbers?.actual_savings_pct || 0) },
+            { name: "ความต้องการ", standard: 30, user: 30 },
+            { name: "หนี้สิน", standard: 40, user: insightData?.numbers?.debt_to_income_pct || 0 },
+            { name: "ค่าใช้จ่าย", standard: 50, user: insightData?.numbers?.actual_needs_pct || 0 }
         ];
     };
 
@@ -109,24 +105,42 @@ export default function FinancialInsight() {
         return "#ef4444";
     };
 
+    // Use demo data
+    const useDemoData = () => {
+        setInsightData({
+            numbers: {
+                health_score: 65,
+                actual_needs_pct: 68,
+                actual_savings_pct: 12,
+                debt_to_income_pct: 20
+            },
+            panels: {
+                left_panel: "ค่าที่อยู่อาศัยเกินมาตรฐาน 18% ทำให้เงินสำรองลดลง",
+                middle_panel: "การเงินของคุณอยู่ในระดับปานกลาง มีโอกาสปรับปรุงได้",
+                right_panel: "ลองพิจารณาลดค่าใช้จ่ายที่ไม่จำเป็นหรือหารายได้เสริม"
+            }
+        });
+        setError(null);
+    };
+
     return (
         <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">
             {/* Header */}
-            <div className="w-full bg-[#ffcc00] py-8 md:py-12 px-4 shadow-md mb-8">
+            <div className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 py-10 md:py-14 px-4 shadow-lg mb-10">
                 <div className="max-w-7xl mx-auto text-center">
-                    <h1 className="text-3xl md:text-5xl font-bold text-[#2b2b2b] mb-4">
-                        รายงานข้อมูลเชิงลึกทางการเงิน
+                    <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">
+                        🔍 รายงานข้อมูลเชิงลึกทางการเงิน
                     </h1>
-                    <h3 className="text-lg md:text-xl text-[#2b2b2b]/80">
+                    <h3 className="text-lg md:text-xl text-white/80">
                         วิเคราะห์โดย AI
                     </h3>
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-6xl mx-auto px-4 md:px-8">
                 <Link
                     to="/salary-aftertax?mode=detailed"
-                    className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-6"
+                    className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-8"
                 >
                     <i className="fa-solid fa-arrow-left-long mr-2"></i>
                     กลับไปหน้าคำนวณ
@@ -134,23 +148,45 @@ export default function FinancialInsight() {
 
                 {/* Loading State */}
                 {loading && (
-                    <div className="flex flex-col justify-center items-center h-80">
-                        <i className="fa-solid fa-spinner text-[#ffcc00] text-5xl animate-spin mb-4"></i>
-                        <p className="text-gray-500 dark:text-gray-400">กำลังวิเคราะห์ข้อมูลของคุณ...</p>
+                    <div className="flex flex-col justify-center items-center h-80 bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-lg">
+                        <i className="fa-solid fa-spinner text-blue-500 text-6xl animate-spin mb-6"></i>
+                        <p className="text-gray-500 dark:text-gray-400 text-lg">กำลังวิเคราะห์ข้อมูลของคุณ...</p>
+                        <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">อาจใช้เวลา 30-60 วินาที</p>
                     </div>
                 )}
 
                 {/* Error State */}
                 {error && !loading && (
-                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
-                        <i className="fa-solid fa-triangle-exclamation text-red-500 text-4xl mb-4"></i>
-                        <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
-                        <button
-                            onClick={() => navigate("/salary-aftertax?mode=detailed")}
-                            className="bg-[#ffcc00] text-[#2b2b2b] font-bold px-6 py-2 rounded-lg hover:bg-[#e6b800] transition-colors"
-                        >
-                            กลับไปคำนวณ
-                        </button>
+                    <div className="bg-white dark:bg-[#2b2b2b] border-2 border-red-300 dark:border-red-800 rounded-2xl p-8 text-center shadow-lg">
+                        <i className="fa-solid fa-triangle-exclamation text-red-500 text-6xl mb-6"></i>
+                        <p className="text-red-600 dark:text-red-400 text-xl mb-4">{error}</p>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6">
+                            API Server อาจกำลัง Cold Start รอ 30-60 วินาที แล้วลองอีกครั้ง
+                        </p>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                            {expenseData && (
+                                <button
+                                    onClick={fetchFinancialInsight}
+                                    className="px-8 py-3 rounded-xl bg-blue-500 text-white font-bold hover:bg-blue-600 transition-colors text-lg"
+                                >
+                                    <i className="fa-solid fa-rotate-right mr-2"></i>
+                                    ลองอีกครั้ง
+                                </button>
+                            )}
+                            <button
+                                onClick={useDemoData}
+                                className="px-8 py-3 rounded-xl bg-purple-500 text-white font-bold hover:bg-purple-600 transition-colors text-lg"
+                            >
+                                <i className="fa-solid fa-flask mr-2"></i>
+                                ใช้ข้อมูลตัวอย่าง
+                            </button>
+                            <button
+                                onClick={() => navigate("/salary-aftertax?mode=detailed")}
+                                className="px-8 py-3 rounded-xl bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors text-lg"
+                            >
+                                กลับไปคำนวณ
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -160,188 +196,147 @@ export default function FinancialInsight() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                        className="space-y-8"
                     >
-                        {/* Panel 1: Expense Breakdown Pie Chart */}
-                        <div className="bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-lg p-6">
-                            <div className="flex items-center gap-2 mb-4">
-                                <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-white">
-                                    เกิน {Math.round(insightData.numbers?.actual_needs_pct - 50 || 0)}%
+                        {/* Top Row: Score and Pie Chart */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Panel 1: Financial Strength Score */}
+                            <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl shadow-xl p-8">
+                                <h3 className="text-2xl font-bold text-[#2b2b2b] dark:text-white mb-6 text-center">
+                                    💪 ความแข็งแรงทางการเงิน
                                 </h3>
-                            </div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                                ของจำนวนเงินถูกใช้ไปกับ....
-                            </p>
 
-                            <div className="h-48 relative">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie
-                                            data={getPieData()}
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={40}
-                                            outerRadius={70}
-                                            paddingAngle={2}
-                                            dataKey="value"
-                                            label={({ value }) => `${Math.round(value)}%`}
-                                        >
-                                            {getPieData().map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span className="text-xs font-bold text-[#f59e0b]">ค่าใช้จ่าย<br />จำเป็น</span>
-                                </div>
-                            </div>
-
-                            {/* Legend */}
-                            <div className="flex flex-wrap justify-center gap-3 mt-4 text-xs">
-                                {getPieData().map((item, i) => (
-                                    <div key={i} className="flex items-center gap-1">
-                                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></span>
-                                        <span className="text-gray-600 dark:text-gray-300">{item.name}</span>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* LLM Text */}
-                            <div className="mt-4 p-3 bg-gray-50 dark:bg-[#1a1a1a] rounded-lg">
-                                <p className="text-sm text-gray-700 dark:text-gray-300">
-                                    {insightData.panels?.left_panel || "กำลังวิเคราะห์..."}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Panel 2: Financial Strength Score */}
-                        <div className="bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-lg p-6">
-                            <div className="flex items-center gap-2 mb-4">
-                                <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-white">
-                                    ความแข็งแรงทางการเงินของคุณ
-                                </h3>
-                                <i className="fa-solid fa-circle-info text-gray-400 text-sm"></i>
-                            </div>
-
-                            {/* Circular Score */}
-                            <div className="flex justify-center my-6">
-                                <div
-                                    className="relative w-32 h-32 rounded-full flex items-center justify-center"
-                                    style={{
-                                        background: `conic-gradient(${getScoreColor(insightData.numbers?.health_score)} ${(insightData.numbers?.health_score || 0) * 3.6}deg, #e5e7eb 0deg)`
-                                    }}
-                                >
-                                    <div className="w-24 h-24 rounded-full bg-white dark:bg-[#2b2b2b] flex items-center justify-center">
-                                        <span className="text-3xl font-bold" style={{ color: getScoreColor(insightData.numbers?.health_score) }}>
-                                            {Math.round(insightData.numbers?.health_score || 0)}/100
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Metrics */}
-                            <div className="space-y-4">
-                                <div>
-                                    <div className="flex justify-between text-sm mb-1">
-                                        <span className="text-gray-600 dark:text-gray-400">ภาระหนี้สินต่อรายได้</span>
-                                        <i className="fa-solid fa-circle-info text-gray-400 text-xs"></i>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        {[15, 40, 50].map((val, i) => (
-                                            <span key={i} className={`text-xs px-2 py-1 rounded ${(insightData.numbers?.debt_to_income_pct || 0) <= val ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
-                                                }`}>
-                                                {val}%
+                                {/* Circular Score */}
+                                <div className="flex justify-center my-8">
+                                    <div
+                                        className="relative w-48 h-48 rounded-full flex items-center justify-center shadow-lg"
+                                        style={{
+                                            background: `conic-gradient(${getScoreColor(insightData.numbers?.health_score)} ${(insightData.numbers?.health_score || 0) * 3.6}deg, #e5e7eb 0deg)`
+                                        }}
+                                    >
+                                        <div className="w-36 h-36 rounded-full bg-white dark:bg-[#2b2b2b] flex flex-col items-center justify-center shadow-inner">
+                                            <span className="text-5xl font-bold" style={{ color: getScoreColor(insightData.numbers?.health_score) }}>
+                                                {Math.round(insightData.numbers?.health_score || 0)}
                                             </span>
-                                        ))}
+                                            <span className="text-gray-500 text-lg">/100</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div>
-                                    <div className="flex justify-between text-sm mb-1">
-                                        <span className="text-gray-600 dark:text-gray-400">ความสามารถในการสำรองเงิน</span>
-                                        <i className="fa-solid fa-circle-info text-gray-400 text-xs"></i>
-                                    </div>
-                                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                                        <div
-                                            className="h-3 rounded-full transition-all"
-                                            style={{
-                                                width: `${Math.min(100, Math.max(0, insightData.numbers?.actual_savings_pct || 0))}%`,
-                                                backgroundColor: getScoreColor(insightData.numbers?.actual_savings_pct * 3 || 0)
-                                            }}
-                                        ></div>
-                                    </div>
-                                    <div className="flex justify-between text-xs text-gray-400 mt-1">
-                                        <span>น้อยกว่า 1</span>
-                                        <span>มากกว่า 1</span>
-                                        <span>มากกว่า 3-6</span>
-                                    </div>
+                                {/* LLM Text */}
+                                <div className="p-5 bg-gray-50 dark:bg-[#1a1a1a] rounded-xl">
+                                    <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                                        {insightData.panels?.middle_panel || "กำลังวิเคราะห์..."}
+                                    </p>
                                 </div>
                             </div>
 
-                            {/* LLM Text */}
-                            <div className="mt-4 p-3 bg-gray-50 dark:bg-[#1a1a1a] rounded-lg">
-                                <p className="text-sm text-gray-700 dark:text-gray-300">
-                                    {insightData.panels?.middle_panel || "กำลังวิเคราะห์..."}
+                            {/* Panel 2: Expense Breakdown Pie Chart */}
+                            <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl shadow-xl p-8">
+                                <h3 className="text-2xl font-bold text-[#2b2b2b] dark:text-white mb-2 text-center">
+                                    📊 สัดส่วนค่าใช้จ่าย
+                                </h3>
+                                <p className="text-gray-500 dark:text-gray-400 text-center mb-4">
+                                    {insightData.numbers?.actual_needs_pct > 50 && `เกินมาตรฐาน ${Math.round(insightData.numbers?.actual_needs_pct - 50)}%`}
                                 </p>
+
+                                <div className="h-64">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={getPieData()}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius={60}
+                                                outerRadius={100}
+                                                paddingAngle={3}
+                                                dataKey="value"
+                                                label={({ name, value }) => `${Math.round(value)}%`}
+                                            >
+                                                {getPieData().map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `${Math.round(value)}%`} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
+
+                                {/* Legend */}
+                                <div className="flex flex-wrap justify-center gap-6 mt-4">
+                                    {getPieData().map((item, i) => (
+                                        <div key={i} className="flex items-center gap-2">
+                                            <span className="w-4 h-4 rounded-full" style={{ backgroundColor: item.color }}></span>
+                                            <span className="text-gray-600 dark:text-gray-300">{item.name}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* LLM Text */}
+                                <div className="mt-6 p-5 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-800">
+                                    <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                                        {insightData.panels?.left_panel || "กำลังวิเคราะห์..."}
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Panel 3: Income Allocation Bar Chart */}
-                        <div className="bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-lg p-6">
-                            <div className="flex items-center gap-2 mb-4">
-                                <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-white">
-                                    การจัดสรรรายได้โดยรวม
-                                </h3>
-                                <i className="fa-solid fa-circle-info text-gray-400 text-sm"></i>
-                            </div>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                                เทียบกับเกณฑ์มาตรฐานหลักการวางแผนการเงิน
+                        {/* Bottom Row: Bar Chart and Recommendations */}
+                        <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl shadow-xl p-8">
+                            <h3 className="text-2xl font-bold text-[#2b2b2b] dark:text-white mb-2 text-center">
+                                📈 การจัดสรรรายได้เทียบกับเกณฑ์มาตรฐาน
+                            </h3>
+                            <p className="text-gray-500 dark:text-gray-400 text-center mb-6">
+                                เทียบกับหลักการวางแผนการเงิน 50-30-20
                             </p>
 
-                            {/* Recommendation Box */}
-                            <div className="border-2 border-red-400 rounded-lg p-3 mb-4">
-                                <p className="text-red-500 text-xs font-bold mb-1">คำแนะนำ</p>
-                                <p className="text-xs text-gray-700 dark:text-gray-300">
-                                    {insightData.panels?.right_panel || "กำลังวิเคราะห์..."}
-                                </p>
-                            </div>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Bar Chart */}
+                                <div className="h-72">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={getBarData()} barGap={8}>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                            <XAxis dataKey="name" tick={{ fontSize: 14 }} />
+                                            <YAxis tick={{ fontSize: 12 }} domain={[0, 100]} />
+                                            <Tooltip formatter={(value) => `${Math.round(value)}%`} />
+                                            <Legend wrapperStyle={{ fontSize: 14 }} />
+                                            <Bar dataKey="standard" name="เกณฑ์มาตรฐาน" fill="#93c5fd" radius={[6, 6, 0, 0]} />
+                                            <Bar dataKey="user" name="คุณ" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
 
-                            {/* Bar Chart */}
-                            <div className="h-48">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={getBarData()} barGap={2}>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                        <XAxis dataKey="name" tick={{ fontSize: 10 }} interval={0} />
-                                        <YAxis tick={{ fontSize: 10 }} />
-                                        <Tooltip />
-                                        <Legend wrapperStyle={{ fontSize: 12 }} />
-                                        <Bar dataKey="เกณฑ์มาตรฐาน" fill="#93c5fd" radius={[4, 4, 0, 0]} />
-                                        <Bar dataKey="คุณ" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                                    </BarChart>
-                                </ResponsiveContainer>
+                                {/* Recommendation Box */}
+                                <div className="flex flex-col justify-center">
+                                    <div className="border-3 border-blue-400 rounded-2xl p-6 bg-blue-50 dark:bg-blue-900/20">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <span className="text-3xl">💡</span>
+                                            <h4 className="text-xl font-bold text-blue-600 dark:text-blue-400">คำแนะนำจาก AI</h4>
+                                        </div>
+                                        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                                            {insightData.panels?.right_panel || "กำลังวิเคราะห์..."}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                            <Link
+                                to="/"
+                                className="px-8 py-4 rounded-xl bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors text-lg text-center"
+                            >
+                                หน้าแรก
+                            </Link>
+                            <Link
+                                to="/salary-aftertax?mode=detailed"
+                                className="px-8 py-4 rounded-xl bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors text-lg text-center"
+                            >
+                                คำนวณอีกครั้ง
+                            </Link>
                         </div>
                     </motion.div>
-                )}
-
-                {/* Action Buttons */}
-                {!loading && (
-                    <div className="flex justify-center gap-4 mt-8">
-                        <Link
-                            to="/"
-                            className="px-6 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors"
-                        >
-                            หน้าแรก
-                        </Link>
-                        <Link
-                            to="/salary-aftertax?mode=detailed"
-                            className="px-6 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors"
-                        >
-                            คำนวณอีกครั้ง
-                        </Link>
-                    </div>
                 )}
             </div>
         </section>

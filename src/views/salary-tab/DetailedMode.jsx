@@ -21,17 +21,26 @@ export default function DetailedMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
 
+  // Only require salary and housing (most crucial)
   const validationSchema = Yup.object({
     monthlySalary: Yup.string().required("กรุณากรอกข้อมูล"),
     housingCost: Yup.string().required("กรุณากรอกข้อมูล"),
-    transportCost: Yup.string().required("กรุณากรอกข้อมูล"),
-    debtPayment: Yup.string().required("กรุณากรอกข้อมูล"),
-    foodCost: Yup.string().required("กรุณากรอกข้อมูล"),
-    utilitiesCost: Yup.string().required("กรุณากรอกข้อมูล"),
-    insuranceServiceCost: Yup.string().required("กรุณากรอกข้อมูล"),
   });
 
   const savedData = loadData();
+
+  // Mock data for testing
+  const fillMockData = (setFieldValue) => {
+    setFieldValue("monthlySalary", "30,000");
+    setFieldValue("monthlyBonusExtra", "60,000");
+    setFieldValue("housingCost", "7,000");
+    setFieldValue("transportCost", "2,000");
+    setFieldValue("debtPayment", "3,000");
+    setFieldValue("foodCost", "5,000");
+    setFieldValue("utilitiesCost", "1,500");
+    setFieldValue("insuranceServiceCost", "800");
+    setFieldValue("miscCost", "2,000");
+  };
 
   return (
     <div className="w-full mt-10">
@@ -66,6 +75,18 @@ export default function DetailedMode({ calculate, loading }) {
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
+              {/* Mock Data Button for Testing */}
+              <div className="mb-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => fillMockData(setFieldValue)}
+                  className="px-4 py-2 text-sm rounded-lg bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-flask"></i>
+                  เติมข้อมูลตัวอย่าง
+                </button>
+              </div>
+
               {/* Income Section */}
               <CalculatorSection title="รายได้">
                 <CalculatorInput
@@ -109,7 +130,6 @@ export default function DetailedMode({ calculate, loading }) {
                   name="transportCost"
                   label="ค่าเดินทางต่อเดือน"
                   placeholder="3000"
-                  required={true}
                   value={values.transportCost}
                   error={errors.transportCost}
                   touched={touched.transportCost}
@@ -120,7 +140,6 @@ export default function DetailedMode({ calculate, loading }) {
                   name="debtPayment"
                   label="หนี้สินขั้นต่ำต่อเดือน"
                   placeholder="5000"
-                  required={true}
                   value={values.debtPayment}
                   error={errors.debtPayment}
                   touched={touched.debtPayment}
@@ -131,7 +150,6 @@ export default function DetailedMode({ calculate, loading }) {
                   name="foodCost"
                   label="ค่าอาหารต่อเดือน"
                   placeholder="8000"
-                  required={true}
                   value={values.foodCost}
                   error={errors.foodCost}
                   touched={touched.foodCost}
@@ -142,7 +160,6 @@ export default function DetailedMode({ calculate, loading }) {
                   name="utilitiesCost"
                   label="ค่าสาธารณูปโภคต่อเดือน"
                   placeholder="2000"
-                  required={true}
                   value={values.utilitiesCost}
                   error={errors.utilitiesCost}
                   touched={touched.utilitiesCost}
@@ -153,7 +170,6 @@ export default function DetailedMode({ calculate, loading }) {
                   name="insuranceServiceCost"
                   label="ค่าเบี้ยประกัน/บริการที่จำเป็นต่อเดือน"
                   placeholder="1000"
-                  required={true}
                   value={values.insuranceServiceCost}
                   error={errors.insuranceServiceCost}
                   touched={touched.insuranceServiceCost}
