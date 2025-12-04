@@ -38,9 +38,6 @@ export const CalculatorInput = ({
     placeholder,
     required = false,
     unit = "บาท",
-    unitOptions,
-    currentUnit,
-    onUnitChange,
     error,
     touched,
     setFieldValue,
@@ -78,23 +75,9 @@ export const CalculatorInput = ({
                 )}
             </div>
 
-            {unitOptions && onUnitChange ? (
-                <select
-                    value={currentUnit}
-                    onChange={(e) => onUnitChange(e.target.value)}
-                    className="text-[#2b2b2b] dark:text-gray-200 dark:bg-[#2b2b2b] font-medium min-w-[100px] text-right px-2 py-1 rounded border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#ffcc00] hidden md:block"
-                >
-                    {unitOptions.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                        </option>
-                    ))}
-                </select>
-            ) : (
-                <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[30px] text-right hidden md:block">
-                    {unit}
-                </span>
-            )}
+            <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[100px] text-right hidden md:block">
+                {unit}
+            </span>
         </div>
     );
 };

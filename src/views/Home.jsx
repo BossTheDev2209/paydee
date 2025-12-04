@@ -70,7 +70,7 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xl justify-center">
-          <button className="flex items-center justify-center px-6 py-3 bg-[#e0e0e0] dark:bg-[#4a4a4a] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-lg font-medium hover:bg-[#d0d0d0] transition-colors hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 ease-in-out w-full sm:w-auto min-w-[200px]" onClick={() => document.getElementById('calculators')?.scrollIntoView({ behavior: 'smooth' })}>
+          <button className="flex items-center justify-center px-6 py-3 bg-[#e0e0e0] dark:bg-[#4a4a4a] text-[#3d3d3d] dark:text-[#f2f1f1] rounded-lg font-medium hover:bg-[#d0d0d0] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300 ease-in-out w-full sm:w-auto min-w-[200px]" onClick={() => document.getElementById('calculators')?.scrollIntoView({ behavior: 'smooth' })}>
             <span>เลือกเครื่องคำนวณ</span>
           </button>
 
