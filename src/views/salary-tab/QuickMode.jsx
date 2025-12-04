@@ -48,8 +48,8 @@ export default function QuickMode({ calculate, loading }) {
             // Pass monthly values directly to tax engine
             const normalizedValues = {
               ...values,
-              salary: Number(values.salary),
-              expenses: Number(values.expenses)
+              salary: Number(String(values.salary).replace(/,/g, '')),
+              expenses: Number(String(values.expenses).replace(/,/g, ''))
             };
             calculate(normalizedValues, "quick");
           }}
@@ -253,6 +253,9 @@ export default function QuickMode({ calculate, loading }) {
                     setFieldValue("rmfAmount", "");
                     setFieldValue("hasLifeInsurance", false);
                     setFieldValue("lifeInsuranceAmount", "");
+
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
                   {isResetting ? (

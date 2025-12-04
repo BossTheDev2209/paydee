@@ -415,6 +415,9 @@ export default function DetailedMode({ calculate, loading }) {
                     setFieldValue("utilitiesCost", "");
                     setFieldValue("insuranceServiceCost", "");
                     setFieldValue("miscCost", "");
+
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
                   {isResetting ? (

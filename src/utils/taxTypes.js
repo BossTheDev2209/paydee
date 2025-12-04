@@ -24,7 +24,7 @@ export const MAX_SOCIAL_SECURITY_MONTHLY = 750; // สูงสุด 750 บา
 
 export const MAX_LIFE_INSURANCE = 100000;
 export const MAX_PARENT_HEALTH = 15000;
-export const MAX_PROVIDENT_RATE = 0.15; 
+export const MAX_PROVIDENT_RATE = 0.15;
 
 export const MAX_SSF = 200000;
 export const MAX_RMF = 500000;
@@ -33,6 +33,9 @@ export const MAX_RETIREMENT_GROUP = 500000; // กลุ่มเกษียณ
 export const DONATION_RATE_CAP = 0.10;
 
 export function toNumber(val) {
+  if (typeof val === 'string') {
+    val = val.replace(/,/g, '');
+  }
   const num = Number(val);
   return isNaN(num) ? 0 : num;
 }

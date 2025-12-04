@@ -60,9 +60,11 @@ export const CalculatorInput = ({
                     placeholder={placeholder}
                     value={value}
                     onChange={(e) => {
-                        // ตัวกรองค่าเป็นตัวเลข
-                        const val = e.target.value.replace(/[^0-9]/g, "");
-                        setFieldValue(name, val);
+                        // Remove commas and non-digits
+                        const rawValue = e.target.value.replace(/[^0-9]/g, "");
+                        // Format with commas
+                        const formattedVal = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        setFieldValue(name, formattedVal);
                     }}
                     className={cn(
                         "w-full transition-colors duration-300",
