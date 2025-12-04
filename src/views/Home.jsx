@@ -21,7 +21,7 @@ export default function Home() {
       title: "เป้าหมายการออม",
       details: "คำนวณเป้าหมายการออม",
       bgColor: "#867CFF",
-      isAi: true,
+      isAi: false,
       aiIcon: AI
     },
     {

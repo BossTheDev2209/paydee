@@ -1,3 +1,4 @@
+import AIPort from "@/views/AIPort";
 import MainLayout from "../layout/MainLayout";
 import AboutUs from "../views/AboutUs.jsx";
 import Financial from "../views/Financial.jsx";
@@ -17,6 +18,7 @@ const allRoutes = [
       { path: "/financial", element: <Financial /> },
       { path: "/policy", element: <Policy /> },
       { path: "/about-us", element: <AboutUs /> },
+      { path: "/ai-port", element: <AIPort /> },
     ],
   },
 ];
