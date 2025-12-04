@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { calculateTax } from "../utils/taxCalculator";
 import QuickMode from "./salary-tab/QuickMode";
 import DetailedMode from "./salary-tab/DetailedMode";
 import { Link, useSearchParams } from "react-router-dom";
@@ -20,40 +21,12 @@ export default function SalaryAfterTax() {
 
   const calculate = (values, mode) => {
     setLoading(true);
+    // Simulate API delay for better UX
     setTimeout(() => {
-      const salary = Number(values.salary || 0);
-      const expenses = Number(values.expenses || 0);
-      const tax = Number(values.tax || 0);
-      const bonus = Number(values.bonus || 0);
-      const extraIncome = Number(values.extraIncome || 0);
-      const commutingCost = Number(values.commutingCost || 0);
-      const housingCost = Number(values.housingCost || 0);
-      const debt = Number(values.debt || 0);
-      const deduction = Number(values.deduction || 0);
-
-      // quick mode
-      const Qnet = (salary - expenses) * 12;
-
-      // detailed mode
-      const Dnet =
-        (salary +
-          bonus +
-          extraIncome -
-          (commutingCost + housingCost + debt + deduction + expenses)) *
-        12;
-
-      const netTax = mode === "quick" ? (tax / 100) * Qnet : (tax / 100) * Dnet;
-      const netMount =
-        mode === "quick" ? (Qnet - netTax) / 12 : (Dnet - netTax) / 12;
-      const netYearAfterTax = mode === "quick" ? Qnet - netTax : Dnet - netTax;
-
-      setResult({
-        netTax,
-        netMount,
-        netYearAfterTax,
-      });
+      const result = calculateTax(values, mode);
+      setResult(result);
       setLoading(false);
-    });
+    }, 800);
   };
   
   useEffect(() => {
@@ -143,7 +116,7 @@ export default function SalaryAfterTax() {
                   <div className="space-y-6">
                     {/* Conditional Text Animation */}
                     <div className="text-center mb-6">
-                      {result.netMount > 0 ? (
+                      {result.net_income_month_after_tax > 0 ? (
                         <motion.div
                           initial={{ scale: 0.8, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
@@ -169,7 +142,7 @@ export default function SalaryAfterTax() {
                         รายได้สุทธิต่อเดือน
                       </h2>
                       <h2 className="text-2xl md:text-3xl font-bold text-[#2b2b2b] dark:text-[#ffcc00]">
-                        <SlotCounter value={result.netMount} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                        <SlotCounter value={result.net_income_month_after_tax} /> <span className="text-base font-normal text-gray-500">บาท</span>
                       </h2>
                     </div>
 
@@ -178,7 +151,7 @@ export default function SalaryAfterTax() {
                         รายได้สุทธิต่อปี
                       </h2>
                       <h2 className="text-xl md:text-2xl font-bold text-[#2b2b2b] dark:text-white">
-                        <SlotCounter value={result.netYearAfterTax} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                        <SlotCounter value={result.net_income_year_after_tax} /> <span className="text-base font-normal text-gray-500">บาท</span>
                       </h2>
                     </div>
 
@@ -187,7 +160,7 @@ export default function SalaryAfterTax() {
                         ภาษีต่อปี
                       </h2>
                       <h2 className="text-xl md:text-2xl font-bold text-red-500">
-                        <SlotCounter value={result.netTax} /> <span className="text-base font-normal text-gray-500">บาท</span>
+                        <SlotCounter value={result.tax_year} /> <span className="text-base font-normal text-gray-500">บาท</span>
                       </h2>
                     </div>
                   </div>

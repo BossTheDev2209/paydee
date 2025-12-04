@@ -19,6 +19,18 @@ function loadData() {
 export default function DetailedMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
+  
+  // Unit states for all fields
+  const [units, setUnits] = useState({
+    monthlySalary: "month",
+    monthlyBonusExtra: "month",
+    lifeInsurance: "year",
+    ssf: "year",
+    rmf: "year",
+    provident: "year",
+    parentsHealthInsurance: "year",
+    donation: "year"
+  });
 
   const validationSchema = Yup.object({
     monthlySalary: Yup.string().required("กรุณากรอกข้อมูล"),
@@ -26,10 +38,14 @@ export default function DetailedMode({ calculate, loading }) {
 
   const savedData = loadData();
 
-  const incomeFields = [
-    { name: "monthlySalary", label: "เงินเดือนต่อเดือน", placeholder: "30000", required: true },
-    { name: "monthlyBonusExtra", label: "โบนัส/รายได้เสริมต่อเดือน", placeholder: "5000" },
+  const unitOptions = [
+    { value: "month", label: "บาท/เดือน" },
+    { value: "year", label: "บาท/ปี" }
   ];
+
+  const handleUnitChange = (field, value) => {
+    setUnits(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div className="w-full mt-10">
@@ -50,24 +66,51 @@ export default function DetailedMode({ calculate, loading }) {
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            calculate(values, "detailed");
+            // Normalize all values to annual
+            const normalizedValues = {
+              ...values,
+              monthlySalary: units.monthlySalary === "month" ? Number(values.monthlySalary) * 12 : Number(values.monthlySalary),
+              monthlyBonusExtra: units.monthlyBonusExtra === "month" ? Number(values.monthlyBonusExtra) * 12 : Number(values.monthlyBonusExtra),
+              lifeInsurance: units.lifeInsurance === "month" ? Number(values.lifeInsurance) * 12 : Number(values.lifeInsurance),
+              ssf: units.ssf === "month" ? Number(values.ssf) * 12 : Number(values.ssf),
+              rmf: units.rmf === "month" ? Number(values.rmf) * 12 : Number(values.rmf),
+              provident: units.provident === "month" ? Number(values.provident) * 12 : Number(values.provident),
+              parentsHealthInsurance: units.parentsHealthInsurance === "month" ? Number(values.parentsHealthInsurance) * 12 : Number(values.parentsHealthInsurance),
+              donation: units.donation === "month" ? Number(values.donation) * 12 : Number(values.donation)
+            };
+            calculate(normalizedValues, "detailed");
           }}
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
               {/* Income Section */}
               <CalculatorSection title="รายได้">
-                {incomeFields.map((field) => (
-                  <CalculatorInput
-                    key={field.name}
-                    {...field}
-                    value={values[field.name]}
-                    error={errors[field.name]}
-                    touched={touched[field.name]}
-                    setFieldValue={setFieldValue}
-                    savedValue={savedData?.[field.name]}
-                  />
-                ))}
+                <CalculatorInput
+                  name="monthlySalary"
+                  label="เงินเดือนต่อเดือน"
+                  placeholder={units.monthlySalary === "month" ? "30000" : "360000"}
+                  required={true}
+                  value={values.monthlySalary}
+                  error={errors.monthlySalary}
+                  touched={touched.monthlySalary}
+                  setFieldValue={setFieldValue}
+                  savedValue={savedData?.salary}
+                  unitOptions={unitOptions}
+                  currentUnit={units.monthlySalary}
+                  onUnitChange={(val) => handleUnitChange("monthlySalary", val)}
+                />
+                <CalculatorInput
+                  name="monthlyBonusExtra"
+                  label="โบนัส/รายได้เสริมต่อเดือน"
+                  placeholder={units.monthlyBonusExtra === "month" ? "5000" : "60000"}
+                  value={values.monthlyBonusExtra}
+                  error={errors.monthlyBonusExtra}
+                  touched={touched.monthlyBonusExtra}
+                  setFieldValue={setFieldValue}
+                  unitOptions={unitOptions}
+                  currentUnit={units.monthlyBonusExtra}
+                  onUnitChange={(val) => handleUnitChange("monthlyBonusExtra", val)}
+                />
               </CalculatorSection>
 
               {/* Tax Deduction Section */}
@@ -160,160 +203,130 @@ export default function DetailedMode({ calculate, loading }) {
                   </p>
 
                   {/* Life Insurance */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      ประกันชีวิต
-                      <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
-                        (≤ 100,000)
-                      </span>
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="lifeInsurance"
-                        name="lifeInsurance"
-                        placeholder="0"
-                        value={values.lifeInsurance}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("lifeInsurance", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[60px] text-right hidden md:block">
-                      บาท/ปี
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="lifeInsurance"
+                    label={
+                      <>
+                        ประกันชีวิต
+                        <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
+                          (≤ 100,000)
+                        </span>
+                      </>
+                    }
+                    placeholder={units.lifeInsurance === "month" ? "0" : "0"}
+                    value={values.lifeInsurance}
+                    error={errors.lifeInsurance}
+                    touched={touched.lifeInsurance}
+                    setFieldValue={setFieldValue}
+                    unitOptions={unitOptions}
+                    currentUnit={units.lifeInsurance}
+                    onUnitChange={(val) => handleUnitChange("lifeInsurance", val)}
+                  />
 
                   {/* SSF */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      SSF
-                      <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
-                        (≤ 200,000 และ ≤ 30% รายได้)
-                      </span>
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="ssf"
-                        name="ssf"
-                        placeholder="0"
-                        value={values.ssf}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("ssf", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[60px] text-right hidden md:block">
-                      บาท/ปี
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="ssf"
+                    label={
+                      <>
+                        SSF
+                        <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
+                          (≤ 200,000 และ ≤ 30% รายได้)
+                        </span>
+                      </>
+                    }
+                    placeholder={units.ssf === "month" ? "0" : "0"}
+                    value={values.ssf}
+                    error={errors.ssf}
+                    touched={touched.ssf}
+                    setFieldValue={setFieldValue}
+                    unitOptions={unitOptions}
+                    currentUnit={units.ssf}
+                    onUnitChange={(val) => handleUnitChange("ssf", val)}
+                  />
 
                   {/* RMF */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      RMF
-                      <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
-                        (≤ 500,000 และ ≤ 30% รายได้)
-                      </span>
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="rmf"
-                        name="rmf"
-                        placeholder="0"
-                        value={values.rmf}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("rmf", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[60px] text-right hidden md:block">
-                      บาท/ปี
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="rmf"
+                    label={
+                      <>
+                        RMF
+                        <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
+                          (≤ 500,000 และ ≤ 30% รายได้)
+                        </span>
+                      </>
+                    }
+                    placeholder={units.rmf === "month" ? "0" : "0"}
+                    value={values.rmf}
+                    error={errors.rmf}
+                    touched={touched.rmf}
+                    setFieldValue={setFieldValue}
+                    unitOptions={unitOptions}
+                    currentUnit={units.rmf}
+                    onUnitChange={(val) => handleUnitChange("rmf", val)}
+                  />
 
                   {/* Provident Fund */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      Provident fund / กบข.
-                      <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
-                        (≤ 15% รายได้)
-                      </span>
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="provident"
-                        name="provident"
-                        placeholder="0"
-                        value={values.provident}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("provident", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[60px] text-right hidden md:block">
-                      บาท/ปี
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="provident"
+                    label={
+                      <>
+                        Provident fund / กบข.
+                        <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
+                          (≤ 15% รายได้)
+                        </span>
+                      </>
+                    }
+                    placeholder={units.provident === "month" ? "0" : "0"}
+                    value={values.provident}
+                    error={errors.provident}
+                    touched={touched.provident}
+                    setFieldValue={setFieldValue}
+                    unitOptions={unitOptions}
+                    currentUnit={units.provident}
+                    onUnitChange={(val) => handleUnitChange("provident", val)}
+                  />
 
                   {/* Parent Health Insurance */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      ประกันสุขภาพพ่อแม่
-                      <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
-                        (≤ 100,000)
-                      </span>
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="parentsHealthInsurance"
-                        name="parentsHealthInsurance"
-                        placeholder="0"
-                        value={values.parentsHealthInsurance}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("parentsHealthInsurance", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[60px] text-right hidden md:block">
-                      บาท/ปี
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="parentsHealthInsurance"
+                    label={
+                      <>
+                        ประกันสุขภาพพ่อแม่
+                        <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
+                          (≤ 100,000)
+                        </span>
+                      </>
+                    }
+                    placeholder={units.parentsHealthInsurance === "month" ? "0" : "0"}
+                    value={values.parentsHealthInsurance}
+                    error={errors.parentsHealthInsurance}
+                    touched={touched.parentsHealthInsurance}
+                    setFieldValue={setFieldValue}
+                    unitOptions={unitOptions}
+                    currentUnit={units.parentsHealthInsurance}
+                    onUnitChange={(val) => handleUnitChange("parentsHealthInsurance", val)}
+                  />
 
                   {/* Donation */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      เงินบริจาค
-                      <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
-                        (≤ 10% ของรายได้สุทธิ)
-                      </span>
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="donation"
-                        name="donation"
-                        placeholder="0"
-                        value={values.donation}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("donation", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[60px] text-right hidden md:block">
-                      บาท/ปี
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="donation"
+                    label={
+                      <>
+                        เงินบริจาค
+                        <span className="block text-xs text-gray-500 dark:text-gray-400 font-normal mt-0.5">
+                          (≤ 10% ของรายได้สุทธิ)
+                        </span>
+                      </>
+                    }
+                    placeholder={units.donation === "month" ? "0" : "0"}
+                    value={values.donation}
+                    error={errors.donation}
+                    touched={touched.donation}
+                    setFieldValue={setFieldValue}
+                    unitOptions={unitOptions}
+                    currentUnit={units.donation}
+                    onUnitChange={(val) => handleUnitChange("donation", val)}
+                  />
                 </div>
               </CalculatorSection>
 

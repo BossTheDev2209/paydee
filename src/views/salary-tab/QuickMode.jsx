@@ -19,15 +19,17 @@ function loadData() {
 export default function QuickMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
+  const [salaryUnit, setSalaryUnit] = useState("month");
+  
   const validationSchema = Yup.object({
     salary: Yup.string().required("กรุณากรอกข้อมูล"),
   });
 
   const savedData = loadData();
 
-  const quickModeFields = [
-    { name: "salary", label: "รายได้ต่อเดือน", placeholder: "30000", required: true },
-    { name: "expenses", label: "ค่าใช้จ่ายต่อเดือน", placeholder: "30000" },
+  const unitOptions = [
+    { value: "month", label: "บาท/เดือน" },
+    { value: "year", label: "บาท/ปี" }
   ];
 
   return (
@@ -49,23 +51,42 @@ export default function QuickMode({ calculate, loading }) {
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            calculate(values, "quick");
+            // Normalize values to annual before sending to calculator
+            const normalizedValues = {
+              ...values,
+              salary: salaryUnit === "month" ? Number(values.salary) * 12 : Number(values.salary)
+            };
+            calculate(normalizedValues, "quick");
           }}
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
               <CalculatorSection>
-                {quickModeFields.map((field) => (
-                  <CalculatorInput
-                    key={field.name}
-                    {...field}
-                    value={values[field.name]}
-                    error={errors[field.name]}
-                    touched={touched[field.name]}
-                    setFieldValue={setFieldValue}
-                    savedValue={savedData?.[field.name]}
-                  />
-                ))}
+                <CalculatorInput
+                  name="salary"
+                  label="รายได้ต่อเดือน"
+                  placeholder={salaryUnit === "month" ? "30000" : "360000"}
+                  required={true}
+                  value={values.salary}
+                  error={errors.salary}
+                  touched={touched.salary}
+                  setFieldValue={setFieldValue}
+                  savedValue={savedData?.salary}
+                  unitOptions={unitOptions}
+                  currentUnit={salaryUnit}
+                  onUnitChange={setSalaryUnit}
+                />
+                <CalculatorInput
+                  name="expenses"
+                  label="ค่าใช้จ่ายต่อเดือน"
+                  placeholder="30000"
+                  value={values.expenses}
+                  error={errors.expenses}
+                  touched={touched.expenses}
+                  setFieldValue={setFieldValue}
+                  savedValue={savedData?.expenses}
+                  unit="บาท"
+                />
               </CalculatorSection>
 
               {/* Tax Deduction Section */}
