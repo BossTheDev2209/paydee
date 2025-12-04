@@ -17,23 +17,39 @@ export default function CalculatorCarousel({ items }) {
     const lastScrollTime = React.useRef(0);
     const COOLDOWN = 500; // ms
 
-    const handleWheel = React.useCallback((e) => {
-        if (!api) return
+    // Use a ref for the container to attach native event listener
+    const containerRef = React.useRef(null);
 
-        const now = Date.now();
-        if (now - lastScrollTime.current < COOLDOWN) return;
+    React.useEffect(() => {
+        const container = containerRef.current;
+        if (!container || !api) return;
 
-        if (e.deltaY > 0) {
-            api.scrollNext()
-            lastScrollTime.current = now;
-        } else if (e.deltaY < 0) {
-            api.scrollPrev()
-            lastScrollTime.current = now;
-        }
-    }, [api])
+        const onWheel = (e) => {
+            // Prevent default page scroll
+            e.preventDefault();
+
+            const now = Date.now();
+            if (now - lastScrollTime.current < COOLDOWN) return;
+
+            if (e.deltaY > 0) {
+                api.scrollNext();
+                lastScrollTime.current = now;
+            } else if (e.deltaY < 0) {
+                api.scrollPrev();
+                lastScrollTime.current = now;
+            }
+        };
+
+        // Add non-passive event listener to allow preventing default
+        container.addEventListener('wheel', onWheel, { passive: false });
+
+        return () => {
+            container.removeEventListener('wheel', onWheel);
+        };
+    }, [api]);
 
     return (
-        <div className="w-full px-8 md:px-12" onWheel={handleWheel}>
+        <div ref={containerRef} className="w-full px-8 md:px-12">
             <Carousel
                 setApi={setApi}
                 plugins={[plugin.current]}
