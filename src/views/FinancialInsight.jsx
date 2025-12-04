@@ -129,7 +129,7 @@ export default function FinancialInsight() {
             <div className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 py-10 md:py-14 px-4 shadow-lg mb-10">
                 <div className="max-w-7xl mx-auto text-center">
                     <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">
-                        🔍 รายงานข้อมูลเชิงลึกทางการเงิน
+                        รายงานข้อมูลเชิงลึกทางการเงิน
                     </h1>
                     <h3 className="text-lg md:text-xl text-white/80">
                         วิเคราะห์โดย AI
@@ -203,7 +203,7 @@ export default function FinancialInsight() {
                             {/* Panel 1: Financial Strength Score */}
                             <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl shadow-xl p-8">
                                 <h3 className="text-2xl font-bold text-[#2b2b2b] dark:text-white mb-6 text-center">
-                                    💪 ความแข็งแรงทางการเงิน
+                                    ความแข็งแรงทางการเงิน
                                 </h3>
 
                                 {/* Circular Score */}
@@ -234,7 +234,7 @@ export default function FinancialInsight() {
                             {/* Panel 2: Expense Breakdown Pie Chart */}
                             <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl shadow-xl p-8">
                                 <h3 className="text-2xl font-bold text-[#2b2b2b] dark:text-white mb-2 text-center">
-                                    📊 สัดส่วนค่าใช้จ่าย
+                                    สัดส่วนค่าใช้จ่าย
                                 </h3>
                                 <p className="text-gray-500 dark:text-gray-400 text-center mb-4">
                                     {insightData.numbers?.actual_needs_pct > 50 && `เกินมาตรฐาน ${Math.round(insightData.numbers?.actual_needs_pct - 50)}%`}
@@ -284,7 +284,7 @@ export default function FinancialInsight() {
                         {/* Bottom Row: Bar Chart and Recommendations */}
                         <div className="bg-white dark:bg-[#2b2b2b] rounded-3xl shadow-xl p-8">
                             <h3 className="text-2xl font-bold text-[#2b2b2b] dark:text-white mb-2 text-center">
-                                📈 การจัดสรรรายได้เทียบกับเกณฑ์มาตรฐาน
+                                การจัดสรรรายได้เทียบกับเกณฑ์มาตรฐาน
                             </h3>
                             <p className="text-gray-500 dark:text-gray-400 text-center mb-6">
                                 เทียบกับหลักการวางแผนการเงิน 50-30-20
@@ -310,7 +310,7 @@ export default function FinancialInsight() {
                                 <div className="flex flex-col justify-center">
                                     <div className="border-3 border-blue-400 rounded-2xl p-6 bg-blue-50 dark:bg-blue-900/20">
                                         <div className="flex items-center gap-3 mb-4">
-                                            <span className="text-3xl">💡</span>
+                                            <img src="/images/Ai_icon.png" alt="AI" className="w-8 h-8" />
                                             <h4 className="text-xl font-bold text-blue-600 dark:text-blue-400">คำแนะนำจาก AI</h4>
                                         </div>
                                         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">

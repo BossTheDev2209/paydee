@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,24 @@ function loadData() {
 export default function QuickMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
+  const formRef = useRef(null);
+
+  // Global Enter key to submit form
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        // Don't submit if in a textarea
+        if (e.target.tagName === "TEXTAREA") return;
+
+        if (formRef.current) {
+          e.preventDefault();
+          formRef.current.submitForm();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const validationSchema = Yup.object({
     salary: Yup.string().required("กรุณากรอกข้อมูล"),
@@ -44,6 +62,7 @@ export default function QuickMode({ calculate, loading }) {
             lifeInsuranceAmount: "",
           }}
           validationSchema={validationSchema}
+          innerRef={formRef}
           onSubmit={(values) => {
             // Pass monthly values directly to tax engine
             const normalizedValues = {

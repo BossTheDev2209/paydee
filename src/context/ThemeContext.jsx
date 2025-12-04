@@ -21,6 +21,18 @@ export function ThemeProvider({ children }) {
     }
   }, [isDark]);
 
+  // Ctrl+F shortcut for theme switching
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.key === "f") {
+        e.preventDefault(); // Prevent browser find
+        setIsDark(prev => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const toggleTheme = () => setIsDark(!isDark);
 
   return (

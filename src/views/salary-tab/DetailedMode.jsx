@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,24 @@ function loadData() {
 export default function DetailedMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
+  const formRef = useRef(null);
+
+  // Global Enter key to submit form
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        // Don't submit if in a textarea
+        if (e.target.tagName === "TEXTAREA") return;
+
+        if (formRef.current) {
+          e.preventDefault();
+          formRef.current.submitForm();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Only require salary and housing (most crucial)
   const validationSchema = Yup.object({
@@ -68,6 +86,7 @@ export default function DetailedMode({ calculate, loading }) {
             miscCost: "",
           }}
           validationSchema={validationSchema}
+          innerRef={formRef}
           onSubmit={(values) => {
             // All values are already annual in Detailed Mode, no normalization needed
             calculate(values, "detailed");
