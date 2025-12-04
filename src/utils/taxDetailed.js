@@ -35,8 +35,8 @@ function calculateProgressiveTax(taxableIncome) {
 
 export function calculateTaxDetailed(values = {}) {
   // 1. รายได้ (Detailed Mode ส่งมาเป็นรายปีตาม UI หรือรายเดือน)
-  const salaryMonth = toNumber(values.monthlySalary ?? values.salaryMonth ?? 0); // จาก input name="monthlySalary"
-  const bonusYear = toNumber(values.monthlyBonusExtra ?? values.bonusYear ?? 0); // จาก input name="monthlyBonusExtra"
+  const salaryMonth = toNumber(values.monthlySalary ?? values.salaryMonth ?? 0);
+  const bonusYear = toNumber(values.monthlyBonusExtra ?? values.bonusYear ?? 0);
 
   const baseIncome = salaryMonth * 12;
   const annualIncome = baseIncome + bonusYear;
@@ -83,15 +83,15 @@ export function calculateTaxDetailed(values = {}) {
   const netYear = annualIncome - taxYear;
 
   // 7. Cash Flow (Expenses)
-  const monthlyExpenses =
-    toNumber(values.housingCost) +
-    toNumber(values.transportCost) +
-    toNumber(values.debtPayment) +
-    toNumber(values.foodCost) +
-    toNumber(values.utilitiesCost) +
-    toNumber(values.insuranceServiceCost) +
-    toNumber(values.miscCost);
+  const housingCost = toNumber(values.housingCost);
+  const transportCost = toNumber(values.transportCost);
+  const debtPayment = toNumber(values.debtPayment);
+  const foodCost = toNumber(values.foodCost);
+  const utilitiesCost = toNumber(values.utilitiesCost);
+  const insuranceServiceCost = toNumber(values.insuranceServiceCost);
+  const miscCost = toNumber(values.miscCost);
 
+  const monthlyExpenses = housingCost + transportCost + debtPayment + foodCost + utilitiesCost + insuranceServiceCost + miscCost;
   const yearlyExpenses = monthlyExpenses * 12;
   const remainingCashYear = netYear - yearlyExpenses;
 
@@ -111,6 +111,15 @@ export function calculateTaxDetailed(values = {}) {
     total_monthly_expenses: monthlyExpenses,
     total_yearly_expenses: yearlyExpenses,
     remaining_cash_year: remainingCashYear,
-    remaining_cash_month: remainingCashYear / 12
+    remaining_cash_month: remainingCashYear / 12,
+
+    // Individual expense breakdown for Financial Insight API
+    housingCost,
+    transportCost,
+    debtPayment,
+    foodCost,
+    utilitiesCost,
+    insuranceServiceCost,
+    miscCost
   };
 }

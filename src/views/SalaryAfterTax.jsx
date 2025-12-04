@@ -210,6 +210,55 @@ export default function SalaryAfterTax() {
                         <SlotCounter value={result.tax_year} /> <span className="text-base font-normal text-gray-500">บาท</span>
                       </h2>
                     </div>
+
+                    {/* Action Buttons - Only show in Detailed Mode with expenses */}
+                    {currentMode === "detailed" && result.total_monthly_expenses > 0 && (
+                      <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
+                        <Link
+                          to="/"
+                          className="px-6 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors text-center"
+                        >
+                          หน้าแรก
+                        </Link>
+                        <Link
+                          to="/financial-insight"
+                          state={{
+                            expenseData: {
+                              net_income_month_after_tax: result.net_income_month_after_tax,
+                              housingCost: Number(String(result.housingCost || 0).replace(/,/g, '')),
+                              transportCost: Number(String(result.transportCost || 0).replace(/,/g, '')),
+                              debtPayment: Number(String(result.debtPayment || 0).replace(/,/g, '')),
+                              foodCost: Number(String(result.foodCost || 0).replace(/,/g, '')),
+                              utilitiesCost: Number(String(result.utilitiesCost || 0).replace(/,/g, '')),
+                              insuranceServiceCost: Number(String(result.insuranceServiceCost || 0).replace(/,/g, '')),
+                              miscCost: Number(String(result.miscCost || 0).replace(/,/g, ''))
+                            }
+                          }}
+                          className="relative px-6 py-3 rounded-lg font-bold text-center transition-all duration-300 overflow-hidden group"
+                          style={{
+                            background: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #8b5cf6 100%)"
+                          }}
+                        >
+                          <span className="relative z-10 text-white flex items-center justify-center gap-2">
+                            แนะนำด้วย AI
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2L9 9H2l5.5 4.5L5 22l7-5 7 5-2.5-8.5L22 9h-7L12 2z" />
+                            </svg>
+                          </span>
+                          <span className="absolute top-1 right-2 text-white/60 text-lg">✦</span>
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setResult(null);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="px-6 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors text-center"
+                        >
+                          คำนวณอีกครั้ง
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </CalculatorCard>
