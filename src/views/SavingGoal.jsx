@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QuickMode from "./saving-goal-tab/QuickMode";
 import DetailedMode from "./saving-goal-tab/DetailedMode";
 import { Link, useSearchParams } from "react-router-dom";
@@ -125,6 +125,14 @@ export default function SavingGoal() {
       setLoading(false);
     });
   };
+  
+  useEffect(() => {
+    if (result) {
+      setTimeout(() => {
+        document.getElementById('result')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [result]);
 
   return (
     <section className="w-full">
@@ -171,17 +179,19 @@ export default function SavingGoal() {
             <QuickMode
               key="quick"
               calculate={calculate}
+              loading={loading}
             // switchMode={() => setMode("detailed")}
             />
           ) : (
             <DetailedMode
               key="detailed"
               calculate={calculate}
+              loading={loading}
             // switchMode={() => setMode("quick")}
             />
           )}
 
-          <div className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
+          <div id="result" className="w-full p-4 bg-[#fdfdfd] dark:bg-[#202121] transition-colors duration-300 rounded-lg mt-10">
             <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center mb-4">
               ผลลัพธ์
             </h1>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -16,8 +16,9 @@ function loadData() {
   }
 }
 
-export default function DetailedMode({ calculate }) {
+export default function DetailedMode({ calculate, loading }) {
   const navigate = useNavigate();
+  const [isResetting, setIsResetting] = useState(false);
 
   const validationSchema = Yup.object({
     monthlySalary: Yup.string().required("กรุณากรอกข้อมูล"),
@@ -319,15 +320,22 @@ export default function DetailedMode({ calculate }) {
               <div className="mt-8 w-full justify-between flex gap-4">
                 <button
                   type="button"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-300 transition-colors"
+                  className="w-full md:w-1/3 py-3 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-300 transition-colors active:scale-95 duration-200"
                   onClick={() => navigate("/")}
                 >
                   กลับ
                 </button>
                 <button
                   type="reset"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-red-100 text-red-600 font-bold hover:bg-red-200 transition-colors"
+                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${
+                    isResetting 
+                      ? "bg-green-100 text-green-600" 
+                      : "bg-red-100 text-red-600 hover:bg-red-200"
+                  }`}
                   onClick={() => {
+                    setIsResetting(true);
+                    setTimeout(() => setIsResetting(false), 1000);
+
                     // Reset form values
                     setFieldValue("monthlySalary", "");
                     setFieldValue("monthlyBonusExtra", "");
@@ -342,13 +350,32 @@ export default function DetailedMode({ calculate }) {
                     setFieldValue("donation", "");
                   }}
                 >
-                  รีเซต
+                  {isResetting ? (
+                    <>
+                      <i className="fa-solid fa-check mr-2"></i>
+                      เรียบร้อย
+                    </>
+                  ) : (
+                    "รีเซต"
+                  )}
                 </button>
                 <button
                   type="submit"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors shadow-md"
+                  disabled={loading}
+                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${
+                    loading 
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
+                      : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
+                  }`}
                 >
-                  คำนวณ
+                  {loading ? (
+                    <>
+                      <i className="fa-solid fa-spinner animate-spin"></i>
+                      กำลังคำนวณ...
+                    </>
+                  ) : (
+                    "คำนวณ"
+                  )}
                 </button>
               </div>
             </Form>

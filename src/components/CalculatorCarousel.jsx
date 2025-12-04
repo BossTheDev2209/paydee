@@ -13,10 +13,29 @@ export default function CalculatorCarousel({ items }) {
     const plugin = React.useRef(
         Autoplay({ delay: 4000, stopOnInteraction: false })
     )
+    const [api, setApi] = React.useState()
+    const lastScrollTime = React.useRef(0);
+    const COOLDOWN = 500; // ms
+
+    const handleWheel = React.useCallback((e) => {
+        if (!api) return
+
+        const now = Date.now();
+        if (now - lastScrollTime.current < COOLDOWN) return;
+
+        if (e.deltaY > 0) {
+            api.scrollNext()
+            lastScrollTime.current = now;
+        } else if (e.deltaY < 0) {
+            api.scrollPrev()
+            lastScrollTime.current = now;
+        }
+    }, [api])
 
     return (
-        <div className="w-full px-8 md:px-12">
+        <div className="w-full px-8 md:px-12" onWheel={handleWheel}>
             <Carousel
+                setApi={setApi}
                 plugins={[plugin.current]}
                 className="w-full"
                 onMouseEnter={plugin.current.stop}

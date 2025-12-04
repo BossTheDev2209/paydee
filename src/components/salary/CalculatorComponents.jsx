@@ -2,9 +2,9 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
 
-export const CalculatorCard = ({ title, children, className }) => {
+export const CalculatorCard = ({ title, children, className, ...props }) => {
     return (
-        <div className={cn("w-full rounded-2xl shadow-lg bg-white dark:bg-[#2b2b2b]", className)}>
+        <div className={cn("w-full rounded-2xl shadow-lg bg-white dark:bg-[#2b2b2b]", className)} {...props}>
             <div className="bg-[#ffcc00] py-3 px-6 text-center rounded-t-2xl">
                 <h2 className="text-xl md:text-2xl font-bold text-[#2b2b2b]">{title}</h2>
             </div>

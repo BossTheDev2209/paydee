@@ -13,9 +13,10 @@ function loadData() {
   }
 }
 
-export default function DetailedMode({ calculate, switchMode }) {
+export default function DetailedMode({ calculate, switchMode, loading }) {
   const navigate = useNavigate();
   const savedData = loadData();
+  const [isResetting, setIsResetting] = useState(false);
 
   return (
     <div className="w-full">
@@ -222,17 +223,59 @@ export default function DetailedMode({ calculate, switchMode }) {
               <div className="mt-8 w-full justify-between pad-main flex gap-2">
                 <button
                   type="button"
-                  className="w-4/12 btn-base bg-[#f2f1f1]"
+                  className="w-4/12 btn-base bg-[#f2f1f1] active:scale-95 duration-200"
                   onClick={() => navigate("/")}
                 >
                   กลับ
                 </button>
                 <button
+                  type="reset"
+                  className={`w-4/12 btn-base transition-all duration-200 active:scale-95 ${
+                    isResetting 
+                      ? "bg-green-100 text-green-600" 
+                      : "bg-red-100 text-red-600 hover:bg-red-200"
+                  }`}
+                  onClick={() => {
+                    setIsResetting(true);
+                    setTimeout(() => setIsResetting(false), 1000);
+                    
+                    setFieldValue("target", "");
+                    setFieldValue("saving", "");
+                    setFieldValue("amount", "");
+                    setFieldValue("frequency", "day");
+                    setFieldValue("salary", "");
+                    setFieldValue("increase", "");
+                    setFieldValue("bonus", "");
+                    setFieldValue("extraIncome", "");
+                  }}
+                >
+                  {isResetting ? (
+                    <>
+                      <i className="fa-solid fa-check mr-2"></i>
+                      เรียบร้อย
+                    </>
+                  ) : (
+                    "รีเซต"
+                  )}
+                </button>
+                <button
                   type="button"
-                  className="w-4/12 btn-base bg-[#ffcc00]"
+                  disabled={loading}
+                  className={`w-4/12 btn-base transition-all duration-200 flex justify-center items-center gap-2 ${
+                    loading 
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
+                      : "bg-[#ffcc00] active:scale-95"
+                  }`}
                   onClick={() => calculate(values, "detailed")}
                 >
-                  คำนวณ
+                  {loading ? (
+                    <>
+                      <i className="fa-solid fa-spinner animate-spin"></i>
+                      กำลังคำนวณ...
+                    </>
+                  ) : (
+                    "คำนวณ"
+                  )}
                 </button>
               </div>
             </Form>

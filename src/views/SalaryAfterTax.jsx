@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QuickMode from "./salary-tab/QuickMode";
 import DetailedMode from "./salary-tab/DetailedMode";
 import { Link, useSearchParams } from "react-router-dom";
@@ -55,6 +55,14 @@ export default function SalaryAfterTax() {
       setLoading(false);
     });
   };
+  
+  useEffect(() => {
+    if (result) {
+      setTimeout(() => {
+        document.getElementById('result')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [result]);
 
   return (
     <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">
@@ -106,11 +114,13 @@ export default function SalaryAfterTax() {
             <QuickMode
               key="quick"
               calculate={(values) => calculate(values, "quick")}
+              loading={loading}
             />
           ) : (
             <DetailedMode
               key="detailed"
               calculate={(values) => calculate(values, "detailed")}
+              loading={loading}
             />
           )}
         </div>
@@ -124,7 +134,7 @@ export default function SalaryAfterTax() {
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <CalculatorCard title="ผลลัพธ์">
+              <CalculatorCard title="ผลลัพธ์" id="result">
                 {loading ? (
                   <div className="flex justify-center items-center h-40">
                     <i className="fa-solid fa-spinner text-[#ffcc00] text-4xl animate-spin"></i>
@@ -140,7 +150,7 @@ export default function SalaryAfterTax() {
                           transition={{ delay: 0.3, type: "spring" }}
                           className="text-green-600 dark:text-green-400 font-bold text-xl md:text-2xl"
                         >
-                          🎉 ยินดีด้วย! คุณมีรายได้สุทธิคงเหลือ
+                          ยินดีด้วย! คุณมีรายได้สุทธิคงเหลือ
                         </motion.div>
                       ) : (
                         <motion.div
@@ -149,7 +159,7 @@ export default function SalaryAfterTax() {
                           transition={{ delay: 0.3, type: "spring" }}
                           className="text-red-500 font-bold text-xl md:text-2xl"
                         >
-                          ⚠️ ระวัง! รายจ่ายของคุณเกินรายได้
+                          ระวัง! รายจ่ายของคุณเกินรายได้
                         </motion.div>
                       )}
                     </div>
