@@ -27,6 +27,72 @@ function formatDuration(days) {
   }
 }
 
+const AdjustmentSection = ({ result, selectedDate }) => {
+  if (!result || !selectedDate || !result.totalTarget) return null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const targetDate = new Date(selectedDate);
+  targetDate.setHours(0, 0, 0, 0);
+
+  const diffTime = targetDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) return null;
+
+  let daysPerSave = 1;
+  switch (result.frequency) {
+    case "day": daysPerSave = 1; break;
+    case "week": daysPerSave = 7; break;
+    case "month": daysPerSave = 30; break;
+    default: daysPerSave = 1;
+  }
+
+  const numberOfSaves = Math.floor(diffDays / daysPerSave);
+  // Avoid division by zero
+  const newAmount = numberOfSaves > 0 ? Math.ceil(result.totalTarget / numberOfSaves) : result.totalTarget;
+
+  const formatThaDate = (date) => {
+    return date.toLocaleDateString("th-TH", { day: 'numeric', month: 'short' });
+  };
+
+  return (
+    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl p-6 mt-6 w-full mx-auto border border-gray-100 dark:border-gray-800">
+      <h3 className="text-xl font-bold mb-6 text-[#1e293b] dark:text-white">สิ่งที่ต้องปรับสำหรับเป้าหมายใหม่</h3>
+
+      <div className="space-y-6">
+        {/* Amount Adjustment */}
+        <div className="flex justify-between items-start">
+          <div className="flex items-center gap-2 mt-1">
+            <span className="w-2 h-2 rounded-full bg-[#ffcc00]"></span>
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">จำนวนเงินออมต่อครั้ง</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[#ffcc00] font-bold text-lg">{result.amountPerSave.toLocaleString()}</span>
+            <span className="text-[#1e293b] dark:text-gray-400 text-sm">บาท</span>
+            <i className="fa-solid fa-arrow-right text-gray-400 text-sm mx-1"></i>
+            <span className="text-[#ffcc00] font-bold text-lg">{newAmount.toLocaleString()}</span>
+            <span className="text-[#1e293b] dark:text-gray-400 text-sm">บาท</span>
+          </div>
+        </div>
+
+        {/* Date Adjustment */}
+        <div className="flex justify-between items-start">
+          <div className="flex items-center gap-2 mt-1">
+            <span className="w-2 h-2 rounded-full bg-[#ffcc00]"></span>
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">เป้าหมายเงินออม</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[#ffcc00] font-bold text-lg">{formatThaDate(result.targetDay)}</span>
+            <i className="fa-solid fa-arrow-right text-gray-400 text-sm mx-1"></i>
+            <span className="text-[#ffcc00] font-bold text-lg">{formatThaDate(targetDate)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function SavingGoal() {
   const [modal, setModal] = useState(false);
   const [activeStartDate, setActiveStartDate] = useState(new Date());
@@ -133,6 +199,7 @@ export default function SavingGoal() {
         chartData: generateChartData(),
         amountPerSave: amount,
         frequency: values.frequency,
+        totalTarget: target,
       });
       setActiveStartDate(targetDay);
 
@@ -227,7 +294,13 @@ export default function SavingGoal() {
                   {formatDate(result.targetDay)}
                 </span>
               </p>
-              <div className="w-full flex flex-col items-center my-10">
+              <div className="calendar-container">
+                {/* Calendar Title */}
+                <h3 className="calendar-title">
+                  <i className="fa-solid fa-calendar-day text-[#d4a800]"></i>
+                  เลือกวันที่เพื่อดูยอดเงินออมสะสม
+                </h3>
+
                 <Calendar
                   onChange={(date) => {
                     setValue(date);
@@ -251,14 +324,39 @@ export default function SavingGoal() {
                     }
                     return null;
                   }}
+                  formatShortWeekday={(locale, date) =>
+                    ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'][date.getDay()]
+                  }
+                  nextLabel={<i className="fa-solid fa-chevron-right text-sm"></i>}
+                  prevLabel={<i className="fa-solid fa-chevron-left text-sm"></i>}
+                  next2Label={null}
+                  prev2Label={null}
                 />
 
+                {/* Calendar Legend */}
+                <div className="calendar-legend">
+                  <div className="calendar-legend-item">
+                    <div className="calendar-legend-dot calendar-legend-dot--today"></div>
+                    <span className="calendar-legend-text">วันนี้</span>
+                  </div>
+                  <div className="calendar-legend-item">
+                    <div className="calendar-legend-dot calendar-legend-dot--selected"></div>
+                    <span className="calendar-legend-text">วันที่เลือก</span>
+                  </div>
+                  <div className="calendar-legend-item">
+                    <div className="calendar-legend-dot calendar-legend-dot--target"></div>
+                    <span className="calendar-legend-text">วันถึงเป้าหมาย</span>
+                  </div>
+                </div>
+
+                {/* Estimated Savings Display */}
                 {selectedDate && estimatedSaving !== null && (
-                  <p className="mt-4 text-center text-lg md:text-xl font-semibold text-[#3d3d3d] dark:text-white">
-                    คุณจะออมได้
-                    <span className="text-[#ffcc00] px-2">{estimatedSaving.toLocaleString()}</span>
-                    บาท
-                  </p>
+                  <div className="calendar-savings-display">
+                    <p>
+                      ยอดเงินออมสะสม ณ วันที่ <span className="text-[#1e293b] dark:text-white font-bold">{formatDate(selectedDate)}</span>
+                    </p>
+                    <span className="amount">{estimatedSaving.toLocaleString()} บาท</span>
+                  </div>
                 )}
               </div>
 
@@ -273,6 +371,8 @@ export default function SavingGoal() {
                   estimatedSaving={estimatedSaving}
                   formatDate={formatShortDate}
                 />
+                {/* Adjustment Section Component */}
+                <AdjustmentSection result={result} selectedDate={selectedDate} />
               </div>
             </>
           ) : null}

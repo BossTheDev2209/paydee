@@ -364,7 +364,7 @@ export default function FinancialInsight() {
                                 <div className="flex flex-col justify-center">
                                     <div className="border-3 border-blue-400 rounded-2xl p-6 bg-blue-50 dark:bg-blue-900/20">
                                         <div className="flex items-center gap-3 mb-4">
-                                            <img src="/images/Ai_icon.png" alt="AI" className="w-8 h-8" />
+                                            <i className="fa-solid fa-robot text-3xl text-blue-600 dark:text-blue-400"></i>
                                             <h4 className="text-xl font-bold text-blue-600 dark:text-blue-400">คำแนะนำจาก AI</h4>
                                         </div>
                                         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">

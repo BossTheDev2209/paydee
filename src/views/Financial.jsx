@@ -107,7 +107,7 @@ export default function Financial() {
 
   const countryOptions = [
     { value: "th", label: "ไทย" },
-    { value: "uk", label: "สหราชอณาจักร" },
+    { value: "uk", label: "สหราชอาณาจักร" },
     { value: "us", label: "สหรัฐอเมริกา" },
   ];
 
