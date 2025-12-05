@@ -3,70 +3,83 @@ import { Label } from "recharts";
 
 export default function AIPort() {
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
   const fetchAiPort = () => {
     setLoading(true);
     fetch("https://market-stock-suggestion.onrender.com/market_stock/listing", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ years_forecast: 10, n_sims: 50000 }),
+      body: JSON.stringify({ years_forecast: 10, n_sims: 2000 }),
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`HTTP ${res.status} - ${text}`);
+        }
+        return res.json();
+      })
       .then((res) => {
         console.log(res);
         setData(res);
-        setLoading(false);
       })
-      .catch((err) => console.log("feth error", err));
+      .catch((err) => console.log("fetch error:", err));
   };
+
+  const industrialData = data?.Industrial;
+  const productsData = data?.Products;
+  const servicesData = data?.Services;
+  const resourcesData = data?.Resources;
+  const financialsData = data?.Financials;
 
   useEffect(() => {
     console.log("useEffect triggered");
     fetchAiPort();
+    // setLoading(false);
   }, []);
 
   const industrial = [
     {
       id: 1,
       title: "กลุ่มอุตสาหกรรมสินค้าอุตสาหกรรม",
-      median: "1",
-      mean: "2",
-      prob: "3",
+      median: industrialData?.median ?? "-",
+      mean: industrialData?.mean ?? "-",
+      prob: industrialData?.prob_loss ?? "-",
     },
   ];
   const products = [
     {
       id: 1,
       title: "กลุ่มอุตสาหกรรมกลุ่มสินค้าอุปโภคบริโภค",
-      median: "1",
-      mean: "2",
-      prob: "3",
+      median: productsData?.median ?? "-",
+      mean: productsData?.mean ?? "-",
+      prob: productsData?.prob_loss ?? "-",
     },
   ];
   const services = [
     {
       id: 1,
       title: "กลุ่มอุตสาหกรรมกลุ่มสินค้าประเภทบริการ",
-      median: "1",
-      mean: "2",
-      prob: "3",
+      median: servicesData?.median ?? "-",
+      mean: servicesData?.mean ?? "-",
+      prob: servicesData?.prob_loss ?? "-",
     },
   ];
   const resources = [
     {
       id: 1,
       title: "กลุ่มอุตสาหกรรมกลุ่มทรัพยากร",
-      median: "1",
-      mean: "2",
-      prob: "3",
+      median: resourcesData?.median ?? "-",
+      mean: resourcesData?.mean ?? "-",
+      prob: resourcesData?.prob_loss ?? "-",
     },
   ];
   const financials = [
     {
       id: 1,
       title: "กลุ่มอุตสาหกรรมกลุ่มธุรกิจการเงิน",
-      median: "1",
-      mean: "2",
-      prob: "3",
+      median: financialsData?.median ?? "-",
+      mean: financialsData?.mean ?? "-",
+      prob: financialsData?.prob_loss ?? "-",
     },
   ];
 
@@ -143,7 +156,9 @@ export default function AIPort() {
           <h3 className="text-lg md:text-xl text-[#2b2b2b]/80">
             ข้อมูลนี้เป็นข้อมูลเพื่อการศึกษาเท่านั้น
             ผู้ใช้วานควรศึกษาข้อมูลและปรึกษาผู้แนะนำการลงทุนที่ได้รับอนุญาตก่อนตัดสินใจ
-            รายละเอียดเพิ่มเติม
+            <span className="text-blue-600 underline px-2">
+              รายละเอียดเพิ่มเติม
+            </span>
           </h3>
         </div>
       </div>
@@ -165,13 +180,37 @@ export default function AIPort() {
             return (
               <div
                 key={idx}
-                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
+                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-lg text-sm md:text-lg"
               >
-                <div className="w-full flex items-center">
-                  <p className="w-4/12 text-center"> {item.title} </p>
-                  <p className="w-4/12 text-center"> {item.detail} </p>
-                  <p className="w-4/12 text-center"> {item.returns} </p>
-                  <p className="w-4/12 text-center"> {item.risk} </p>
+                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
+                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ประเภท
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      รายละเอียด
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ผลตอบแทน
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ความเสี่ยง
+                    </p>
+                  </div>
+                  <div className="grid md:grid-cols-4 gap-2">
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.title}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.detail}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.returns}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.risk}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -186,11 +225,35 @@ export default function AIPort() {
                 key={idx}
                 className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
               >
-                <div className="w-full flex items-center">
-                  <p className="w-4/12 text-center"> {item.title} </p>
-                  <p className="w-4/12 text-center"> {item.detail} </p>
-                  <p className="w-4/12 text-center"> {item.returns} </p>
-                  <p className="w-4/12 text-center"> {item.risk} </p>
+                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
+                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ประเภท
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      รายละเอียด
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ผลตอบแทน
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ความเสี่ยง
+                    </p>
+                  </div>
+                  <div className="grid md:grid-cols-4 gap-2">
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.title}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.detail}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.returns}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.risk}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -205,11 +268,35 @@ export default function AIPort() {
                 key={idx}
                 className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
               >
-                <div className="w-full flex items-center">
-                  <p className="w-4/12 text-center"> {item.title} </p>
-                  <p className="w-4/12 text-center"> {item.detail} </p>
-                  <p className="w-4/12 text-center"> {item.returns} </p>
-                  <p className="w-4/12 text-center"> {item.risk} </p>
+                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
+                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ประเภท
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      รายละเอียด
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ผลตอบแทน
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ความเสี่ยง
+                    </p>
+                  </div>
+                  <div className="grid md:grid-cols-4 gap-2">
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.title}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.detail}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.returns}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.risk}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -224,11 +311,35 @@ export default function AIPort() {
                 key={idx}
                 className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
               >
-                <div className="w-full flex items-center">
-                  <p className="w-4/12 text-center"> {item.title} </p>
-                  <p className="w-4/12 text-center"> {item.detail} </p>
-                  <p className="w-4/12 text-center"> {item.returns} </p>
-                  <p className="w-4/12 text-center"> {item.risk} </p>
+                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
+                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ประเภท
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      รายละเอียด
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ผลตอบแทน
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ความเสี่ยง
+                    </p>
+                  </div>
+                  <div className="grid md:grid-cols-4 gap-2">
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.title}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.detail}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.returns}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.risk}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -243,11 +354,35 @@ export default function AIPort() {
                 key={idx}
                 className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
               >
-                <div className="w-full flex items-center">
-                  <p className="w-4/12 text-center"> {item.title} </p>
-                  <p className="w-4/12 text-center"> {item.detail} </p>
-                  <p className="w-4/12 text-center"> {item.returns} </p>
-                  <p className="w-4/12 text-center"> {item.risk} </p>
+                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
+                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ประเภท
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      รายละเอียด
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ผลตอบแทน
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ความเสี่ยง
+                    </p>
+                  </div>
+                  <div className="grid md:grid-cols-4 gap-2">
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.title}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.detail}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.returns}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.risk}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -262,11 +397,35 @@ export default function AIPort() {
                 key={idx}
                 className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
               >
-                <div className="w-full flex items-center">
-                  <p className="w-4/12 text-center"> {item.title} </p>
-                  <p className="w-4/12 text-center"> {item.detail} </p>
-                  <p className="w-4/12 text-center"> {item.returns} </p>
-                  <p className="w-4/12 text-center"> {item.risk} </p>
+                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
+                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ประเภท
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      รายละเอียด
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ผลตอบแทน
+                    </p>
+                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
+                      ความเสี่ยง
+                    </p>
+                  </div>
+                  <div className="grid md:grid-cols-4 gap-2">
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.title}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.detail}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.returns}
+                    </p>
+                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
+                      {item.risk}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -334,7 +493,6 @@ export default function AIPort() {
           ในตลาดหลักทรัพย์แห่งประเทศไทย
         </h1>
         <p className="p-8 text-lg md:text-xl text-center text-red-500">
-          {" "}
           คำเตือน การคาดการณ์นี้เป็นการคาดการณ์เพื่อการศึกษาและ
           ยกตัวอย่างเท่านั้น โดยมีจุดประสงค์เพื่อเพิ่มความเข้าใจให้กับผู้ใช้
           ซึ่งข้อมูลที่เห็นนั้นมิใช่ราคาที่อยู่ในดีชนีอุตสาหกรรมนั้นจริง ๆ
@@ -342,7 +500,9 @@ export default function AIPort() {
           ดังนั้นจึงไม่ควรนำข้อมูลนี้ไปใช้ในการประกอบการตัดสินใจ ในการลงทุน
           และเราไม่รับผิดชอบกับความเสียหายที่เกิดขึ้นหาก
           ผู้ใช้นำข้อมูลเหล่านี้ไปใช้ในการประกอบการตัดสินใจในการลงทุน
-          รายละเอียดเพิ่มเติม{" "}
+          <span className="text-blue-600 underline px-2">
+            รายละเอียดเพิ่มเติม
+          </span>
         </p>
         <div className="my-4 p-4 w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg">
           {/* industrial */}
@@ -357,16 +517,18 @@ export default function AIPort() {
                     <p className="w-6/12 text-center"> {item.title} </p>
                     <div className="w-6/12">
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาล่าสุดจากการคำนวณ: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.mean} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาที่คาดการณ์: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.median} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12">
+                          โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
+                        </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.prob} </p> }  
                       </div>
                     </div>
                   </div>
@@ -387,16 +549,18 @@ export default function AIPort() {
                     <p className="w-6/12 text-center"> {item.title} </p>
                     <div className="w-6/12">
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาล่าสุดจากการคำนวณ: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.mean} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาที่คาดการณ์: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.median} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12">
+                          โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
+                        </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.prob} </p> }  
                       </div>
                     </div>
                   </div>
@@ -417,16 +581,18 @@ export default function AIPort() {
                     <p className="w-6/12 text-center"> {item.title} </p>
                     <div className="w-6/12">
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาล่าสุดจากการคำนวณ: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.mean} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาที่คาดการณ์: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.median} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12">
+                          โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
+                        </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.prob} </p> }  
                       </div>
                     </div>
                   </div>
@@ -447,16 +613,18 @@ export default function AIPort() {
                     <p className="w-6/12 text-center"> {item.title} </p>
                     <div className="w-6/12">
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาล่าสุดจากการคำนวณ: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.mean} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาที่คาดการณ์: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.median} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12">
+                          โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
+                        </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.prob} </p> }  
                       </div>
                     </div>
                   </div>
@@ -477,16 +645,18 @@ export default function AIPort() {
                     <p className="w-6/12 text-center"> {item.title} </p>
                     <div className="w-6/12">
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาล่าสุดจากการคำนวณ: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.mean} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12"> ราคาที่คาดการณ์: </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.median} </p> }  
                       </div>
                       <div className="w-full flex">
-                        <p> ราคาล่าสุดจากการคำนวณ: </p>
-                        <p className="w-4/12 text-center"> {item.mean} </p>
+                        <p className="w-6/12">
+                          โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
+                        </p>
+                      {loading ? <p className="w-6/12 text-center"> loading.. </p> : <p className="w-6/12 text-center"> {item.prob} </p> }  
                       </div>
                     </div>
                   </div>
