@@ -2,67 +2,355 @@ import { Link } from "react-router-dom";
 
 export default function Policy() {
     return (
-            <div className="max-w-4xl mx-auto bg-[#fdfdfd] dark:bg-[#2b2b2b] rounded-2xl shadow-lg p-8 md:p-12 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-                {/* <Link to="/" className="inline-block mb-8 text-[#979797] hover:text-[#ffcc00] transition-colors">
-                    <i className="fa-solid fa-arrow-left-long pr-2"></i>
-                    Back to Home
-                </Link> */}
-
-                <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-                    ข้อกำหนดในการใช้งาน <span className="text-[#ffcc00]">(Policy)</span>
-                </h1>
-
-                <div className="space-y-12">
-                    {/*Terms of Use*/}
-                    <section id="terms-of-use" className="scroll-mt-24">
-                        <h2 className="text-2xl font-bold mb-4 border-b border-[#e0e0e0] dark:border-[#3d3d3d] pb-2">
-                            ข้อตกลงและเงื่อนไขการใช้งาน
-                        </h2>
-                        <p className="text-lg leading-relaxed opacity-80">
-                            [Placeholder]
-                        </p>
-                    </section>
-
-                    {/*General Disclaimer*/}
-                    <section id="disclaimer" className="scroll-mt-24">
-                        <h2 className="text-2xl font-bold mb-4 border-b border-[#e0e0e0] dark:border-[#3d3d3d] pb-2">
-                            ข้อจำกัดความรับผิดชอบ (Disclaimer)
-                        </h2>
-                        <p className="text-lg leading-relaxed opacity-80">
-                            [Placeholder]
-                        </p>
-                    </section>
-
-                    {/*Salary After Tax*/}
-                    <section id="salary-tax-policy" className="scroll-mt-24">
-                        <h2 className="text-2xl font-bold mb-4 border-b border-[#e0e0e0] dark:border-[#3d3d3d] pb-2">
-                            นโยบายสำหรับ เครื่องคำนวณภาษี
-                        </h2>
-                        <p className="text-lg leading-relaxed opacity-80">
-                            [Placeholder]
-                        </p>
-                    </section>
-
-                    {/*Saving Goal*/}
-                    <section id="saving-goal-policy" className="scroll-mt-24">
-                        <h2 className="text-2xl font-bold mb-4 border-b border-[#e0e0e0] dark:border-[#3d3d3d] pb-2">
-                            นโยบายสำหรับ เครื่องคำนวณเป้าหมายการออม
-                        </h2>
-                        <p className="text-lg leading-relaxed opacity-80">
-                            [Placeholder]
-                        </p>
-                    </section>
-
-                    {/*AI Port*/}
-                    <section id="ai-port-policy" className="scroll-mt-24">
-                        <h2 className="text-2xl font-bold mb-4 border-b border-[#e0e0e0] dark:border-[#3d3d3d] pb-2">
-                            นโยบายสำหรับ ตัวอย่างแนวโน้มจำลองตลาดหลักทรัพย์
-                        </h2>
-                        <p className="text-lg leading-relaxed opacity-80">
-                            [Placeholder]
-                        </p>
-                    </section>
+        <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">
+            {/* Header Section */}
+            <div className="w-full bg-[#ffcc00] py-8 md:py-12 px-4shadow-md mb-8">
+                <div className="max-w-7xl mx-auto text-center">
+                    <h1 className="text-3xl md:text-5xl font-bold text-[#2b2b2b] mb-4">
+                        ข้อกำหนดการใช้งาน
+                    </h1>
+                    <h3 className="text-lg md:text-xl text-[#2b2b2b]/80">
+                        Terms of Use & Privacy Policy
+                    </h3>
                 </div>
             </div>
+
+            <div className="max-w-5xl mx-auto px-4">
+                <Link
+                    to="/"
+                    className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-8"
+                >
+                    <i className="fa-solid fa-arrow-left-long mr-2"></i>
+                    Back to Home
+                </Link>
+
+                <div className="bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-lg p-6 md:p-12 transition-colors duration-300">
+                    {/* Table of Contents */}
+                    <nav className="mb-12 p-6 bg-gray-50 dark:bg-[#1a1a1a] rounded-xl">
+                        <h2 className="text-xl font-bold text-[#2b2b2b] dark:text-white mb-4">
+                            สารบัญ
+                        </h2>
+                        <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                            <li>
+                                <a href="#terms-of-use" className="hover:text-[#ffcc00] transition-colors">
+                                    1. ข้อตกลงและเงื่อนไขการใช้งาน
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#disclaimer" className="hover:text-[#ffcc00] transition-colors">
+                                    2. ข้อจำกัดความรับผิดชอบ (Disclaimer)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#salary-tax-policy" className="hover:text-[#ffcc00] transition-colors">
+                                    3. เครื่องคำนวณภาษี
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#saving-goal-policy" className="hover:text-[#ffcc00] transition-colors">
+                                    4. เครื่องคำนวณเป้าหมายการออม
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#ai-port-policy" className="hover:text-[#ffcc00] transition-colors">
+                                    5. ตัวอย่างแนวโน้มจำลองตลาดหลักทรัพย์
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div className="space-y-12 text-[#3d3d3d] dark:text-[#f2f1f1]">
+                        {/* Terms of Use */}
+                        <section id="terms-of-use" className="scroll-mt-24">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-[#ffcc00] pb-3">
+                                1. ข้อตกลงและเงื่อนไขการใช้งาน
+                            </h2>
+                            <div className="space-y-4 text-lg leading-relaxed opacity-90">
+                                <p>ยินดีต้อนรับสู่ PayDee เว็บไซต์นี้จัดทำขึ้นเพื่อให้บริการเครื่องมือคำนวณและวางแผนทางการเงินเบื้องต้น การเข้าใช้เว็บไซต์นี้ถือว่าท่านยอมรับข้อตกลงและเงื่อนไขดังต่อไปนี้</p>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm italic">
+                                    วัตถุประสงค์: PayDee เป็นเครื่องมือสำหรับอำนวยความสะดวกในการคำนวณภาษี วางแผนการออม และจำลองสถานการณ์การลงทุนเพื่อการศึกษาเท่านั้น ไม่ใช่การให้บริการที่ปรึกษาทางการเงินหรือการแนะนำการลงทุนอย่างเป็นทางการ
+
+                                    ความถูกต้องของข้อมูล: แม้ทางเราจะพยายามปรับปรุงข้อมูลและสูตรการคำนวณให้เป็นปัจจุบันที่สุด (เช่น อัตราภาษีตามกฎหมายใหม่) แต่เราไม่สามารถรับรองความถูกต้อง สมบูรณ์ หรือความเป็นปัจจุบันของข้อมูลได้ตลอดเวลา
+
+                                    ทรัพย์สินทางปัญญา: โลโก้, กราฟิก, ซอร์สโค้ด และเนื้อหาบนเว็บไซต์นี้ เป็นลิขสิทธิ์ของผู้พัฒนา ห้ามมิให้ทำซ้ำ ดัดแปลง หรือนำไปใช้เพื่อการค้าโดยไม่ได้รับอนุญาต
+
+                                    การเปลี่ยนแปลงเงื่อนไข: เราขอสงวนสิทธิ์ในการแก้ไข เปลี่ยนแปลง หรือระงับการให้บริการส่วนหนึ่งส่วนใดของเว็บไซต์ได้ตลอดเวลาโดยไม่ต้องแจ้งให้ทราบล่วงหน้า
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* General Disclaimer */}
+                        <section id="disclaimer" className="scroll-mt-24">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-[#ffcc00] pb-3">
+                                2. ข้อจำกัดความรับผิดชอบ (Disclaimer)
+                            </h2>
+                            <div className="space-y-4 text-lg leading-relaxed opacity-90">
+                                <p>ข้อมูลและการคำนวณทั้งหมดบนเว็บไซต์ PayDee จัดทำขึ้นเพื่อวัตถุประสงค์ในการให้ข้อมูลทั่วไปและการศึกษาเท่านั้น "ไม่ใช่คำแนะนำทางการเงิน กฎหมาย หรือภาษีอากร"</p>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm italic">
+                                    ผู้พัฒนาเว็บไซต์ไม่มีส่วนรับผิดชอบต่อความเสียหาย การสูญเสีย หรือผลกำไรที่เกิดขึ้นจากการใช้งาน หรือการตัดสินใจใดๆ ที่อ้างอิงข้อมูลจากเว็บไซต์นี้ ผู้ใช้งานควรปรึกษาผู้เชี่ยวชาญด้านภาษี นักวางแผนการเงิน หรือตรวจสอบข้อมูลกับหน่วยงานราชการที่เกี่ยวข้อง (เช่น กรมสรรพากร) ก่อนตัดสินใจทำธุรกรรมทางการเงินจริง
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* Salary After Tax */}
+                        <section id="salary-tax-policy" className="scroll-mt-24">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-[#ffcc00] pb-3">
+                                3. เครื่องคำนวณภาษี
+                            </h2>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ที่มาของสูตร (Formula Origins)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        แหล่งข้อมูลอ้างอิงหลัก: สูตรการคำนวณทั้งหมดในเว็บไซต์ PayDee อ้างอิงตาม ประมวลรัษฎากร (The Revenue Code) และประกาศจาก กรมสรรพากร (The Revenue Department) ของประเทศไทย สำหรับปีภาษีปัจจุบัน โดยมีรายละเอียดดังนี้:
+
+                                        โครงสร้างภาษี: อ้างอิงอัตราภาษีเงินได้บุคคลธรรมดาแบบก้าวหน้า (Progressive Tax Rate) 7 ขั้นบันได (0% - 35%) ตามมาตรา 66 แห่งประมวลรัษฎากร
+
+                                        การหักค่าใช้จ่าย: อ้างอิงมาตรา 42 ทวิ ถึง 48 (50% ของเงินได้พึงประเมิน แต่ไม่เกิน 100,000 บาท)
+
+                                        ค่าลดหย่อนส่วนตัวและครอบครัว: อ้างอิงมาตรา 47 (ลดหย่อนส่วนตัว 60,000 บาท)
+
+                                        เงินสมทบกองทุนประกันสังคม: อ้างอิงกฎกระทรวง แรงงาน (หัก 5% ของเงินเดือน สูงสุดไม่เกินฐานเงินเดือน 15,000 บาท หรือ 9,000 บาทต่อปี)
+
+                                        การพัฒนา Logic (Algorithm): อัลกอริทึมการคำนวณถูกพัฒนาขึ้นโดยทีมงาน PayDee (Internal Logic) เพื่อแปลงกฎหมายภาษีที่ซับซ้อนให้เป็น Code ภาษา JavaScript ที่แม่นยำ โดยมีการตรวจสอบกรณีพิเศษ (Edge Cases) เช่น:
+
+                                        การจำกัดเพดานลดหย่อนกลุ่มเกษียณ (RMF/SSF/PVD) รวมกันไม่เกิน 500,000 บาท
+
+                                        การคำนวณเพดานเงินบริจาค 10% ของเงินได้สุทธิ
+
+                                        การคำนวณประกันสังคมแบบอัตโนมัติจากฐานเงินเดือนจริง
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ความปลอดภัยทางกฎหมาย (Legal Safety)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        ข้อจำกัดความรับผิดชอบ (Disclaimer):
+
+                                        วัตถุประสงค์: เครื่องคำนวณนี้จัดทำขึ้นเพื่ออำนวยความสะดวกในการ "วางแผนภาษีเบื้องต้น" เท่านั้น ไม่สามารถนำไปใช้อ้างอิงเป็นหลักฐานทางกฎหมาย หรือใช้แทนเอกสารราชการในการยื่นภาษีจริงได้
+
+                                        ความคลาดเคลื่อน: ผลลัพธ์อาจมีความคลาดเคลื่อนจากยอดจริง เนื่องจากการปัดเศษทศนิยม หรือเงื่อนไขลดหย่อนภาษีเฉพาะบุคคลที่โปรแกรมอาจยังไม่รองรับ
+
+                                        ไม่มีการเก็บข้อมูล: ระบบประมวลผลข้อมูลทั้งหมดบน Browser ของผู้ใช้งาน (Client-side Processing) ทาง PayDee ไม่มีการบันทึกข้อมูลรายได้หรือข้อมูลส่วนตัวของท่านลงในเซิร์ฟเวอร์ เพื่อความเป็นส่วนตัวและความปลอดภัยสูงสุด
+
+                                        คำแนะนำ: ผู้ใช้งานควรตรวจสอบยอดภาษีที่ถูกต้องอีกครั้งผ่านระบบ e-Filing ของกรมสรรพากร หรือปรึกษาผู้เชี่ยวชาญด้านบัญชีและภาษีก่อนดำเนินการชำระภาษี
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        วิธีการคำนวณ (Calculation Methods)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        ขั้นตอนที่ 1: ปรับฐานรายได้เป็นรายปี (Annualization) ระบบจะนำเงินเดือนและรายได้อื่นๆ มารวมกันเพื่อหา "เงินได้พึงประเมินตลอดทั้งปี"
+
+                                        สูตร: (เงินเดือน x 12) + โบนัส + รายได้อื่นๆ = รายได้รวมทั้งปี
+
+                                        ขั้นตอนที่ 2: หักค่าใช้จ่าย (Standard Deduction) ตามกฎหมายสำหรับมนุษย์เงินเดือน (มาตรา 40(1))
+
+                                        สูตร: รายได้รวมทั้งปี x 50% (แต่ระบบจะตัดยอดสูงสุดให้ไม่เกิน 100,000 บาท)
+
+                                        ขั้นตอนที่ 3: หักค่าลดหย่อน (Allowances) ระบบจะนำรายการลดหย่อนที่ผู้ใช้กรอกมาหักออกตามลำดับ:
+
+                                        ลดหย่อนส่วนตัว: หักอัตโนมัติ 60,000 บาท
+
+                                        ประกันสังคม: คำนวณจากเงินเดือนจริง (Max 9,000 บาท)
+
+                                        ลดหย่อนตามจริง: คู่สมรส, บุตร, บิดามารดา
+
+                                        ลดหย่อนการลงทุน: SSF, RMF, ประกันชีวิต (ระบบจะตรวจสอบเพดานสูงสุดของแต่ละประเภทให้ เช่น SSF ไม่เกิน 30% ของรายได้)
+
+                                        เงินบริจาค: หักเป็นลำดับสุดท้าย (ไม่เกิน 10% ของเงินได้หลังหักค่าใช้จ่ายและลดหย่อนอื่นๆ แล้ว)
+
+                                        ขั้นตอนที่ 4: คำนวณเงินได้สุทธิ (Net Taxable Income)
+
+                                        สูตร: รายได้รวม - ค่าใช้จ่าย - ค่าลดหย่อนทั้งหมด = เงินได้สุทธิ
+
+                                        ขั้นตอนที่ 5: คำนวณภาษีตามขั้นบันได (Progressive Tax Calculation) นำ "เงินได้สุทธิ" มาเทียบตารางอัตราภาษี 7 ขั้น ดังนี้:
+
+                                        0 - 150,000 บาท: ยกเว้น (0%)
+
+                                        150,001 - 300,000 บาท: 5%
+
+                                        300,001 - 500,000 บาท: 10%
+
+                                        500,001 - 750,000 บาท: 15%
+
+                                        750,001 - 1,000,000 บาท: 20%
+
+                                        1,000,001 - 2,000,000 บาท: 25%
+
+                                        2,000,001 - 5,000,000 บาท: 30%
+
+                                        5,000,001 บาทขึ้นไป: 35%
+
+                                        ขั้นตอนสุดท้าย: นำภาษีของแต่ละขั้นมารวมกัน เป็น "ภาษีที่ต้องจ่ายต่อปี"
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Saving Goal */}
+                        <section id="saving-goal-policy" className="scroll-mt-24">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-[#ffcc00] pb-3">
+                                4. เครื่องคำนวณเป้าหมายการออม
+                            </h2>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ที่มาของสูตร (Formula Origins)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        หลักการพื้นฐาน: การคำนวณใช้หลักการ "การสะสมมูลค่าแบบคงที่" (Linear Accumulation) ซึ่งเป็นพื้นฐานของการวางแผนการเงินส่วนบุคคล (Personal Finance) สำหรับเป้าหมายระยะสั้นและระยะกลาง โดยยังไม่ได้นำปัจจัยเรื่อง "ดอกเบี้ยทบต้น" (Compound Interest) หรือ "อัตราเงินเฟ้อ" (Inflation) มารวมคำนวณ เพื่อให้ผู้ใช้งานเห็นภาพรวมของวินัยการออมที่จำเป็นเบื้องต้นอย่างชัดเจนที่สุด
+                                        มาตรฐานเวลา: การคำนวณระยะเวลาและวันที่ อ้างอิงตามมาตรฐานปฏิทินสากล (Gregorian Calendar) ผ่าน ECMAScript Date Objects
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ความปลอดภัยทางกฎหมาย (Legal Safety)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        ข้อจำกัดความรับผิดชอบ (Disclaimer):
+
+                                        การประมาณการเท่านั้น: ผลลัพธ์ที่ได้เป็นเพียงการ "ประมาณการเบื้องต้น" ทางคณิตศาสตร์ โดยสมมติว่าวินัยการออมคงที่สม่ำเสมอ ในความเป็นจริงผลลัพธ์อาจแตกต่างกันขึ้นอยู่กับปัจจัยอื่นๆ ภายนอก
+
+                                        ไม่ใช่คำแนะนำทางการเงิน: PayDee ให้บริการเครื่องมือคำนวณเท่านั้น ไม่ใช่ “ที่ปรึกษาทางการเงิน” (Financial Planner) ผู้ใช้งานควรพิจารณาความเสี่ยงและสภาพคล่องส่วนบุคคลประกอบการตัดสินใจ
+
+                                        ปัจจัยภายนอก: สูตรนี้ไม่ได้คำนึงถึงอัตราดอกเบี้ยเงินฝาก อัตราเงินเฟ้อ หรือค่าใช้จ่ายฉุกเฉินที่อาจเกิดขึ้นระหว่างทาง ซึ่งอาจส่งผลให้มูลค่าเงินในอนาคตลดลง
+
+                                        ความเป็นส่วนตัว: เช่นเดียวกับบริการอื่นๆ ของเรา ข้อมูลเป้าหมายทางการเงินของท่านถูกประมวลผลบนอุปกรณ์ของท่านเอง (Client-side) และไม่มีการส่งข้อมูลออกไปยังเซิร์ฟเวอร์ภายนอก
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        วิธีการคำนวณ (Calculation Methods)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        ขั้นตอนที่ 1: การแปลงค่าความถี่ (Frequency Conversion)
+                                        ระบบจะแปลงรอบการออมของผู้ใช้ให้เป็น "จำนวนวัน" เพื่อใช้เป็นฐานเดียวกันในการคำนวณ:
+                                        รายวัน = 1 วัน
+                                        รายสัปดาห์ = 7 วัน
+                                        รายเดือน = 30 วัน (ค่าเฉลี่ยมาตรฐานสำหรับการคำนวณเบื้องต้น)
+                                        ขั้นตอนที่ 2: คำนวณจำนวนงวดการออม (Total Installments)
+                                        กรณี Quick Mode: เป้าหมายเงินออม ÷ จำนวนเงินที่ออมต่อครั้ง
+                                        กรณี Detailed Mode: (เป้าหมายเงินออม - เงินออมที่มีอยู่แล้ว) ÷ จำนวนเงินที่ออมต่อครั้ง
+                                        ขั้นตอนที่ 3: คำนวณระยะเวลาสู่เป้าหมาย (Time to Goal)
+                                        สูตร: จำนวนงวดการออม x จำนวนวันตามความถี่ = ระยะเวลารวม (วัน)
+                                        วันที่สำเร็จเป้าหมาย = วันที่ปัจจุบัน + ระยะเวลารวม
+                                        ขั้นตอนที่ 4: การคำนวณแผนทางเลือก (Adjusted Plan Logic)
+                                        เมื่อผู้ใช้งานเลือกวันที่ในปฏิทิน (Custom Goal Date) ระบบจะทำ "การคำนวณย้อนกลับ" (Reverse Calculation) เพื่อหาจำนวนเงินที่ต้องออมใหม่:
+                                        สูตร: ยอดเป้าหมายคงเหลือจริง ÷ จำนวนงวดที่เหลือจริง (คำนวณตามวันจริง)
+                                        ผลลัพธ์นี้ช่วยให้ผู้ใช้ทราบว่า หากต้องการบรรลุเป้าหมายภายในวันที่กำหนด จะต้องเพิ่มหรือลดเงินออมต่อครั้งเท่าใด
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* AI Port */}
+                        <section id="ai-port-policy" className="scroll-mt-24">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-[#ffcc00] pb-3">
+                                5. ตัวอย่างแนวโน้มจำลองตลาดหลักทรัพย์
+                            </h2>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ที่มาของสูตร (Formula Origins)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        ข้อมูล ผลลัพธ์ และการคาดการณ์ที่แสดงในระบบนี้ถูกสร้างขึ้นจากแบบจำลองเชิงสถิติ เช่น Monte Carlo Simulation และมีความไม่แน่นอนสูง ผลลัพธ์ทั้งหมดเป็นเพียงการประมาณเชิงคณิตศาสตร์ เพื่อใช้ประกอบการศึกษาและความเข้าใจเกี่ยวกับความผันผวนในตลาดการเงินเท่านั้น ไม่ควรถูกตีความว่าเป็นคำแนะนำการลงทุน คำแนะนำทางการเงิน หรือคำชี้นำให้ซื้อ ขาย หรือถือครองหลักทรัพย์ใด ๆ
+
+                                        ระบบนี้มิได้ดำเนินการวิเคราะห์เฉพาะบุคคล (Non-personalized) มิได้คำนึงถึงสถานะทางการเงิน ระดับความเสี่ยง หรือวัตถุประสงค์ในการลงทุนของผู้ใช้งาน ดังนั้นข้อมูลที่แสดงไม่สามารถใช้แทนคำปรึกษาทางการเงินจากผู้เชี่ยวชาญได้
+
+                                        ผลการคาดการณ์เป็นเพียงความเป็นไปได้ทางสถิติในอดีตและไม่สามารถยืนยันผลลัพธ์ในอนาคตได้ ตลาดการเงินมีความเสี่ยงสูง ผู้ใช้งานควรใช้ดุลพินิจศึกษาข้อมูลเพิ่มเติม และรับผิดชอบต่อการตัดสินใจของตนเอง
+
+                                        ผู้พัฒนาและระบบนี้ไม่รับผิดชอบต่อความเสียหายที่เกิดขึ้นจากการนำข้อมูลนี้ไปใช้ไม่ว่าทางตรงหรือทางอ้อม
+
+                                        ในการคาดการณ์ เราได้ดึงข้อมูลจาก library ของ yfinance และนำข้อมูลที่ได้มารวบรวมในแต่ละหมวดหมู่ของธุรกิจ อ้างอิงจากดัชนี SET ของประเทศไทย จากนั้นเราได้ใช้การจำลอง Monte Carlo ซึ่งเป็นเทคนิคทางคณิตศาสตร์ที่คาดการณ์ผลลัพธ์ที่เป็นไปได้ของเหตุการณ์ที่ไม่แน่นอน มาช่วยในการคาดการณ์การเปลี่ยนแปลงของค่าดัชนีตามเวลาที่กำหนด โดยผลลัพธ์ที่ได้จะประกอบไปด้วยค่ากลางจากการจำลองแบบ Monte Carlo และโอกาสที่ราคาจะอยู่เหนือหรือต่ำกว่าราคาเริ่มต้น ณ ปัจจุบัน ดังนั้นการคาดการณ์เช่นนี้จึงอาศัยประวัติของข้อมูลราคาที่เคยเกิดขึ้นแล้วมาวิเคราะห์เท่านั้น ไม่มีการนำปัจจัยภายนอกมาพิจารณาร่วมด้วย เช่น การเมืองระหว่างประเทศ นโยบายการเงิน อัตราแลกเปลี่ยน ราคาสินค้าโภคภัณฑ์ และอื่น ๆ การคาดการณ์นี้จึงไม่ควรนำไปใช้เพื่อเป็นคำแนะนำด้านการลงทุน หรือเพื่อประกอบการตัดสินใจในการลงทุน และเรามีจุดประสงค์เพียงเพื่อการยกตัวอย่างและการศึกษาเท่านั้น
+
+                                        วิธีการคำนวณ:
+
+                                        ภาพรวม: ดัชนีที่แสดงเป็นดัชนีจำลอง (simulated industry index) ที่คำนวณจากข้อมูลหุ้นที่ระบบสามารถดึงมาได้เท่านั้น — ไม่ใช่ดัชนีทางการของ SET และอาจมีการขาดหายของหลักทรัพย์ในแต่ละกลุ่มอุตสาหกรรม
+
+                                        ข้อมูลนำเข้า:
+                                        - ราคาปิด (Close price) รายเดือน
+                                        - จำนวนหุ้นที่จำหน่ายแล้ว (Shares Outstanding)
+                                        - ค่าสัดส่วนหุ้นที่ซื้อขายได้ (Free-float factor)
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ความปลอดภัยทางกฎหมาย (Legal Safety)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        สำหรับฟีเจอร์จำลองตลาดหลักทรัพย์ (Stock Market Simulation)
+
+1. การปฏิเสธการให้คำแนะนำ (No Investment Advice)
+สถานะของข้อมูล: ข้อมูลและกราฟทั้งหมดเป็นเพียง "แบบจำลองทางคณิตศาสตร์ (Mathematical Simulation)" ที่เกิดจากการคำนวณทางสถิติ (Monte Carlo) เท่านั้น
+
+ไม่ใช่คำแนะนำ: ระบบยืนยันชัดเจนว่า มิใช่ การวิเคราะห์หลักทรัพย์, คำแนะนำทางการเงิน, หรือการชี้ชวนให้ซื้อขายหลักทรัพย์แต่อย่างใด
+
+วัตถุประสงค์: จัดทำขึ้นเพื่อ "การศึกษา (Educational Purpose)" และเพื่อให้เห็นภาพความผันผวนของตลาดในเชิงทฤษฎีเท่านั้น
+
+2. ข้อจำกัดความรับผิดชอบ (Limitation of Liability)
+ความรับผิดของผู้พัฒนา: ผู้พัฒนาและระบบ ไม่ขอรับผิดชอบ ต่อความเสียหาย, การขาดทุน, หรือผลกระทบใดๆ (ทั้งทางตรงและทางอ้อม) ที่เกิดขึ้นจากการที่ผู้ใช้งานนำข้อมูลชุดนี้ไปใช้ประกอบการตัดสินใจ
+
+ความรับผิดของผู้ใช้งาน: ผู้ใช้งานตกลงที่จะใช้วิจารณญาณของตนเอง และยอมรับความเสี่ยงจากการตัดสินใจลงทุนด้วยตนเองแต่เพียงผู้เดียว (Self-responsibility)
+
+3. ความไม่สมบูรณ์ของข้อมูลและโมเดล (Data & Model Limitations)
+ความไม่แน่นอน: การคาดการณ์อ้างอิงจากข้อมูลในอดีต (Historical Data) ซึ่ง ไม่สามารถการันตีผลลัพธ์ในอนาคตได้
+
+ปัจจัยที่ถูกตัดออก: โมเดลคำนวณจากราคาทางเทคนิคเท่านั้น โดยละเลยปัจจัยภายนอก (Exogenous Factors) ที่มีผลต่อตลาดจริง เช่น ข่าวเศรษฐกิจ, นโยบายรัฐ, สงคราม, หรือโรคระบาด
+
+ความไม่เป็นทางการ: ดัชนีที่แสดงเป็น "ดัชนีจำลอง (Simulated Index)" ที่คำนวณขึ้นเอง ไม่ใช่ดัชนีทางการของตลาดหลักทรัพย์ (SET) และข้อมูลอาจมีความคลาดเคลื่อนหรือขาดหายไปตามข้อจำกัดของแหล่งข้อมูล (yfinance)
+
+4. ไม่มีความเฉพาะเจาะจง (Non-Personalized)
+ระบบประมวลผลแบบทั่วไป (General Analysis) โดยไม่ได้นำข้อมูลส่วนบุคคลของผู้ใช้งาน เช่น ความสามารถในการรับความเสี่ยง (Risk Appetite) หรือเป้าหมายทางการเงินส่วนบุคคล มาพิจารณาร่วมด้วย จึงไม่สามารถใช้ทดแทนคำแนะนำจากผู้เชี่ยวชาญส่วนตัวได้
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        วิธีการคำนวณ (Calculation Methods)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        ขั้นตอนคำนวณ:
+                                        1. จัดเตรียมข้อมูลราคาปิดรายเดือน และค่าหุ้นพื้นฐาน
+                                        2. คำนวณ FFMC ต่อหุ้นต่อเดือน: FFMC (Free-Float Market Capitalization) = Price × SharesOutstanding × FreeFloat
+                                        3. ทำ smoothing เพื่อความเสถียร เช่นใช้ค่าเฉลี่ย 3 เดือนล่าสุด
+                                        4. คำนวณน้ำหนักของหุ้นในกลุ่ม: weight(หุ้นที่คำนวณ) = FFMC(หุ้นที่คำนวณ) / sum(FFMC(FFMC ของหุ้นทุกตัว))
+                                        5. คัดเลือกหุ้นตัวอย่างโดยเลือกหุ้นตามลำดับน้ำหนักจนถึง coverage 95% และไม่เกิน 10 ตัว
+                                        6. สร้าง List สำหรับหุ้นที่เหลือ
+                                        7. คำนวณ CMV ของกลุ่มทุกเดือน: CMV (Current Market Value) = sum(Price_i × SharesOut_i × FreeFloat_i) + FFMC_Other
+                                        8. นิยาม BMV (Base Market Value) โดยใช้ราคาจากเดือนแรก
+                                        9. คำนวณดัชนี: Index_t = (CMV_t / BMV) × BaseIndexValue
+                                        10. ใช้ Monte Carlo simulation เพื่อพยากรณ์ราคาของดัชนีที่ได้คำนวณมา
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* Last Updated */}
+                    <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            อัพเดทล่าสุด: {new Date().toLocaleDateString('th-TH', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }

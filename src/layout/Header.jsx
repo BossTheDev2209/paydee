@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { isDark, toggleTheme } = useTheme();
-  const currentpPath = location.pathname;
+
+  // Handle scroll for sticky header effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleMenu = () => setOpen((prev) => !prev);
   const handleClick = () => {
@@ -13,134 +22,134 @@ export default function Header() {
   };
 
   const menuItems = [
-    { label: "Home", path: "/" },
-    { label: "About Us", path: "/about-us" },
-    { label: "Salary After Tax", path: "/salary-aftertax" },
-    { label: "Saving Goal", path: "/saving-goal" },
-    { label: "ข้อมูลศูนย์กลาง", path: "/financial" },
+    { label: "หน้าแรก", path: "/" },
+    { label: "เกี่ยวกับเรา", path: "/about-us" },
+    { label: "ข้อกำหนดการใช้งาน", path: "/terms-of-use" },
   ];
 
   return (
-    <div className="w-full">
-      <section className="w-full text-[#2b2b2b] dark:text-[#f2f1f1] h-38 flex flex-col justify-center lg:static transition-colors duration-300">
-        {/* Desktop Navigation */}
-        <div className="w-full hidden md:flex p-4">
-          <div className="w-6/12">
-            <Link to="/" className="w-full flex gap-2 items-center">
-              <div className="mx-4">
-                <h1 className="text-sm md:text-2xl font-bold">PayDee</h1>
-                <p className="text-xs md:text-lg">เพย์ดี</p>
-              </div>
-              <div>
-                <button className="hover:bg-[#f2f2f2] hover:dark:bg-[#353535] text-[#2b2b2b] dark:text-[#f2f1f1] rounded-full transition-colors">
-                  <i className="fa-solid fa-globe px-2 py-1 text-2xl"></i>
-                </button>
-              </div>
-            </Link>
-          </div>
-
-          <div className="w-6/12 flex gap-2 items-center justify-end">
-            <Link to="/about-us">
-              <button className="btn-base hover:bg-[#f2f2f2] dark:hover:bg-[#353535] text-[#2b2b2b] dark:text-[#f2f1f1] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
-                เกี่ยวกับเรา
-              </button>
-            </Link>
-
-            <Link to="Policy">
-              <button className="btn-base hover:bg-[#f2f2f2] dark:hover:bg-[#353535] text-[#2b2b2b] dark:text-[#f2f1f1] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
-                ข้อกำหนดในการใช้งาน
-              </button>
-            </Link>
-
-            <Link to="/financial">
-              <button className="btn-base bg-[#ffcc00] dark:bg-[#ffcc00] text-[#2b2b2b] dark:text-[#2b2b2b] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
-                ข้อมูลศูนย์กลาง
-              </button>
-            </Link>
-
-            <button
-              onClick={toggleTheme}
-              className="hover:bg-[#f2f2f2] hover:dark:bg-[#353535] hover:scale-105 duration-300 text-[#2b2b2b] dark:text-[#f2f1f1] rounded-full transition-all"
-            >
-              <i
-                className={`fa-solid ${isDark ? "fa-sun px-2 py-1" : "fa-moon px-2 py-0.5"
-                  } text-md md:text-2xl`}
-              ></i>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        <div className="fixed top-0 bg-[#fdfdfd] dark:bg-[#2b2b2b] z-50 flex items-center justify-between w-full gap-2 pr-2 md:hidden p-4 transition-colors duration-300">
-          <button
-            onClick={toggleMenu}
-            className="w-4/12 relative cursor-pointer"
-          >
-            <div className="relative flex flex-col justify-between w-5 h-3 mt-1">
-              <span
-                className={`hamburger-menu dark:bg-white ${open ? "rotate-45 translate-y-1.5" : ""
-                  }`}
-              ></span>
-              <span
-                className={`hamburger-menu dark:bg-white ${open ? "opacity-0" : "opacity-100"
-                  }`}
-              ></span>
-              <span
-                className={`hamburger-menu dark:bg-white ${open ? "-rotate-45 -translate-y-1" : ""
-                  }`}
-              ></span>
+    <>
+      {/* Desktop Sticky Header */}
+      <header
+        className={`hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? "bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-md shadow-lg py-3"
+          : "bg-transparent py-4"
+          }`}
+      >
+        <div className="w-full max-w-7xl mx-auto px-6 flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-[#ffcc00] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+              <span className="font-bold text-[#2b2b2b] text-lg">P</span>
             </div>
-          </button>
-
-          <Link to="/" className="w-4/12 flex flex-col items-center">
-            <div className="w-full">
-              <h1 className="text-base md:text-2xl font-bold text-center">
+            <div>
+              <h1 className="text-xl font-bold text-[#2b2b2b] dark:text-white">
                 PayDee
               </h1>
-              <p className="text-sm md:text-lg text-nowrap text-center">
+              <p className={`text-xs ${scrolled ? "text-gray-600 dark:text-gray-400" : "text-[#2b2b2b]/70 dark:text-white/70"}`}>
                 เพย์ดี
               </p>
             </div>
           </Link>
 
-          <div className="w-4/12 flex gap-1 justify-end">
-            <button className="hover:bg-[#f2f2f2] dark:bg-[#353535] text-[#2b2b2b] dark:text-[#f2f1f1] px-2 rounded-full transition-colors">
-              <i className="fa-solid fa-globe text-base"></i>
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="hover:bg-[#f2f2f2] hover:dark:bg-[#353535] hover:scale-105 duration-300 text-[#2b2b2b] dark:text-[#f2f1f1] rounded-full transition-all"
-            >
-              <i
-                className={`fa-solid ${isDark ? "fa-sun px-2 py-1" : "fa-moon px-2 py-0.5 "
-                  } text-base`}
-              ></i>
-            </button>
-          </div>
-        </div>
-
-        {/* Dropdown Menu */}
-        <div
-          className={`lg:hidden fixed top-0 left-0 z-40 w-full h-full duration-300 ${open ? "translate-x-0" : "translate-x-full hidden"
-            }`}
-        >
-          <div className="px-6 mt-[76px] space-y-4 text-lg text-[#2b2b2b] dark:text-[#f2f1f1] bg-[#fdfdfd] dark:bg-[#2b2b2b] transition-colors duration-300">
+          {/* Navigation Links */}
+          <nav className="flex items-center gap-2">
             {menuItems.map((item, index) => (
               <Link
-                to={item.path}
                 key={index}
-                onClick={handleClick}
-                className={`cursor-pointer flex justify-center items-center h-10 rounded-xl transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#303030] border-[#979797] dark:border-[#303030] hover:border ${currentpPath === item.path
-                  ? "font-bold bg-[#f2f2f2] dark:bg-[#303030] border border-[#979797] dark:border-[#303030]"
-                  : ""
+                to={item.path}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 hover:bg-[#ffcc00] hover:text-[#2b2b2b] ${scrolled
+                  ? "text-gray-600 dark:text-gray-300"
+                  : "text-[#2b2b2b]/80 dark:text-white/80"
                   }`}
               >
                 {item.label}
               </Link>
             ))}
-          </div>
+
+            {/* CTA Button */}
+            <Link to="/financial">
+              <button className="ml-2 px-5 py-2 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold text-sm hover:bg-[#e6b800] transition-all shadow-md">
+                ข้อมูลศูนย์กลาง
+              </button>
+            </Link>
+
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className={`ml-2 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${scrolled
+                ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                : "bg-[#2b2b2b]/10 dark:bg-white/10 hover:bg-[#2b2b2b]/20 dark:hover:bg-white/20"
+                }`}
+            >
+              <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600 dark:text-white"}`}></i>
+            </button>
+          </nav>
         </div>
-      </section>
-    </div>
+      </header>
+
+      {/* Mobile Sticky Header */}
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1a1a1a]/95 backdrop-blur-md shadow-md">
+        <div className="flex items-center justify-between px-4 py-3">
+          {/* Hamburger Menu */}
+          <button
+            onClick={toggleMenu}
+            className="w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+          >
+            <span className={`w-5 h-0.5 bg-[#2b2b2b] dark:bg-white rounded transition-all ${open ? "rotate-45 translate-y-2" : ""}`}></span>
+            <span className={`w-5 h-0.5 bg-[#2b2b2b] dark:bg-white rounded transition-all ${open ? "opacity-0" : ""}`}></span>
+            <span className={`w-5 h-0.5 bg-[#2b2b2b] dark:bg-white rounded transition-all ${open ? "-rotate-45 -translate-y-2" : ""}`}></span>
+          </button>
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#ffcc00] flex items-center justify-center shadow-sm">
+              <span className="font-bold text-[#2b2b2b]">P</span>
+            </div>
+            <div>
+              <div className="font-bold text-[#2b2b2b] dark:text-white">PayDee</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">เพย์ดี</div>
+            </div>
+          </Link>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+          >
+            <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600"}`}></i>
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Dropdown Menu */}
+      <div
+        className={`md:hidden fixed top-[60px] left-0 right-0 z-40 bg-white dark:bg-[#1a1a1a] shadow-lg transition-all duration-300 ${open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
+          }`}
+      >
+        <nav className="p-4 space-y-2">
+          {menuItems.map((item, index) => (
+            <Link
+              key={index}
+              to={item.path}
+              onClick={handleClick}
+              className="block px-4 py-3 rounded-lg font-medium text-center transition-all text-gray-600 dark:text-gray-300 hover:bg-[#ffcc00] hover:text-[#2b2b2b]"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            to="/financial"
+            onClick={handleClick}
+            className="block px-4 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold text-center"
+          >
+            ข้อมูลศูนย์กลาง
+          </Link>
+        </nav>
+      </div>
+
+      {/* Spacer for fixed header */}
+      <div className="h-16 md:h-20"></div>
+    </>
   );
 }

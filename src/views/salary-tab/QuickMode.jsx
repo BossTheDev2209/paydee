@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -19,18 +19,30 @@ function loadData() {
 export default function QuickMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
-  const [salaryUnit, setSalaryUnit] = useState("month");
-  
+  const formRef = useRef(null);
+
+  // Global Enter key to submit form
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        // Don't submit if in a textarea
+        if (e.target.tagName === "TEXTAREA") return;
+
+        if (formRef.current) {
+          e.preventDefault();
+          formRef.current.submitForm();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const validationSchema = Yup.object({
     salary: Yup.string().required("กรุณากรอกข้อมูล"),
   });
 
   const savedData = loadData();
-
-  const unitOptions = [
-    { value: "month", label: "บาท/เดือน" },
-    { value: "year", label: "บาท/ปี" }
-  ];
 
   return (
     <div className="w-full mt-10">
@@ -50,11 +62,13 @@ export default function QuickMode({ calculate, loading }) {
             lifeInsuranceAmount: "",
           }}
           validationSchema={validationSchema}
+          innerRef={formRef}
           onSubmit={(values) => {
-            // Normalize values to annual before sending to calculator
+            // Pass monthly values directly to tax engine
             const normalizedValues = {
               ...values,
-              salary: salaryUnit === "month" ? Number(values.salary) * 12 : Number(values.salary)
+              salary: Number(String(values.salary).replace(/,/g, '')),
+              expenses: Number(String(values.expenses).replace(/,/g, ''))
             };
             calculate(normalizedValues, "quick");
           }}
@@ -65,16 +79,14 @@ export default function QuickMode({ calculate, loading }) {
                 <CalculatorInput
                   name="salary"
                   label="รายได้ต่อเดือน"
-                  placeholder={salaryUnit === "month" ? "30000" : "360000"}
+                  placeholder="30000"
                   required={true}
                   value={values.salary}
                   error={errors.salary}
                   touched={touched.salary}
                   setFieldValue={setFieldValue}
                   savedValue={savedData?.salary}
-                  unitOptions={unitOptions}
-                  currentUnit={salaryUnit}
-                  onUnitChange={setSalaryUnit}
+                  unit="บาท/เดือน"
                 />
                 <CalculatorInput
                   name="expenses"
@@ -85,7 +97,7 @@ export default function QuickMode({ calculate, loading }) {
                   touched={touched.expenses}
                   setFieldValue={setFieldValue}
                   savedValue={savedData?.expenses}
-                  unit="บาท"
+                  unit="บาท/เดือน"
                 />
               </CalculatorSection>
 
@@ -169,7 +181,7 @@ export default function QuickMode({ calculate, loading }) {
                           }}
                           className="flex-1"
                         />
-                        <span className="text-[#2b2b2b] dark:text-gray-200 text-sm">บาท</span>
+                        <span className="text-[#2b2b2b] dark:text-gray-200 text-sm">บาท/ปี</span>
                       </div>
                     )}
                   </div>
@@ -196,7 +208,7 @@ export default function QuickMode({ calculate, loading }) {
                           }}
                           className="flex-1"
                         />
-                        <span className="text-[#2b2b2b] dark:text-gray-200 text-sm">บาท</span>
+                        <span className="text-[#2b2b2b] dark:text-gray-200 text-sm">บาท/ปี</span>
                       </div>
                     )}
                   </div>
@@ -223,7 +235,7 @@ export default function QuickMode({ calculate, loading }) {
                           }}
                           className="flex-1"
                         />
-                        <span className="text-[#2b2b2b] dark:text-gray-200 text-sm">บาท</span>
+                        <span className="text-[#2b2b2b] dark:text-gray-200 text-sm">บาท/ปี</span>
                       </div>
                     )}
                   </div>
@@ -240,15 +252,14 @@ export default function QuickMode({ calculate, loading }) {
                 </button>
                 <button
                   type="reset"
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${
-                    isResetting 
-                      ? "bg-green-100 text-green-600" 
-                      : "bg-red-100 text-red-600 hover:bg-red-200"
-                  }`}
+                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
+                    ? "bg-green-100 text-green-600"
+                    : "bg-red-100 text-red-600 hover:bg-red-200"
+                    }`}
                   onClick={() => {
                     setIsResetting(true);
                     setTimeout(() => setIsResetting(false), 1000);
-                    
+
                     // Reset form values
                     setFieldValue("salary", "");
                     setFieldValue("expenses", "");
@@ -261,6 +272,9 @@ export default function QuickMode({ calculate, loading }) {
                     setFieldValue("rmfAmount", "");
                     setFieldValue("hasLifeInsurance", false);
                     setFieldValue("lifeInsuranceAmount", "");
+
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
                   {isResetting ? (
@@ -275,11 +289,10 @@ export default function QuickMode({ calculate, loading }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${
-                    loading 
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
-                      : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
-                  }`}
+                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${loading
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
+                    }`}
                 >
                   {loading ? (
                     <>

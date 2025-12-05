@@ -1,6 +1,6 @@
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import {
     Carousel,
     CarouselContent,
@@ -8,17 +8,39 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import DisclaimerModal from "./DisclaimerModal"
 
-export default function CalculatorCarousel({ items }) {
+export default function CalculatorCarousel({ items, large = false }) {
     const plugin = React.useRef(
         Autoplay({ delay: 4000, stopOnInteraction: false })
     )
+    const navigate = useNavigate();
     const [api, setApi] = React.useState()
+    const [showDisclaimer, setShowDisclaimer] = React.useState(false);
+    const [selectedPath, setSelectedPath] = React.useState(null);
     const lastScrollTime = React.useRef(0);
     const COOLDOWN = 500; // ms
 
     // Use a ref for the container to attach native event listener
     const containerRef = React.useRef(null);
+
+    const handleCardClick = (e, path) => {
+        e.preventDefault();
+        setSelectedPath(path);
+        setShowDisclaimer(true);
+    };
+
+    const handleAccept = () => {
+        setShowDisclaimer(false);
+        if (selectedPath) {
+            navigate(selectedPath);
+        }
+    };
+
+    const handleReject = () => {
+        setShowDisclaimer(false);
+        setSelectedPath(null);
+    };
 
     React.useEffect(() => {
         const container = containerRef.current;
@@ -65,9 +87,13 @@ export default function CalculatorCarousel({ items }) {
                     {items.map((item) => (
                         <CarouselItem key={item.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                             <div className="h-full">
-                                <Link to={item.path} className="block h-full">
+                                <button
+                                    onClick={(e) => handleCardClick(e, item.path)}
+                                    className="block w-full h-full text-left"
+                                >
                                     <div
-                                        className="relative h-56 md:h-48 rounded-xl p-5 flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] border border-transparent hover:border-gray-200 shadow-sm"
+                                        className={`relative rounded-xl flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] border border-transparent hover:border-gray-200 shadow-sm cursor-pointer ${large ? "h-64 md:h-56 p-6" : "h-56 md:h-48 p-5"
+                                            }`}
                                         style={{ backgroundColor: item.bgColor }}
                                     >
                                         <div className="flex justify-between items-start">
@@ -107,14 +133,22 @@ export default function CalculatorCarousel({ items }) {
                                             </p>
                                         </div>
                                     </div>
-                                </Link>
+                                </button>
                             </div>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="flex -left-8 md:-left-12 border-none bg-transparent hover:bg-transparent text-gray-400 hover:text-gray-600" />
-                <CarouselNext className="flex -right-8 md:-right-12 border-none bg-transparent hover:bg-transparent text-gray-400 hover:text-gray-600" />
+                <CarouselPrevious className={`flex -left-8 md:-left-12 border-none bg-white/80 hover:bg-white shadow-md ${large ? "text-[#2b2b2b] hover:text-[#ffcc00]" : "text-gray-600 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"}`} />
+                <CarouselNext className={`flex -right-8 md:-right-12 border-none bg-white/80 hover:bg-white shadow-md ${large ? "text-[#2b2b2b] hover:text-[#ffcc00]" : "text-gray-600 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"}`} />
             </Carousel>
+
+            {/* Disclaimer Modal */}
+            <DisclaimerModal
+                isOpen={showDisclaimer}
+                onClose={() => setShowDisclaimer(false)}
+                onAccept={handleAccept}
+                onReject={handleReject}
+            />
         </div>
     )
 }

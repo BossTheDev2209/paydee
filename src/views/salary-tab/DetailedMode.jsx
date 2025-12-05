@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { CalculatorCard, CalculatorSection, CalculatorInput } from "../../compon
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
+import { calculateTaxDetailed } from "../../utils/taxDetailed";
 
 function loadData() {
   try {
@@ -19,32 +20,44 @@ function loadData() {
 export default function DetailedMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
-  
-  // Unit states for all fields
-  const [units, setUnits] = useState({
-    monthlySalary: "month",
-    monthlyBonusExtra: "month",
-    lifeInsurance: "year",
-    ssf: "year",
-    rmf: "year",
-    provident: "year",
-    parentsHealthInsurance: "year",
-    donation: "year"
-  });
+  const formRef = useRef(null);
 
+  // Global Enter key to submit form
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        // Don't submit if in a textarea
+        if (e.target.tagName === "TEXTAREA") return;
+
+        if (formRef.current) {
+          e.preventDefault();
+          formRef.current.submitForm();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Only require salary and housing (most crucial)
   const validationSchema = Yup.object({
     monthlySalary: Yup.string().required("กรุณากรอกข้อมูล"),
+    housingCost: Yup.string().required("กรุณากรอกข้อมูล"),
   });
 
   const savedData = loadData();
 
-  const unitOptions = [
-    { value: "month", label: "บาท/เดือน" },
-    { value: "year", label: "บาท/ปี" }
-  ];
-
-  const handleUnitChange = (field, value) => {
-    setUnits(prev => ({ ...prev, [field]: value }));
+  // Mock data for testing
+  const fillMockData = (setFieldValue) => {
+    setFieldValue("monthlySalary", "30,000");
+    setFieldValue("monthlyBonusExtra", "60,000");
+    setFieldValue("housingCost", "7,000");
+    setFieldValue("transportCost", "2,000");
+    setFieldValue("debtPayment", "3,000");
+    setFieldValue("foodCost", "5,000");
+    setFieldValue("utilitiesCost", "1,500");
+    setFieldValue("insuranceServiceCost", "800");
+    setFieldValue("miscCost", "2,000");
   };
 
   return (
@@ -63,53 +76,134 @@ export default function DetailedMode({ calculate, loading }) {
             provident: "",
             parentsHealthInsurance: "",
             donation: "",
+            // Expense fields (monthly)
+            housingCost: "",
+            transportCost: "",
+            debtPayment: "",
+            foodCost: "",
+            utilitiesCost: "",
+            insuranceServiceCost: "",
+            miscCost: "",
           }}
           validationSchema={validationSchema}
+          innerRef={formRef}
           onSubmit={(values) => {
-            // Normalize all values to annual
-            const normalizedValues = {
-              ...values,
-              monthlySalary: units.monthlySalary === "month" ? Number(values.monthlySalary) * 12 : Number(values.monthlySalary),
-              monthlyBonusExtra: units.monthlyBonusExtra === "month" ? Number(values.monthlyBonusExtra) * 12 : Number(values.monthlyBonusExtra),
-              lifeInsurance: units.lifeInsurance === "month" ? Number(values.lifeInsurance) * 12 : Number(values.lifeInsurance),
-              ssf: units.ssf === "month" ? Number(values.ssf) * 12 : Number(values.ssf),
-              rmf: units.rmf === "month" ? Number(values.rmf) * 12 : Number(values.rmf),
-              provident: units.provident === "month" ? Number(values.provident) * 12 : Number(values.provident),
-              parentsHealthInsurance: units.parentsHealthInsurance === "month" ? Number(values.parentsHealthInsurance) * 12 : Number(values.parentsHealthInsurance),
-              donation: units.donation === "month" ? Number(values.donation) * 12 : Number(values.donation)
-            };
-            calculate(normalizedValues, "detailed");
+            // All values are already annual in Detailed Mode, no normalization needed
+            calculate(values, "detailed");
           }}
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
+              {/* Mock Data Button for Testing */}
+              <div className="mb-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => fillMockData(setFieldValue)}
+                  className="px-4 py-2 text-sm rounded-lg bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-flask"></i>
+                  เติมข้อมูลตัวอย่าง
+                </button>
+              </div>
+
               {/* Income Section */}
               <CalculatorSection title="รายได้">
                 <CalculatorInput
                   name="monthlySalary"
                   label="เงินเดือนต่อเดือน"
-                  placeholder={units.monthlySalary === "month" ? "30000" : "360000"}
+                  placeholder="360000"
                   required={true}
                   value={values.monthlySalary}
                   error={errors.monthlySalary}
                   touched={touched.monthlySalary}
                   setFieldValue={setFieldValue}
                   savedValue={savedData?.salary}
-                  unitOptions={unitOptions}
-                  currentUnit={units.monthlySalary}
-                  onUnitChange={(val) => handleUnitChange("monthlySalary", val)}
+                  unit="บาท/ปี"
                 />
                 <CalculatorInput
                   name="monthlyBonusExtra"
-                  label="โบนัส/รายได้เสริมต่อเดือน"
-                  placeholder={units.monthlyBonusExtra === "month" ? "5000" : "60000"}
+                  label="โบนัสรายปี"
+                  placeholder="60000"
                   value={values.monthlyBonusExtra}
                   error={errors.monthlyBonusExtra}
                   touched={touched.monthlyBonusExtra}
                   setFieldValue={setFieldValue}
-                  unitOptions={unitOptions}
-                  currentUnit={units.monthlyBonusExtra}
-                  onUnitChange={(val) => handleUnitChange("monthlyBonusExtra", val)}
+                  unit="บาท/ปี"
+                />
+              </CalculatorSection>
+
+              {/* Expense Section */}
+              <CalculatorSection title="รายจ่าย">
+                <CalculatorInput
+                  name="housingCost"
+                  label="ค่าที่พักต่อเดือน"
+                  placeholder="10000"
+                  required={true}
+                  value={values.housingCost}
+                  error={errors.housingCost}
+                  touched={touched.housingCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="transportCost"
+                  label="ค่าเดินทางต่อเดือน"
+                  placeholder="3000"
+                  value={values.transportCost}
+                  error={errors.transportCost}
+                  touched={touched.transportCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="debtPayment"
+                  label="หนี้สินขั้นต่ำต่อเดือน"
+                  placeholder="5000"
+                  value={values.debtPayment}
+                  error={errors.debtPayment}
+                  touched={touched.debtPayment}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="foodCost"
+                  label="ค่าอาหารต่อเดือน"
+                  placeholder="8000"
+                  value={values.foodCost}
+                  error={errors.foodCost}
+                  touched={touched.foodCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="utilitiesCost"
+                  label="ค่าสาธารณูปโภคต่อเดือน"
+                  placeholder="2000"
+                  value={values.utilitiesCost}
+                  error={errors.utilitiesCost}
+                  touched={touched.utilitiesCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="insuranceServiceCost"
+                  label="ค่าเบี้ยประกัน/บริการที่จำเป็นต่อเดือน"
+                  placeholder="1000"
+                  value={values.insuranceServiceCost}
+                  error={errors.insuranceServiceCost}
+                  touched={touched.insuranceServiceCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
+                />
+                <CalculatorInput
+                  name="miscCost"
+                  label="ค่าใช้จ่ายเบ็ดเตล็ดและอื่น ๆ"
+                  placeholder="0"
+                  value={values.miscCost}
+                  error={errors.miscCost}
+                  touched={touched.miscCost}
+                  setFieldValue={setFieldValue}
+                  unit="บาท/เดือน"
                 />
               </CalculatorSection>
 
@@ -213,14 +307,12 @@ export default function DetailedMode({ calculate, loading }) {
                         </span>
                       </>
                     }
-                    placeholder={units.lifeInsurance === "month" ? "0" : "0"}
+                    placeholder="0"
                     value={values.lifeInsurance}
                     error={errors.lifeInsurance}
                     touched={touched.lifeInsurance}
                     setFieldValue={setFieldValue}
-                    unitOptions={unitOptions}
-                    currentUnit={units.lifeInsurance}
-                    onUnitChange={(val) => handleUnitChange("lifeInsurance", val)}
+                    unit="บาท/ปี"
                   />
 
                   {/* SSF */}
@@ -234,14 +326,12 @@ export default function DetailedMode({ calculate, loading }) {
                         </span>
                       </>
                     }
-                    placeholder={units.ssf === "month" ? "0" : "0"}
+                    placeholder="0"
                     value={values.ssf}
                     error={errors.ssf}
                     touched={touched.ssf}
                     setFieldValue={setFieldValue}
-                    unitOptions={unitOptions}
-                    currentUnit={units.ssf}
-                    onUnitChange={(val) => handleUnitChange("ssf", val)}
+                    unit="บาท/ปี"
                   />
 
                   {/* RMF */}
@@ -255,14 +345,12 @@ export default function DetailedMode({ calculate, loading }) {
                         </span>
                       </>
                     }
-                    placeholder={units.rmf === "month" ? "0" : "0"}
+                    placeholder="0"
                     value={values.rmf}
                     error={errors.rmf}
                     touched={touched.rmf}
                     setFieldValue={setFieldValue}
-                    unitOptions={unitOptions}
-                    currentUnit={units.rmf}
-                    onUnitChange={(val) => handleUnitChange("rmf", val)}
+                    unit="บาท/ปี"
                   />
 
                   {/* Provident Fund */}
@@ -276,14 +364,12 @@ export default function DetailedMode({ calculate, loading }) {
                         </span>
                       </>
                     }
-                    placeholder={units.provident === "month" ? "0" : "0"}
+                    placeholder="0"
                     value={values.provident}
                     error={errors.provident}
                     touched={touched.provident}
                     setFieldValue={setFieldValue}
-                    unitOptions={unitOptions}
-                    currentUnit={units.provident}
-                    onUnitChange={(val) => handleUnitChange("provident", val)}
+                    unit="บาท/ปี"
                   />
 
                   {/* Parent Health Insurance */}
@@ -297,14 +383,12 @@ export default function DetailedMode({ calculate, loading }) {
                         </span>
                       </>
                     }
-                    placeholder={units.parentsHealthInsurance === "month" ? "0" : "0"}
+                    placeholder="0"
                     value={values.parentsHealthInsurance}
                     error={errors.parentsHealthInsurance}
                     touched={touched.parentsHealthInsurance}
                     setFieldValue={setFieldValue}
-                    unitOptions={unitOptions}
-                    currentUnit={units.parentsHealthInsurance}
-                    onUnitChange={(val) => handleUnitChange("parentsHealthInsurance", val)}
+                    unit="บาท/ปี"
                   />
 
                   {/* Donation */}
@@ -318,14 +402,12 @@ export default function DetailedMode({ calculate, loading }) {
                         </span>
                       </>
                     }
-                    placeholder={units.donation === "month" ? "0" : "0"}
+                    placeholder="0"
                     value={values.donation}
                     error={errors.donation}
                     touched={touched.donation}
                     setFieldValue={setFieldValue}
-                    unitOptions={unitOptions}
-                    currentUnit={units.donation}
-                    onUnitChange={(val) => handleUnitChange("donation", val)}
+                    unit="บาท/ปี"
                   />
                 </div>
               </CalculatorSection>
@@ -340,11 +422,10 @@ export default function DetailedMode({ calculate, loading }) {
                 </button>
                 <button
                   type="reset"
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${
-                    isResetting 
-                      ? "bg-green-100 text-green-600" 
-                      : "bg-red-100 text-red-600 hover:bg-red-200"
-                  }`}
+                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
+                    ? "bg-green-100 text-green-600"
+                    : "bg-red-100 text-red-600 hover:bg-red-200"
+                    }`}
                   onClick={() => {
                     setIsResetting(true);
                     setTimeout(() => setIsResetting(false), 1000);
@@ -361,6 +442,17 @@ export default function DetailedMode({ calculate, loading }) {
                     setFieldValue("provident", "");
                     setFieldValue("parentsHealthInsurance", "");
                     setFieldValue("donation", "");
+                    // Reset expense fields
+                    setFieldValue("housingCost", "");
+                    setFieldValue("transportCost", "");
+                    setFieldValue("debtPayment", "");
+                    setFieldValue("foodCost", "");
+                    setFieldValue("utilitiesCost", "");
+                    setFieldValue("insuranceServiceCost", "");
+                    setFieldValue("miscCost", "");
+
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
                   {isResetting ? (
@@ -375,11 +467,10 @@ export default function DetailedMode({ calculate, loading }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${
-                    loading 
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
-                      : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
-                  }`}
+                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${loading
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
+                    }`}
                 >
                   {loading ? (
                     <>
