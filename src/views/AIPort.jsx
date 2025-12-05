@@ -482,7 +482,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.INDUS?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.INDUS?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -537,7 +539,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.TECH?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.TECH?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -592,7 +596,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.CONSUMP?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.CONSUMP?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -646,7 +652,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.PROPCON?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.PROPCON?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -701,7 +709,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.ARGO?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.ARGO?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -756,7 +766,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.SERVICE?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.SERVICE?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -811,7 +823,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.RESOURC?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.RESOURC?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -866,7 +880,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.FINCIAL?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.FINCIAL?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -921,7 +937,9 @@ export default function AIPort() {
                   {loading || !market ? (
                     <p className="w-6/12 text-center">loading..</p>
                   ) : (
-                    <p className="w-full font-semibold text-2xl">{market.SET?.Name}</p>
+                    <p className="w-full font-semibold text-2xl">
+                      {market.SET?.Name}
+                    </p>
                   )}
                 </p>
                 <div className="w-7/12">
@@ -966,6 +984,20 @@ export default function AIPort() {
                 </div>
               </div>
             </div>
+          </section>
+
+          <section className="w-full p-2 bg-black bg-opacity-20 rounded-lg py-4">
+            <p className="text-lg md:text-xl font-semibold w-full flex">
+              {" "}
+              เวลาที่เก็บข้อมูลล่าสุด:{" "}
+              {loading || !market ? (
+                <span className="w-fit text-center px-4">loading..</span>
+              ) : (
+                <p className="w-fit text-start px-4">
+                  {market?.Last_Time_for_index}
+                </p>
+              )}
+            </p>
           </section>
         </div>
       </div>
