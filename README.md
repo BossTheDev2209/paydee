@@ -1,16 +1,28 @@
-# React + Vite
+# Paydee 💰
+> **Smart Financial Calculator & AI Insights**
+> *Understand your money. Make better decisions.*
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## ที่มาของโปรเจกต์ (Background)
+ในปัจจุบัน เครื่องมือคำนวณทางการเงินมักกระจัดกระจาย มีศัพท์เฉพาะที่เข้าใจยาก และขาดการวิเคราะห์ส่วนบุคคล ทำให้ผู้ใช้งานโดยเฉพาะนักเรียน นักศึกษา และ First Jobber รู้สึกว่าการวางแผนการเงินเป็นเรื่องไกลตัว
 
-Currently, two official plugins are available:
+**Paydee** จึงเกิดขึ้นเพื่อเป็น "ผู้ช่วยและเครื่องคิดเลขทางการเงินอัจฉริยะ" ที่รวบรวมเครื่องมือคำนวณที่จำเป็นไว้ในที่เดียว ใช้ภาษาที่เข้าใจง่าย และนำ **AI (Typhoon)** มาช่วยวิเคราะห์พฤติกรรมการใช้จ่ายเพื่อให้คำแนะนำที่เหมาะสมกับแต่ละบุคคล โดยเน้นความเป็นส่วนตัวสูงสุดด้วยการเก็บข้อมูลใน Local Storage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ฟีเจอร์หลัก (Key Features)
 
-## React Compiler
+* **Dual Mode Calculation:** ระบบคำนวณที่ยืดหยุ่น เลือกได้ 2 รูปแบบ
+    * *Quick Mode:* คำนวณคร่าวๆ รวดเร็วด้วยสูตรมาตรฐาน (เช่น กฎ 50-30-20)
+    * *Detailed Mode:* เจาะลึกรายละเอียด เลือกวันและเงื่อนไขต่างๆ เพื่อผลลัพธ์ที่แม่นยำ
+* **All-in-One Financial Tools:** รวมทุกการคำนวณสำคัญ ได้แก่ ภาษีและรายได้สุทธิ (Tax & Net Income), ตรวจสุขภาพทางการเงิน (Financial Health Check) และการวางแผนเป้าหมายการออม
+* **AI-Powered Insights:** เชื่อมต่อกับ **Typhoon LLM** เพื่อวิเคราะห์ข้อมูลและให้คำแนะนำด้านการเงิน/การลงทุนเบื้องต้น รวมถึงฟีเจอร์จำลองแนวโน้มตลาดหลักทรัพย์เพื่อการเรียนรู้
+* **Privacy First:** สบายใจเรื่องความปลอดภัย ข้อมูลทางการเงินทั้งหมดถูกเก็บไว้ใน **Local Storage** ของผู้ใช้เท่านั้น ไม่มีการบันทึกข้อมูลส่วนตัวลง Server
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 👥 สมาชิกทีมและความรับผิดชอบ (Team 7)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| ชื่อ - นามสกุล | ตำแหน่ง / ความรับผิดชอบ |
+| :--- | :--- |
+| **พุธ - พีระพัฒน์ เจนวิริยะ** | Product Manager |
+| **ฟิน - ธนัชพร เกตุจัย** | Full-stack Developer |
+| **บอส - รณกร ขันสำรอง** | Full-stack Developer |
+| **เฟรม - ฐิติพร ลาภชัยถาวรกุล** | AI Developer |
+| **เคน - ภูริณัฐ ทองสว่าง** | AI Developer |
+| **ปอนด์ - ปณชัย บุญหลวง** | AI Developer |
