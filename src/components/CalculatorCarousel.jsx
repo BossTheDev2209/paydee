@@ -9,6 +9,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import DisclaimerModal from "./DisclaimerModal"
+import TermsModal from "./TermsModal"
 
 export default function CalculatorCarousel({ items, large = false }) {
     const plugin = React.useRef(
@@ -17,21 +18,30 @@ export default function CalculatorCarousel({ items, large = false }) {
     const navigate = useNavigate();
     const [api, setApi] = React.useState()
     const [showDisclaimer, setShowDisclaimer] = React.useState(false);
+    const [showTerms, setShowTerms] = React.useState(false);
     const [selectedPath, setSelectedPath] = React.useState(null);
+    const [selectedCalculatorType, setSelectedCalculatorType] = React.useState(null);
     const lastScrollTime = React.useRef(0);
     const COOLDOWN = 500; // ms
 
     // Use a ref for the container to attach native event listener
     const containerRef = React.useRef(null);
 
-    const handleCardClick = (e, path) => {
+    const handleCardClick = (e, item) => {
         e.preventDefault();
-        setSelectedPath(path);
-        setShowDisclaimer(true);
+        setSelectedPath(item.path);
+
+        if (item.calculatorType) {
+            setSelectedCalculatorType(item.calculatorType);
+            setShowTerms(true);
+        } else {
+            setShowDisclaimer(true);
+        }
     };
 
     const handleAccept = () => {
         setShowDisclaimer(false);
+        setShowTerms(false);
         if (selectedPath) {
             navigate(selectedPath);
         }
@@ -39,7 +49,9 @@ export default function CalculatorCarousel({ items, large = false }) {
 
     const handleReject = () => {
         setShowDisclaimer(false);
+        setShowTerms(false);
         setSelectedPath(null);
+        setSelectedCalculatorType(null);
     };
 
     React.useEffect(() => {
@@ -88,7 +100,7 @@ export default function CalculatorCarousel({ items, large = false }) {
                         <CarouselItem key={item.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                             <div className="h-full">
                                 <button
-                                    onClick={(e) => handleCardClick(e, item.path)}
+                                    onClick={(e) => handleCardClick(e, item)}
                                     className="block w-full h-full text-left"
                                 >
                                     <div
@@ -110,10 +122,7 @@ export default function CalculatorCarousel({ items, large = false }) {
                                                     <img
                                                         src={item.aiIcon}
                                                         alt="AI"
-                                                        className="w-16 h-16 object-contain animate-spin-slow filter drop-shadow-[0_0_25px_rgba(59,130,246,1)] md:drop-shadow-[0_0_15px_rgba(59,130,246,0.6)] md:group-hover/icon:drop-shadow-[0_0_25px_rgba(59,130,246,1)]"
-                                                        style={{
-                                                            animation: "spin 3s linear infinite",
-                                                        }}
+                                                        className="w-16 h-16 object-contain animate-float filter drop-shadow-[0_0_25px_rgba(59,130,246,1)] md:drop-shadow-[0_0_15px_rgba(59,130,246,0.6)] md:group-hover/icon:drop-shadow-[0_0_25px_rgba(59,130,246,1)]"
                                                     />
                                                     <div className="absolute top-1/2 -translate-y-1/2 left-[calc(100%+8px)] w-max px-3 py-1.5 bg-black/90 text-white text-xs rounded opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-20">
                                                         เครื่องคำนวณปัญญาประดิษฐ์
@@ -148,6 +157,16 @@ export default function CalculatorCarousel({ items, large = false }) {
                 onClose={() => setShowDisclaimer(false)}
                 onAccept={handleAccept}
                 onReject={handleReject}
+            />
+
+            {/* Terms Modal */}
+            <TermsModal
+                isOpen={showTerms}
+                onClose={() => setShowTerms(false)}
+                onAccept={handleAccept}
+                onReject={handleReject}
+                calculatorType={selectedCalculatorType}
+                showButtons={true}
             />
         </div>
     )

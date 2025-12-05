@@ -35,7 +35,8 @@ export default {
 			},
 			animation: {
 				'fade-in': 'fadeIn 0.8s ease-out forwards',
-				'spin-slow': 'spin 3s linear infinite'
+				'spin-slow': 'spin 3s linear infinite',
+				'float': 'float 3s ease-in-out infinite'
 			},
 			keyframes: {
 				fadeIn: {
@@ -47,6 +48,10 @@ export default {
 						opacity: '1',
 						transform: 'translateY(0)'
 					}
+				},
+				float: {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			borderRadius: {

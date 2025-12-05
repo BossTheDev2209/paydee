@@ -1,26 +1,26 @@
-import TextField from "@/components/TextField";
-import { color } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Label } from "recharts";
+import { Link } from "react-router-dom";
+// Use standard components
+import { CalculatorSection, CalculatorInput } from "@/components/salary/CalculatorComponents";
 
 export default function AIPort() {
   const [yearInput, setYearInput] = useState("10");
   const [loading, setLoading] = useState(false);
   const [market, setMarket] = useState(null);
-  const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   fetch("https://market-stock-suggestion.onrender.com/market_stock/listing"),
-  //     { method: "GET", headers: { "Content-Type": "application/json" } };
-  // });
-
-  const handleYearChange = (e) => {
-    const value = e.target.value;
-    setYearInput(value);
-    fetchMarketData(value);
+  // Wrapper to match CalculatorInput's expected signature
+  const setFieldValue = (name, value) => {
+    if (name === "year") {
+      setYearInput(value);
+      // Strip commas for API call
+      const cleanValue = value.replace(/,/g, '');
+      if (cleanValue) {
+        fetchMarketData(cleanValue);
+      }
+    }
   };
 
-  const fetchMarketData = async () => {
+  const fetchMarketData = async (years = "10") => {
     setLoading(true);
     try {
       const res = await fetch(
@@ -31,1002 +31,216 @@ export default function AIPort() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            years_forecast: yearInput,
+            years_forecast: years,
             n_sims: "50000",
           }),
         }
       );
 
       if (!res.ok) throw new Error(`API error: ${res.status}`);
-      console.log(res);
-
-      return await res.json();
+      const data = await res.json();
+      setMarket(data);
+      setLoading(false);
+      return data;
     } catch (error) {
       console.error("Fetch Error:", error);
+      setLoading(false);
       return null;
     }
   };
 
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      const data = await fetchMarketData();
-      if (data) setMarket(data);
-      console.log(data);
-      setLoading(false);
-    };
-    loadData();
+    fetchMarketData();
   }, []);
 
-  const bank = [
-    {
-      id: 1,
-      title: "เงินฝากธนาคาร",
-      detail: "เป็นการนำเงินฝากไว้กับธนาคาร",
-      returns: "ดอกบี้ย(ค่อนข้างน้อย)",
-      risk: "ต่ำ",
-    },
-  ];
-  const bonds = [
-    {
-      id: 1,
-      title: "พันธบัตรรัฐบาล",
-      detail: "เป็นการให้รัฐบาลกู้ยืมเงินจากผู้ซื้อ",
-      returns: "ดอกเบี้ย(มักสูงกว่าธนาคาร)",
-      risk: "ต่ำ",
-    },
-  ];
-  const gold = [
-    {
-      id: 1,
-      title: "ทองคำ",
-      detail:
-        "เป็นการนำเงินไปซื้อทอง ซึ่งอาจอยู่ในรูปแบบทองคำแท่ง ทองรูปพรรณ หรือกองทุนทองคำ ",
-      returns: "ส่วนต่างจากราคาที่เพิ่มสูงขึ้นเทียบระหว่างตอนซื้อและขาย",
-      risk: "ปานกลาง",
-    },
-  ];
-  const funds = [
-    {
-      id: 1,
-      title: "กองทุนรวม",
-      detail:
-        "เป็นการนำเงินไปให้กับผู้จัดการกองทุน ซึ่งมีหน้าที่นำเงินที่ได้ไปลงทุน เช่น หุ้น พันธบัตร หรืออสังหาริมทรัพย์ ",
-      returns:
-        "ส่วนต่างจากราคาหลักทรัพย์ในกองทุนที่สูงขึ้น หลังหักค่าส่วนแบ่งกำไรจากผู้จัดการกองทุน ",
-      risk: "ปานกลาง",
-    },
-  ];
-  const estate = [
-    {
-      id: 1,
-      title: "อสังหาริมทรัพย์",
-      detail:
-        "เป็นการนำเงินไปซื้ออสังหาริมทรัพย์ เช่น บ้าน คอนโด ที่ดินโดยการได้ผลตอบแทนอาจเกิดได้จากหลายปัจจัยขึ้นกับความต้องการของผู้ลงทุน",
-      returns:
-        "ค่าเช่า/ส่วนต่างของราคาจากการเปลี่ยนแปลงของสภาพเศรษฐกิจ/การขายเพื่อเอากำไร",
-      risk: "ขึ้นกับประเภทอสังหา ฯ",
-    },
-  ];
-  const share = [
-    {
-      id: 1,
-      title: "หุ้น",
-      detail:
-        "เป็นการนำเงินไปซื้อส่วนแบ่งของบริษัท หรือก็คือการซื้อสิทธิในการเป็น เข้าของส่วนหนึ่งของบริษัทนั้น ๆ",
-      returns:
-        "ส่วนแบ่งกำไรจากบริษัท และส่วนต่างของราคาหุ้นเทียบระหว่างตอนซื้อและตอนขาย",
-      risk: "สูง",
-    },
+  const sectors = [
+    { key: "INDUS", name: "อุตสาหกรรม", color: "text-purple-600", bg: "bg-purple-100", border: "hover:border-purple-500", icon: "fa-solid fa-industry" },
+    { key: "TECH", name: "เทคโนโลยี", color: "text-blue-600", bg: "bg-blue-100", border: "hover:border-blue-500", icon: "fa-solid fa-microchip" },
+    { key: "CONSUMP", name: "สินค้าอุปโภคบริโภค", color: "text-orange-600", bg: "bg-orange-100", border: "hover:border-orange-500", icon: "fa-solid fa-basket-shopping" },
+    { key: "PROPCON", name: "อสังหาริมทรัพย์และก่อสร้าง", color: "text-amber-700", bg: "bg-amber-100", border: "hover:border-amber-500", icon: "fa-solid fa-hotel" },
+    { key: "ARGO", name: "เกษตรและอุตสาหกรรมอาหาร", color: "text-green-600", bg: "bg-green-100", border: "hover:border-green-500", icon: "fa-solid fa-leaf" },
+    { key: "SERVICE", name: "บริการ", color: "text-pink-600", bg: "bg-pink-100", border: "hover:border-pink-500", icon: "fa-solid fa-bell-concierge" },
+    { key: "RESOURC", name: "ทรัพยากร", color: "text-cyan-600", bg: "bg-cyan-100", border: "hover:border-cyan-500", icon: "fa-solid fa-oil-well" },
+    { key: "FINCIAL", name: "ธุรกิจการเงิน", color: "text-indigo-600", bg: "bg-indigo-100", border: "hover:border-indigo-500", icon: "fa-solid fa-coins" },
+    { key: "SET", name: "SET Index", color: "text-red-600", bg: "bg-red-100", border: "hover:border-red-500", icon: "fa-solid fa-chart-line" },
   ];
 
+  const DataCard = ({ sectorKey, sectorName, branding }) => {
+    const data = market ? market[sectorKey] : null;
+
+    if (loading || !data) {
+      return (
+        <div className="bg-white dark:bg-[#3d3d3d] rounded-2xl p-6 shadow-sm border border-transparent h-full flex flex-col items-center justify-center min-h-[220px] animate-pulse">
+          <div className={`w-16 h-16 rounded-full mb-4 ${branding.bg} opacity-50`}></div>
+          <div className="w-3/4 h-6 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
+          <div className="w-1/2 h-4 bg-gray-200 dark:bg-gray-600 rounded"></div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={`group bg-white dark:bg-[#3d3d3d] rounded-2xl p-6 shadow-sm border border-transparent ${branding.border} transition-all duration-300 hover:shadow-lg h-full flex flex-col relative overflow-hidden`}>
+        {/* Decorative Background Icon */}
+        <div className={`absolute -right-6 -bottom-6 text-9xl opacity-5 pointer-events-none ${branding.color} transition-transform group-hover:scale-110 group-hover:rotate-12`}>
+          <i className={branding.icon}></i>
+        </div>
+
+        <div className="flex items-center gap-4 mb-6 z-10 relative">
+          <div className={`w-14 h-14 rounded-2xl ${branding.bg} flex items-center justify-center ${branding.color} text-2xl shadow-sm group-hover:scale-110 transition-transform`}>
+            <i className={branding.icon}></i>
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-white truncate" title={data.Name}>
+              {data.Name || sectorName}
+            </h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-0.5">{sectorKey}</p>
+          </div>
+        </div>
+
+        <div className="bg-gray-50/50 dark:bg-[#2b2b2b]/50 rounded-xl p-5 space-y-5 flex-grow backdrop-blur-sm z-10 relative border border-gray-100 dark:border-gray-700/50">
+          <div className="flex justify-between items-end">
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">ราคาปัจจุบัน</span>
+            <div className="text-right">
+              <span className="block text-2xl font-bold text-[#2b2b2b] dark:text-white tracking-tight">
+                {data.start_price.toFixed(2)}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-end">
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">คาดการณ์ ({yearInput} ปี)</span>
+            <div className="text-right">
+              <span className={`block text-2xl font-bold tracking-tight ${data.median >= data.start_price ? 'text-green-500' : 'text-red-500'}`}>
+                {data.median.toFixed(2)}
+              </span>
+              <span className={`inline-flex items-center text-xs font-bold px-2 py-0.5 rounded-full ${data.median >= data.start_price ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {data.median >= data.start_price ? <i className="fa-solid fa-arrow-trend-up mr-1 text-[10px]"></i> : <i className="fa-solid fa-arrow-trend-down mr-1 text-[10px]"></i>}
+                {((Math.abs(data.median - data.start_price) / data.start_price) * 100).toFixed(1)}%
+              </span>
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-gray-200 dark:border-gray-600">
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">โอกาสกำไร</span>
+              <span className={`text-sm font-bold ${branding.color}`}>{data.prob_gain.toFixed(2)}</span>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 overflow-hidden">
+              <div className={`h-full rounded-full transition-all duration-500 ${data.prob_gain > 0.5 ? 'bg-green-500' : 'bg-yellow-500'}`} style={{ width: `${Math.min(data.prob_gain * 100, 100)}%` }}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Group sectors based on probability
+  const highOpportunity = [];
+  const lowOpportunity = [];
+
+  sectors.forEach(sector => {
+    const data = market ? market[sector.key] : null;
+    // Default to putting in low if no data yet, creates skeleton effect
+    if (!data || data.prob_gain <= 0.5) {
+      lowOpportunity.push(sector);
+    } else {
+      highOpportunity.push(sector);
+    }
+  });
+
+  // Sort: High opp by greatest prob, Low opp by greatest prob (descending)
+  if (market) {
+    highOpportunity.sort((a, b) => (market[b.key].prob_gain - market[a.key].prob_gain));
+    lowOpportunity.sort((a, b) => (market[b.key].prob_gain - market[a.key].prob_gain));
+  }
+
   return (
-    <section className="p-4 w-full flex flex-col items-center min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20 rounded-lg">
+    <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">
       {/* Header Section */}
-      <div className="w-full md:w-10/12 bg-[#add8e6] py-8 md:py-12 px-4 shadow-md mb-8 rounded-lg">
+      <div className="w-full bg-[#ffcc00] py-8 md:py-12 px-4 shadow-md mb-8">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-bold text-[#2b2b2b] mb-4">
-            ข้อที่ควรรู้ก่อนการลงทุน
+            จำลองแนวโน้มตลาดหลักทรัพย์
           </h1>
           <h3 className="text-lg md:text-xl text-[#2b2b2b]/80">
-            ข้อมูลนี้เป็นข้อมูลเพื่อการศึกษาเท่านั้น
-            ผู้ใช้วานควรศึกษาข้อมูลและปรึกษาผู้แนะนำการลงทุนที่ได้รับอนุญาตก่อนตัดสินใจ
-            <span className="text-blue-600 underline px-2">
-              รายละเอียดเพิ่มเติม
-            </span>
+            จำลองผลตอบแทนของกลุ่มอุตสาหกรรมในอนาคตด้วย Monte Carlo Simulation
           </h3>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto bg-[#fdfdfd] dark:bg-[#2b2b2b] rounded-2xl shadow-lg p-8 text-[#3d3d3d] dark:text-[#f2f1f1] transition-colors duration-300">
-        <h1 className="text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center">
-          การลงทุนคืออะไร ?
-        </h1>
-        <p className="py-4 md:p-8 text-xs md:text-lg text-center indent-8">
-          คือการนำทรัพย์สินที่มีมูลค่ามาใช้เพื่อสร้างผลตอบแทน
-          หรือกำไรที่อาจะเกิดขึ้นในอนาคต
-          ซึ่งสามารถแบ่งออกได้เป็นหลายประเภทโดยแต่ละประเภทจะมีความเสี่ยงในการลงทุนที่แตกต่างกันโดยดูจากโอกาสที่การลงทุนนั้น
-          ๆ จะทำให้เกิดการขาดทุนได้
-        </p>
+      <div className="max-w-7xl mx-auto px-4">
+        <Link to="/investment-info" className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-6">
+          <i className="fa-solid fa-arrow-left-long mr-2"></i>
+          Back to Info
+        </Link>
 
-        {/* bank */}
-        <div className="w-full py-2">
-          {bank.map((item, idx) => {
-            return (
-              <div
-                key={idx}
-                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-lg text-sm md:text-lg"
-              >
-                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
-                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ประเภท
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      รายละเอียด
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ผลตอบแทน
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ความเสี่ยง
-                    </p>
-                  </div>
-                  <div className="grid md:grid-cols-4 gap-2">
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.title}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.detail}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.returns}
-                    </p>
-                    <p
-                      className={`w-full border border-blue-500 p-2 my-2 rounded-lg text-center flex items-center justify-center`}
-                    >
-                      {item.risk}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* bonds */}
-        <div className="w-full py-2">
-          {bonds.map((item, idx) => {
-            return (
-              <div
-                key={idx}
-                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
-              >
-                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
-                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ประเภท
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      รายละเอียด
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ผลตอบแทน
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ความเสี่ยง
-                    </p>
-                  </div>
-                  <div className="grid md:grid-cols-4 gap-2">
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.title}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.detail}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.returns}
-                    </p>
-                    <p className="w-full border border-blue-500 p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.risk}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* gold */}
-        <div className="w-full py-2">
-          {gold.map((item, idx) => {
-            return (
-              <div
-                key={idx}
-                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
-              >
-                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
-                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ประเภท
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      รายละเอียด
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ผลตอบแทน
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ความเสี่ยง
-                    </p>
-                  </div>
-                  <div className="grid md:grid-cols-4 gap-2">
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.title}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.detail}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.returns}
-                    </p>
-                    <p className="w-full border border-yellow-500 p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.risk}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* funds */}
-        <div className="w-full py-2">
-          {funds.map((item, idx) => {
-            return (
-              <div
-                key={idx}
-                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
-              >
-                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
-                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ประเภท
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      รายละเอียด
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ผลตอบแทน
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ความเสี่ยง
-                    </p>
-                  </div>
-                  <div className="grid md:grid-cols-4 gap-2">
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.title}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.detail}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.returns}
-                    </p>
-                    <p className="w-full border border-yellow-500 p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.risk}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* estate */}
-        <div className="w-full py-2">
-          {estate.map((item, idx) => {
-            return (
-              <div
-                key={idx}
-                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
-              >
-                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
-                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ประเภท
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      รายละเอียด
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ผลตอบแทน
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ความเสี่ยง
-                    </p>
-                  </div>
-                  <div className="grid md:grid-cols-4 gap-2">
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.title}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.detail}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.returns}
-                    </p>
-                    <p className="w-full border border-orange-500 p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.risk}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* share */}
-        <div className="w-full py-2">
-          {share.map((item, idx) => {
-            return (
-              <div
-                key={idx}
-                className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg"
-              >
-                <div className="w-full grid grid-cols-2 md:grid-cols-none  p-4">
-                  <div className="grid md:grid-cols-4 justify-between text-nowrap truncate">
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ประเภท
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      รายละเอียด
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ผลตอบแทน
-                    </p>
-                    <p className="w-full underline py-4 my-2 text-center flex items-center md:justify-center">
-                      ความเสี่ยง
-                    </p>
-                  </div>
-                  <div className="grid md:grid-cols-4 gap-2">
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.title}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.detail}
-                    </p>
-                    <p className="w-full border p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.returns}
-                    </p>
-                    <p className="w-full border border-red-500 p-2 my-2 rounded-lg text-center flex items-center justify-center">
-                      {item.risk}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* section2 */}
-        <h1 className="mt-10 text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center">
-          อยากจะเริ่มลงทุน ต้องทำอย่างไร?
-        </h1>
-        <div className="my-4 p-4 w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg">
-          <h2 className="mb-4 font-semibold"> สิ่งที่ควรมีก่อนการลงทุน </h2>
-          <ul className="list-disc pl-8">
-            <li> เอกสารยืนยันตัวตน เช่น บัตรประชาชน หรือหนังสือเดินทาง </li>
-            <li> บัญชีธนาคารที่สามารถใช้งานได้ </li>
-            <li>
-              สำหรับผู้ที่อายุไม่เกิน 20 ปี จะไม่สามารถเปิดบัญชีได้ด้วยตัวเอง
-            </li>
-            <li>
-              เงินทุนที่มากพอสำหรับการลงทุน หรือเป็นเงินที่พร้อมจะสูญเสียได
-            </li>
-            <li>
-              ความรู้พื้นฐานในการลงทุน เช่น ประเภทของการลงทุน การดูราคาตลาด
-              ความสามารถในการวิเคราะห์ปัจจัยพื้นฐานที่ส่งผลต่อการลงทุน
-              และการติดตามเงินในพอร์ตการลงทุนอย่างต่อเนื่อง
-            </li>
-            <li>
-              เข้าใจถึงเป้าหมายในการลงทุน ไม่ว่าจะเป็นการลงทุนระยะยาวและสั้น
-            </li>
-            <li>
-              ความสามารถในการเข้าถึงข้อมูล ความรู้ และการติดตามข่าวสาร
-              และสามารถหาที่ปรึกษาทางการเงินได้หากเกิดปัญหาหรือข้อสงไส
-            </li>
-          </ul>
-
-          <h2 className="mt-8 mb-4 font-semibold">สิ่งที่ควรมีก่อนการลงทุน</h2>
-          <p className="indent-8">
-            เมื่อมีสิ่งที่ควรมีสำหรับการเริ่มลงทุนครบแล้ว ก็สามารถเริ่มได้จากการ
-            เปิดบัญชีซื้อขายหลักทรัพย์ หรืออาจเปิดบัญชีผ่านบริษัทหลักทรัพย์หรือ
-            โบรกเกอร์ ซึ่งควรเลือกบริษัทที่น่าเชื่อถือ และตรวจสอบได้
-            เพื่อความปลอดภัย
-          </p>
-        </div>
-
-        {/* section3 */}
-        <h1 className="mt-10 text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center">
-          เราจะได้กำไรจากตลาดหลักทรัพย์ได้อย่างไร
-        </h1>
-        <div className="my-4 p-4 w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg">
-          <p className="indent-8">
-            ในกราฟการเปลี่ยนแปลงของราคาตลาดตามเวลา หากพิจารณาที่ช่วงเวลาหนึ่ง ๆ
-            (เช่น 1 วัน หรือ 5 นาที) เราจะสามารถบอกข้อมูลหลัก ๆ ได้ 4 อย่าง คือ
-            ราคาเปิด ราคาปิด ราคาสูงสุด และราคาต่ำสุด
-            ซึ่งจะอยู่ในรูปแบบกราฟแท่งเทียบของช่วงเวลาที่พิจารณา
-            ซึ่งการจะได้กำไรนั้น ก็คือเมื่อราคาปิดในช่วงเวลาที่เราขายออก
-            มีมากกว่าราคาปิดในช่วงเวลาที่เราซื้อนั้นเอง
-            โดยจะคิดเป็นอัตราส่วนเทียบกับเงินที่เราซื้อ
-            และเงินที่ได้มามากขึ้นนั้นก็คือกำไรจากการขายหุ้นตัวนั้น
-          </p>
-        </div>
-
-        {/* section4 */}
-        <h1 className="mt-10 text-xl md:text-3xl font-bold text-[#3d3d3d] w-full bg-[#ffcc00] rounded-lg p-1 text-center">
-          ตัวอย่างผลการจำลองแนวโน้ม ของกลุ่มอุตสาหกรรม
-          ในตลาดหลักทรัพย์แห่งประเทศไทย
-        </h1>
-        <p className="py-4 md:p-8 text-xs md:text-lg text-center text-red-500">
-          คำเตือน การคาดการณ์นี้เป็นการคาดการณ์เพื่อการศึกษาและ
-          ยกตัวอย่างเท่านั้น โดยมีจุดประสงค์เพื่อเพิ่มความเข้าใจให้กับผู้ใช้
-          ซึ่งข้อมูลที่เห็นนั้นมิใช่ราคาที่อยู่ในดีชนีอุตสาหกรรมนั้นจริง ๆ
-          เพราะด้วยข้อจำกัดด้านการเข้าถึงข้อมูล
-          ดังนั้นจึงไม่ควรนำข้อมูลนี้ไปใช้ในการประกอบการตัดสินใจ ในการลงทุน
-          และเราไม่รับผิดชอบกับความเสียหายที่เกิดขึ้นหาก
-          ผู้ใช้นำข้อมูลเหล่านี้ไปใช้ในการประกอบการตัดสินใจในการลงทุน
-          <span className="text-blue-500 underline px-2">
-            รายละเอียดเพิ่มเติม
-          </span>
-        </p>
-        <div className="my-4 p-4 w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg">
-          {/* input */}
-          <div className="w-full flex flex-wrap items-center">
-            <label className="w-full md:w-6/12 mb-2 text-gray-700 dark:text-gray-300">
-              ปีที่ต้องการคาดการณ์{" "}
-              <span className="text-gray-400">(optional)</span>
-            </label>
-            <div className="w-full md:w-6/12 flex items-center justify-end">
-              <div className="w-10/12 pad-main">
-                <TextField
-                  name="year"
-                  value={yearInput}
-                  onChange={handleYearChange}
-                  placeholder="10"
-                />
-              </div>
-              <p className="w-2/12"> ปี </p>
+        {/* Warning Banner */}
+        <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded-r-lg mb-8 shadow-sm">
+          <div className="flex items-start">
+            <i className="fa-solid fa-circle-exclamation text-red-500 mt-1 mr-3 text-lg"></i>
+            <div>
+              <h3 className="font-bold text-red-700 dark:text-red-400 mb-1">คำเตือนสำคัญ</h3>
+              <p className="text-sm text-red-600 dark:text-red-300 leading-relaxed">
+                การคาดการณ์นี้จัดทำขึ้นเพื่อการศึกษาเท่านั้น ข้อมูลเป็นการจำลองทางสถิติและมีความไม่แน่นอน
+                มิใช่ข้อมูลราคาจริงในอนาคต ทางเราไม่รับผิดชอบต่อความเสียหายใดๆ จากการนำข้อมูลนี้ไปใช้ตัดสินใจลงทุน
+              </p>
             </div>
           </div>
-
-          {/* industrial */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.INDUS?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.INDUS?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.INDUS?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.INDUS?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* tech */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.TECH?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.TECH?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.TECH?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.TECH?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* consump */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.CONSUMP?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.CONSUMP?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.CONSUMP?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.CONSUMP?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          {/* propcon */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.PROPCON?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.PROPCON?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.PROPCON?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.PROPCON?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* argo */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.ARGO?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.ARGO?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.ARGO?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.ARGO?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* service */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.SERVICE?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.SERVICE?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.SERVICE?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.SERVICE?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* resourc */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.RESOURC?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.RESOURC?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.RESOURC?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.RESOURC?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* fincial */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.FINCIAL?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.FINCIAL?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.FINCIAL?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.FINCIAL?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* set */}
-          <section className="w-full py-2">
-            <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
-              <div className="w-full flex items-center">
-                <p className="w-5/12">
-                  {loading || !market ? (
-                    <p className="w-6/12 text-center">loading..</p>
-                  ) : (
-                    <p className="w-full font-semibold text-2xl">
-                      {market.SET?.Name}
-                    </p>
-                  )}
-                </p>
-                <div className="w-7/12">
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      {" "}
-                      ราคาล่าสุด
-                      <span className="text-red-400 underline">
-                        จากการคำนวณ:{" "}
-                      </span>{" "}
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.SET?.start_price.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12"> ราคาที่คาดการณ์: </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.SET?.median.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full flex">
-                    <p className="w-6/12">
-                      โอกาสที่ราคาปิดจะอยู่เหนือราคาล่าสุด:
-                    </p>
-                    {loading || !market ? (
-                      <p className="w-6/12 text-center">loading..</p>
-                    ) : (
-                      <p className="w-6/12 text-start px-4">
-                        {market.SET?.prob_gain.toFixed(3)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="w-full p-2 bg-black bg-opacity-20 rounded-lg py-4">
-            <p className="text-lg md:text-xl font-semibold w-full flex">
-              {" "}
-              เวลาที่เก็บข้อมูลล่าสุด:{" "}
-              {loading || !market ? (
-                <span className="w-fit text-center px-4">loading..</span>
-              ) : (
-                <p className="w-fit text-start px-4">
-                  {market?.Last_Time_for_index}
-                </p>
-              )}
-            </p>
-          </section>
         </div>
+
+        {/* Controls Section using Standard Components */}
+        <CalculatorSection title="ตั้งค่าการคำนวณ">
+          <div className="flex flex-col md:flex-row items-end gap-6">
+            <div className="w-full md:w-1/2">
+              <CalculatorInput
+                label="จำนวนปีล่วงหน้า"
+                name="year"
+                placeholder="ระบุจำนวนปี (เช่น 10)"
+                value={yearInput}
+                setFieldValue={setFieldValue}
+                unit="ปี"
+              />
+            </div>
+            <div className="pb-4 text-sm text-gray-500 dark:text-gray-400">
+              <i className="fa-solid fa-clock-rotate-left mr-2"></i>
+              อัปเดตล่าสุด: {market?.Last_Time_for_index || "กำลังโหลด..."}
+            </div>
+          </div>
+        </CalculatorSection>
+
+        {/* High Opportunity Section */}
+        {highOpportunity.length > 0 && (
+          <div className="mb-12">
+            <div className="flex items-center gap-3 mb-6 pl-2 border-l-4 border-green-500">
+              <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">
+                โอกาสกำไรสูง (มากกว่า 50%)
+              </h2>
+              <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">แนะนำ</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {highOpportunity.map((sector) => (
+                <DataCard key={sector.key} sectorKey={sector.key} sectorName={sector.name} branding={sector} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Low Opportunity Section */}
+        {lowOpportunity.length > 0 && (
+          <div>
+            <div className="flex items-center gap-3 mb-6 pl-2 border-l-4 border-orange-500">
+              <h2 className="text-2xl font-bold text-orange-700 dark:text-orange-400">
+                โอกาสกำไรต่ำ/ปานกลาง (น้อยกว่า 50%)
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {lowOpportunity.map((sector) => (
+                <DataCard key={sector.key} sectorKey={sector.key} sectorName={sector.name} branding={sector} />
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </section>
   );

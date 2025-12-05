@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import CommandPalette from "../components/CommandPalette";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
 
   // Handle scroll for sticky header effect
@@ -14,6 +16,18 @@ export default function Header() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Handle Ctrl+K to open search
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const toggleMenu = () => setOpen((prev) => !prev);
@@ -29,6 +43,8 @@ export default function Header() {
 
   return (
     <>
+      <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+
       {/* Desktop Sticky Header */}
       <header
         className={`hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
@@ -53,7 +69,19 @@ export default function Header() {
           </Link>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center gap-3">
+            {/* Search Trigger (Desktop) */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all group ${scrolled
+                ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:border-gray-300 dark:hover:border-gray-600"
+                : "bg-white/50 dark:bg-black/20 border-white/20 dark:border-white/10 text-[#2b2b2b]/60 dark:text-white/60 hover:bg-white/80 dark:hover:bg-black/30"
+                }`}
+            >
+              <i className="fa-solid fa-magnifying-glass text-sm"></i>
+              <span className="text-sm font-medium">ค้นหา...</span>
+            </button>
+
             {menuItems.map((item, index) => (
               <Link
                 key={index}
@@ -112,13 +140,22 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
-          >
-            <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600"}`}></i>
-          </button>
+          {/* Right Mobile Actions */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white"
+            >
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </button>
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+            >
+              <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600"}`}></i>
+            </button>
+          </div>
         </div>
       </header>
 

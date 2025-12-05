@@ -1,4 +1,5 @@
 import AIPort from "@/views/AIPort";
+import InvestmentInfo from "@/views/InvestmentInfo";
 import MainLayout from "../layout/MainLayout";
 import AboutUs from "../views/AboutUs.jsx";
 import Financial from "../views/Financial.jsx";
@@ -22,9 +23,9 @@ const allRoutes = [
       { path: "/terms-of-use", element: <Policy /> },
       { path: "/about-us", element: <AboutUs /> },
       { path: "/ai-port", element: <AIPort /> },
+      { path: "/investment-info", element: <InvestmentInfo /> },
     ],
   },
 ];
 
 export default allRoutes;
-

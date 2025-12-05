@@ -1,62 +1,11 @@
 import { Link } from "react-router-dom";
 import SectionContainer from "../components/SectionContainer";
 import CalculatorCarousel from "../components/CalculatorCarousel";
-import AI from "../images/Ai_icon.png";
 import { motion } from "framer-motion";
+import { popularCalculators, category1, category2 } from "../data/calculators";
 
 export default function Home() {
 
-  const popularCalculators = [
-    {
-      id: 1,
-      path: "/salary-aftertax",
-      title: "รายได้สุทธิหลังภาษี",
-      details: "คำนวณรายได้หลังหักภาษี",
-      bgColor: "#67B8FF",
-      isAi: true,
-      aiIcon: AI
-    },
-    {
-      id: 2,
-      path: "/saving-goal",
-      title: "เป้าหมายการออม",
-      details: "คำนวณเป้าหมายการออม",
-      bgColor: "#867CFF",
-      isAi: false,
-      aiIcon: AI
-    },
-    {
-      id: 3,
-      path: "/ai-port",
-      title: "ตัวอย่างแนวโน้มจำลองตลาดหลักทรัพย์",
-      details: "จำลองกลุ่มหุ้นจากตลาดหลักทรัพย์",
-      bgColor: "#FF8CA2",
-      isAi: true,
-      aiIcon: AI
-    },
-    {
-      id: 4,
-      path: "/debt-management",
-      title: "บริหารหนี้สิน",
-      details: "วางแผนจัดการหนี้สิน",
-      bgColor: "#50df84",
-      icon: "fa-solid fa-hand-holding-dollar"
-    }
-  ];
-  {/*mockup*/ }
-  const category1 = [
-    { id: 101, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-    { id: 102, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-    { id: 103, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-    { id: 104, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-  ];
-
-  const category2 = [
-    { id: 201, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-    { id: 202, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-    { id: 203, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-    { id: 204, path: "#", title: "ชื่อ", details: "คำอธิบาย", bgColor: "#FFE66D" },
-  ];
 
   return (
     <div className="w-full min-h-screen pb-20 bg-gray-50 dark:bg-[#1a1a1a]">
