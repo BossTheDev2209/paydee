@@ -8,6 +8,7 @@ import Home from "../views/Home";
 import Policy from "../views/Policy.jsx";
 import SalaryAfterTax from '../views/SalaryAfterTax.jsx';
 import SavingGoal from '../views/SavingGoal.jsx';
+import DebtManagement from '../views/DebtManagement.jsx';
 
 const allRoutes = [
   {
@@ -18,6 +19,7 @@ const allRoutes = [
       { path: "/salary-aftertax", element: <SalaryAfterTax /> },
       { path: "/financial-insight", element: <FinancialInsight /> },
       { path: "/saving-goal", element: <SavingGoal /> },
+      { path: "/debt-management", element: <DebtManagement /> },
       { path: "/financial", element: <Financial /> },
       { path: "/policy", element: <Policy /> },
       { path: "/terms-of-use", element: <Policy /> },
