@@ -118,7 +118,7 @@ export default function SalaryAfterTax() {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {/* Conditional Text Animation */}
+                    {/* Status Message */}
                     <div className="text-center mb-6">
                       {(currentMode === "detailed" && result.total_monthly_expenses > 0 ? result.remaining_cash_month : result.net_income_month_after_tax) > 0 ? (
                         <motion.div
@@ -143,73 +143,140 @@ export default function SalaryAfterTax() {
                       )}
                     </div>
 
-                    <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                      <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                        รายได้สุทธิต่อเดือน
-                      </h2>
-                      <h2 className="text-2xl md:text-3xl font-bold text-[#2b2b2b] dark:text-[#ffcc00]">
-                        <SlotCounter value={result.net_income_month_after_tax} /> <span className="text-base font-normal text-gray-500">บาท</span>
-                      </h2>
+                    {/* Categories Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                      {/* รายได้ Category */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl p-5 border border-green-200 dark:border-green-700/50"
+                      >
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                            <i className="fa-solid fa-arrow-trend-up text-white text-sm"></i>
+                          </div>
+                          <h3 className="font-bold text-green-700 dark:text-green-400">รายได้</h3>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-xs text-green-600/70 dark:text-green-400/70 mb-1">ต่อเดือน</p>
+                            <p className="text-xl md:text-2xl font-bold text-green-700 dark:text-green-400">
+                              <SlotCounter value={result.net_income_month_after_tax} />
+                              <span className="text-sm font-normal ml-1">บาท</span>
+                            </p>
+                          </div>
+                          <div className="pt-2 border-t border-green-200 dark:border-green-700/50">
+                            <p className="text-xs text-green-600/70 dark:text-green-400/70 mb-1">ต่อปี</p>
+                            <p className="text-lg font-semibold text-green-600 dark:text-green-500">
+                              <SlotCounter value={result.net_income_year_after_tax} />
+                              <span className="text-sm font-normal ml-1">บาท</span>
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* รายจ่าย Category */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl p-5 border border-orange-200 dark:border-orange-700/50"
+                      >
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                            <i className="fa-solid fa-arrow-trend-down text-white text-sm"></i>
+                          </div>
+                          <h3 className="font-bold text-orange-700 dark:text-orange-400">รายจ่าย</h3>
+                        </div>
+                        {currentMode === "detailed" && result.total_monthly_expenses > 0 ? (
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-xs text-orange-600/70 dark:text-orange-400/70 mb-1">ต่อเดือน</p>
+                              <p className="text-xl md:text-2xl font-bold text-orange-700 dark:text-orange-400">
+                                <SlotCounter value={result.total_monthly_expenses} />
+                                <span className="text-sm font-normal ml-1">บาท</span>
+                              </p>
+                            </div>
+                            <div className="pt-2 border-t border-orange-200 dark:border-orange-700/50">
+                              <p className="text-xs text-orange-600/70 dark:text-orange-400/70 mb-1">ต่อปี</p>
+                              <p className="text-lg font-semibold text-orange-600 dark:text-orange-500">
+                                <SlotCounter value={result.total_yearly_expenses} />
+                                <span className="text-sm font-normal ml-1">บาท</span>
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center h-20 text-orange-400 dark:text-orange-500/50">
+                            <p className="text-sm text-center">ไม่มีข้อมูลค่าใช้จ่าย<br />(ใช้ Detailed Mode)</p>
+                          </div>
+                        )}
+                      </motion.div>
+
+                      {/* ภาษี Category */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl p-5 border border-red-200 dark:border-red-700/50"
+                      >
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                            <i className="fa-solid fa-file-invoice-dollar text-white text-sm"></i>
+                          </div>
+                          <h3 className="font-bold text-red-700 dark:text-red-400">ภาษี</h3>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-xs text-red-600/70 dark:text-red-400/70 mb-1">ต่อเดือน</p>
+                            <p className="text-xl md:text-2xl font-bold text-red-700 dark:text-red-400">
+                              <SlotCounter value={Math.round(result.tax_year / 12)} />
+                              <span className="text-sm font-normal ml-1">บาท</span>
+                            </p>
+                          </div>
+                          <div className="pt-2 border-t border-red-200 dark:border-red-700/50">
+                            <p className="text-xs text-red-600/70 dark:text-red-400/70 mb-1">ต่อปี</p>
+                            <p className="text-lg font-semibold text-red-600 dark:text-red-500">
+                              <SlotCounter value={result.tax_year} />
+                              <span className="text-sm font-normal ml-1">บาท</span>
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                      <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                        รายได้สุทธิต่อปี
-                      </h2>
-                      <h2 className="text-xl md:text-2xl font-bold text-[#2b2b2b] dark:text-white">
-                        <SlotCounter value={result.net_income_year_after_tax} /> <span className="text-base font-normal text-gray-500">บาท</span>
-                      </h2>
-                    </div>
-
-                    {/* Show expense and cashflow info only in Detailed Mode with expenses */}
+                    {/* เงินคงเหลือ - Summary Card (Only in Detailed Mode with expenses) */}
                     {currentMode === "detailed" && result.total_monthly_expenses > 0 && (
-                      <>
-                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                            ค่าใช้จ่ายรวมต่อเดือน
-                          </h2>
-                          <h2 className="text-xl md:text-2xl font-bold text-orange-500">
-                            <SlotCounter value={result.total_monthly_expenses} /> <span className="text-base font-normal text-gray-500">บาท</span>
-                          </h2>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className={`rounded-xl p-6 border-2 ${result.remaining_cash_month >= 0
+                            ? 'bg-gradient-to-r from-emerald-500 to-green-600 border-emerald-400'
+                            : 'bg-gradient-to-r from-red-500 to-rose-600 border-red-400'
+                          }`}
+                      >
+                        <div className="text-center text-white">
+                          <p className="text-sm opacity-90 mb-2">เงินคงเหลือหลังหักค่าใช้จ่าย</p>
+                          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+                            <div>
+                              <p className="text-3xl md:text-4xl font-bold">
+                                <SlotCounter value={result.remaining_cash_month} />
+                                <span className="text-lg font-normal ml-1">บาท/เดือน</span>
+                              </p>
+                            </div>
+                            <div className="hidden md:block w-px h-12 bg-white/30"></div>
+                            <div>
+                              <p className="text-xl md:text-2xl font-semibold opacity-90">
+                                <SlotCounter value={result.remaining_cash_year} />
+                                <span className="text-base font-normal ml-1">บาท/ปี</span>
+                              </p>
+                            </div>
+                          </div>
                         </div>
-
-                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                            ค่าใช้จ่ายรวมต่อปี
-                          </h2>
-                          <h2 className="text-xl md:text-2xl font-bold text-orange-500">
-                            <SlotCounter value={result.total_yearly_expenses} /> <span className="text-base font-normal text-gray-500">บาท</span>
-                          </h2>
-                        </div>
-
-                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                            เงินคงเหลือต่อเดือน
-                          </h2>
-                          <h2 className={`text-xl md:text-2xl font-bold ${result.remaining_cash_month >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
-                            <SlotCounter value={result.remaining_cash_month} /> <span className="text-base font-normal text-gray-500">บาท</span>
-                          </h2>
-                        </div>
-
-                        <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-600 pb-4">
-                          <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                            เงินคงเหลือต่อปี
-                          </h2>
-                          <h2 className={`text-xl md:text-2xl font-bold ${result.remaining_cash_year >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
-                            <SlotCounter value={result.remaining_cash_year} /> <span className="text-base font-normal text-gray-500">บาท</span>
-                          </h2>
-                        </div>
-                      </>
+                      </motion.div>
                     )}
-
-                    <div className="flex flex-col md:flex-row justify-between items-center">
-                      <h2 className="text-lg md:text-xl text-[#2b2b2b] dark:text-gray-200">
-                        ภาษีต่อปี
-                      </h2>
-                      <h2 className="text-xl md:text-2xl font-bold text-red-500">
-                        <SlotCounter value={result.tax_year} /> <span className="text-base font-normal text-gray-500">บาท</span>
-                      </h2>
-                    </div>
 
                     {/* Action Buttons - Only show in Detailed Mode with expenses */}
                     {currentMode === "detailed" && result.total_monthly_expenses > 0 && (

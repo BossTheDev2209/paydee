@@ -124,8 +124,8 @@ export default function Home() {
       {/* Content */}
       <div id="calculators" className="max-w-6xl mx-auto px-4 space-y-8 pt-12">
 
-        <SectionContainer title="ยอดนิยม">
-          <CalculatorCarousel items={popularCalculators} />
+        <SectionContainer title="ยอดนิยม" featured>
+          <CalculatorCarousel items={popularCalculators} large />
         </SectionContainer>
 
         <SectionContainer title="เครื่องคำนวณใช้สูตร">

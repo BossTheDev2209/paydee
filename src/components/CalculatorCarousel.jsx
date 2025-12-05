@@ -9,7 +9,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 
-export default function CalculatorCarousel({ items }) {
+export default function CalculatorCarousel({ items, large = false }) {
     const plugin = React.useRef(
         Autoplay({ delay: 4000, stopOnInteraction: false })
     )
@@ -67,7 +67,8 @@ export default function CalculatorCarousel({ items }) {
                             <div className="h-full">
                                 <Link to={item.path} className="block h-full">
                                     <div
-                                        className="relative h-56 md:h-48 rounded-xl p-5 flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] border border-transparent hover:border-gray-200 shadow-sm"
+                                        className={`relative rounded-xl flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] border border-transparent hover:border-gray-200 shadow-sm ${large ? "h-64 md:h-56 p-6" : "h-56 md:h-48 p-5"
+                                            }`}
                                         style={{ backgroundColor: item.bgColor }}
                                     >
                                         <div className="flex justify-between items-start">
@@ -112,8 +113,8 @@ export default function CalculatorCarousel({ items }) {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="flex -left-8 md:-left-12 border-none bg-transparent hover:bg-transparent text-gray-400 hover:text-gray-600" />
-                <CarouselNext className="flex -right-8 md:-right-12 border-none bg-transparent hover:bg-transparent text-gray-400 hover:text-gray-600" />
+                <CarouselPrevious className={`flex -left-8 md:-left-12 border-none bg-white/80 hover:bg-white shadow-md ${large ? "text-[#2b2b2b] hover:text-[#ffcc00]" : "text-gray-600 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"}`} />
+                <CarouselNext className={`flex -right-8 md:-right-12 border-none bg-white/80 hover:bg-white shadow-md ${large ? "text-[#2b2b2b] hover:text-[#ffcc00]" : "text-gray-600 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"}`} />
             </Carousel>
         </div>
     )
