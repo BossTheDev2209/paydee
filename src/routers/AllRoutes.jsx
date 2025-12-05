@@ -18,6 +18,7 @@ const allRoutes = [
       { path: "/saving-goal", element: <SavingGoal /> },
       { path: "/financial", element: <Financial /> },
       { path: "/policy", element: <Policy /> },
+      { path: "/terms-of-use", element: <Policy /> },
       { path: "/about-us", element: <AboutUs /> },
     ],
   },

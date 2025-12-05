@@ -2,11 +2,20 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
 
-export const CalculatorCard = ({ title, children, className, ...props }) => {
+export const CalculatorCard = ({ title, children, className, onInfoClick, ...props }) => {
     return (
         <div className={cn("w-full rounded-2xl shadow-lg bg-white dark:bg-[#2b2b2b]", className)} {...props}>
-            <div className="bg-[#ffcc00] py-3 px-6 text-center rounded-t-2xl">
+            <div className="bg-[#ffcc00] py-3 px-6 text-center rounded-t-2xl flex items-center justify-center gap-2">
                 <h2 className="text-xl md:text-2xl font-bold text-[#2b2b2b]">{title}</h2>
+                {onInfoClick && (
+                    <button
+                        onClick={onInfoClick}
+                        className="ml-2 hover:scale-110 transition-transform"
+                        aria-label="\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e41\u0e25\u0e30\u0e02\u0e49\u0e2d\u0e01\u0e33\u0e2b\u0e19\u0e14"
+                    >
+                        <i className="fa-solid fa-circle-info text-[#2b2b2b]"></i>
+                    </button>
+                )}
             </div>
             <div className="p-6 md:p-8 bg-[#e5e5e5] dark:bg-[#3d3d3d] rounded-b-2xl">
                 {children}
@@ -37,7 +46,7 @@ export const CalculatorInput = ({
     onChange,
     placeholder,
     required = false,
-    unit = "บาท",
+    unit = "\u0e1a\u0e32\u0e17",
     error,
     touched,
     setFieldValue,

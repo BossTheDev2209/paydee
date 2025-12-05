@@ -3,17 +3,29 @@ import { calculateTaxQuick } from "../utils/taxQuick";
 import { calculateTaxDetailed } from "../utils/taxDetailed";
 import QuickMode from "./salary-tab/QuickMode";
 import DetailedMode from "./salary-tab/DetailedMode";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { CalculatorCard } from "../components/salary/CalculatorComponents";
 import { motion, AnimatePresence } from "framer-motion";
 import SlotCounter from "../components/ui/SlotCounter";
+import TermsModal from "../components/TermsModal";
 
 export default function SalaryAfterTax() {
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
   const modeParam = params.get("mode");
   const currentMode = modeParam === "detailed" ? "detailed" : "quick";
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [modal, setModal] = useState(false);
+
+  const handleTermsAccept = () => {
+    setModal(false);
+  };
+
+  const handleTermsReject = () => {
+    setModal(false);
+    navigate("/");
+  };
 
   const handleModeChange = (newMode) => {
     setParams({ mode: newMode });
@@ -111,7 +123,11 @@ export default function SalaryAfterTax() {
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <CalculatorCard title="ผลลัพธ์" id="result">
+              <CalculatorCard
+                title="ผลลัพธ์"
+                id="result"
+                onInfoClick={() => setModal(true)}
+              >
                 {loading ? (
                   <div className="flex justify-center items-center h-40">
                     <i className="fa-solid fa-spinner text-[#ffcc00] text-4xl animate-spin"></i>
@@ -253,8 +269,8 @@ export default function SalaryAfterTax() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
                         className={`rounded-xl p-6 border-2 ${result.remaining_cash_month >= 0
-                            ? 'bg-gradient-to-r from-emerald-500 to-green-600 border-emerald-400'
-                            : 'bg-gradient-to-r from-red-500 to-rose-600 border-red-400'
+                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 border-emerald-400'
+                          : 'bg-gradient-to-r from-red-500 to-rose-600 border-red-400'
                           }`}
                       >
                         <div className="text-center text-white">
@@ -333,6 +349,16 @@ export default function SalaryAfterTax() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Terms Modal - Added at the end of the section */}
+      <TermsModal
+        isOpen={modal}
+        onClose={() => setModal(false)}
+        onAccept={handleTermsAccept}
+        onReject={handleTermsReject}
+        calculatorType="salary-tax"
+        showButtons={true}
+      />
     </section>
   );
 }

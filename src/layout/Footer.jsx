@@ -14,6 +14,10 @@ export default function Footer() {
       { label: "เกี่ยวกับเรา", path: "/about-us" },
       { label: "ติดต่อเรา", path: "/contact" },
     ],
+    กฎหมาย: [
+      { label: "ข้อกำหนดการใช้งาน", path: "/terms-of-use" },
+      { label: "นโยบายความเป็นส่วนตัว", path: "/privacy-policy" },
+    ],
   };
 
   return (

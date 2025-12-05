@@ -24,6 +24,7 @@ export default function Header() {
   const menuItems = [
     { label: "หน้าแรก", path: "/" },
     { label: "เกี่ยวกับเรา", path: "/about-us" },
+    { label: "ข้อกำหนดการใช้งาน", path: "/terms-of-use" },
   ];
 
   return (
@@ -31,8 +32,8 @@ export default function Header() {
       {/* Desktop Sticky Header */}
       <header
         className={`hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-            ? "bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-md shadow-lg py-3"
-            : "bg-transparent py-4"
+          ? "bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-md shadow-lg py-3"
+          : "bg-transparent py-4"
           }`}
       >
         <div className="w-full max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -58,8 +59,8 @@ export default function Header() {
                 key={index}
                 to={item.path}
                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 hover:bg-[#ffcc00] hover:text-[#2b2b2b] ${scrolled
-                    ? "text-gray-600 dark:text-gray-300"
-                    : "text-[#2b2b2b]/80 dark:text-white/80"
+                  ? "text-gray-600 dark:text-gray-300"
+                  : "text-[#2b2b2b]/80 dark:text-white/80"
                   }`}
               >
                 {item.label}
@@ -77,8 +78,8 @@ export default function Header() {
             <button
               onClick={toggleTheme}
               className={`ml-2 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${scrolled
-                  ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-                  : "bg-[#2b2b2b]/10 dark:bg-white/10 hover:bg-[#2b2b2b]/20 dark:hover:bg-white/20"
+                ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                : "bg-[#2b2b2b]/10 dark:bg-white/10 hover:bg-[#2b2b2b]/20 dark:hover:bg-white/20"
                 }`}
             >
               <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600 dark:text-white"}`}></i>

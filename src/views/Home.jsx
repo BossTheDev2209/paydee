@@ -71,7 +71,7 @@ export default function Home() {
         <div className="absolute top-1/2 right-1/4 w-40 h-40 rounded-full bg-white/10 blur-2xl"></div>
 
         {/* Hero Content */}
-        <div className="relative z-10 w-full pt-8 pb-16 px-4 flex flex-col items-center text-center">
+        <div className="relative z-10 w-full pt-24 md:pt-28 pb-16 px-4 flex flex-col items-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

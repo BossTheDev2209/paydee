@@ -3,6 +3,12 @@ import { Form, Formik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Format number with commas for display
+function formatNumber(value) {
+  if (!value) return "";
+  return Number(value).toLocaleString();
+}
+
 // Compact inline input component matching the design
 function InlineInput({ label, name, placeholder, value, onChange, unit, optional }) {
   return (
@@ -215,8 +221,8 @@ export default function Financial() {
                   <InlineInput
                     label="รายได้ต่อเดือน"
                     name="salary"
-                    placeholder="30000"
-                    value={values.salary}
+                    placeholder="30,000"
+                    value={formatNumber(values.salary)}
                     onChange={(e) => setFieldValue("salary", e.target.value.replace(/[^0-9]/g, ""))}
                     unit="บาท"
                     optional
@@ -225,8 +231,8 @@ export default function Financial() {
                   <InlineInput
                     label="ค่าใช้จ่ายต่อเดือน"
                     name="expenses"
-                    placeholder="15000"
-                    value={values.expenses}
+                    placeholder="15,000"
+                    value={formatNumber(values.expenses)}
                     onChange={(e) => setFieldValue("expenses", e.target.value.replace(/[^0-9]/g, ""))}
                     unit="บาท"
                     optional
@@ -235,8 +241,8 @@ export default function Financial() {
                   <InlineInput
                     label="เงินออมปัจจุบัน"
                     name="saving"
-                    placeholder="100000"
-                    value={values.saving}
+                    placeholder="100,000"
+                    value={formatNumber(values.saving)}
                     onChange={(e) => setFieldValue("saving", e.target.value.replace(/[^0-9]/g, ""))}
                     unit="บาท"
                     optional
@@ -245,8 +251,8 @@ export default function Financial() {
                   <InlineInput
                     label="หนี้สินต่อเดือน"
                     name="debt"
-                    placeholder="5000"
-                    value={values.debt}
+                    placeholder="5,000"
+                    value={formatNumber(values.debt)}
                     onChange={(e) => setFieldValue("debt", e.target.value.replace(/[^0-9]/g, ""))}
                     unit="บาท"
                     optional
@@ -266,8 +272,8 @@ export default function Financial() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                   className={`px-8 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600 hover:bg-red-200"
+                    ? "bg-green-100 text-green-600"
+                    : "bg-red-100 text-red-600 hover:bg-red-200"
                     }`}
                 >
                   {isResetting ? (

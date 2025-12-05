@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import QuickMode from "./saving-goal-tab/QuickMode";
 import DetailedMode from "./saving-goal-tab/DetailedMode";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import LineChartComponent from "../components/LineChart";
 import Calendar from "react-calendar";
 import "../styles/calendar.css";
-import Policy from "./Policy";
+import TermsModal from "../components/TermsModal";
 
 function formatDuration(days) {
   if (days < 7) return `${days} วัน`;
@@ -58,7 +58,7 @@ const AdjustmentSection = ({ result, selectedDate }) => {
 
   return (
     <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl p-6 mt-6 w-full mx-auto border border-gray-100 dark:border-gray-800">
-      <h3 className="text-xl font-bold mb-6 text-[#1e293b] dark:text-white">สิ่งที่ต้องปรับสำหรับเป้าหมายใหม่</h3>
+      <h2 className="text-xl font-bold mb-6 text-[#1e293b] dark:text-white">สิ่งที่ต้องปรับสำหรับเป้าหมายใหม่</h2>
 
       <div className="space-y-6">
         {/* Amount Adjustment */}
@@ -95,16 +95,28 @@ const AdjustmentSection = ({ result, selectedDate }) => {
 
 export default function SavingGoal() {
   const [modal, setModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [estimatedSaving, setEstimatedSaving] = useState(null);
   const [value, setValue] = useState(new Date());
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
   const modeParam = params.get("mode");
   const currentMode = modeParam === "detailed" ? "detailed" : "quick";
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const today = new Date();
+
+  const handleTermsAccept = () => {
+    setTermsAccepted(true);
+    setModal(false);
+  };
+
+  const handleTermsReject = () => {
+    setModal(false);
+    navigate("/");
+  };
 
   const handleModeChange = (newMode) => {
     setParams({ mode: newMode });
@@ -269,130 +281,128 @@ export default function SavingGoal() {
           <DetailedMode key="detailed" calculate={calculate} loading={loading} />
         )}
 
-        {/* Result Section */}
-        <div
-          id="result"
-          className="w-full p-4 bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-lg mt-10"
-        >
-          <h1 className="flex justify-center items-center gap-2 text-xl md:text-2xl font-bold text-[#2b2b2b] w-full bg-[#ffcc00] rounded-xl py-3 text-center mb-6">
-            ผลลัพธ์
-            <button onClick={() => setModal(true)}>
-              <i className="fa-solid fa-circle-info"></i>
-            </button>
-          </h1>
-          {loading ? (
-            <div className="flex justify-center items-center h-40">
-              <i className="fa-solid fa-spinner text-[#ffcc00] animate-spin text-5xl"></i>
-            </div>
-          ) : result ? (
-            <>
-              <p className="flex flex-col items-center gap-y-4 mb-8">
-                <h2 className="font-semibold text-xl md:text-2xl text-[#3d3d3d] dark:text-white">
-                  คุณจะถึงเป้าหมายในวันที่
-                </h2>
-                <span className="p-2 px-4 rounded-lg font-semibold bg-[#ffcc00] text-[#2b2b2b] text-base md:text-xl">
-                  {formatDate(result.targetDay)}
-                </span>
-              </p>
-              <div className="calendar-container">
-                {/* Calendar Title */}
-                <h3 className="calendar-title">
-                  <i className="fa-solid fa-calendar-day text-[#d4a800]"></i>
-                  เลือกวันที่เพื่อดูยอดเงินออมสะสม
-                </h3>
+        {/* Result Section - Only show after calculation */}
+        {(loading || result) && (
+          <div
+            id="result"
+            className="w-full p-4 bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-lg mt-10"
+          >
+            <h1 className="flex justify-center items-center gap-2 text-xl md:text-2xl font-bold text-[#2b2b2b] w-full bg-[#ffcc00] rounded-xl py-3 text-center mb-6">
+              ผลลัพธ์
+              <button onClick={() => setModal(true)}>
+                <i className="fa-solid fa-circle-info"></i>
+              </button>
+            </h1>
+            {loading ? (
+              <div className="flex justify-center items-center h-40">
+                <i className="fa-solid fa-spinner text-[#ffcc00] animate-spin text-5xl"></i>
+              </div>
+            ) : result ? (
+              <>
+                <p className="flex flex-col items-center gap-y-4 mb-8">
+                  <h2 className="font-semibold text-xl md:text-2xl text-[#3d3d3d] dark:text-white">
+                    คุณจะถึงเป้าหมายในวันที่
+                  </h2>
+                  <span className="p-2 px-4 rounded-lg font-semibold bg-[#ffcc00] text-[#2b2b2b] text-base md:text-xl">
+                    {formatDate(result.targetDay)}
+                  </span>
+                </p>
+                <div className="calendar-container">
+                  {/* Calendar Title */}
+                  <h3 className="calendar-title">
+                    <i className="fa-solid fa-calendar-day text-[#d4a800]"></i>
+                    เลือกวันที่เพื่อดูยอดเงินออมสะสม
+                  </h3>
 
-                <Calendar
-                  onChange={(date) => {
-                    setValue(date);
-                    setSelectedDate(date);
-                    if (result) {
-                      const totalSaving = calculateSavingUntil(date, result.amountPerSave, result.frequency);
-                      setEstimatedSaving(totalSaving);
+                  <Calendar
+                    onChange={(date) => {
+                      setValue(date);
+                      setSelectedDate(date);
+                      if (result) {
+                        const totalSaving = calculateSavingUntil(date, result.amountPerSave, result.frequency);
+                        setEstimatedSaving(totalSaving);
+                      }
+                    }}
+                    value={value}
+                    activeStartDate={activeStartDate}
+                    onActiveStartDateChange={({ activeStartDate }) => setActiveStartDate(activeStartDate)}
+                    tileClassName={({ date }) => {
+                      if (result) {
+                        const targetDate = result.targetDay;
+                        const isSameDay =
+                          date.getFullYear() === targetDate.getFullYear() &&
+                          date.getMonth() === targetDate.getMonth() &&
+                          date.getDate() === targetDate.getDate();
+                        if (isSameDay) return "target-day";
+                      }
+                      return null;
+                    }}
+                    formatShortWeekday={(locale, date) =>
+                      ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'][date.getDay()]
                     }
-                  }}
-                  value={value}
-                  activeStartDate={activeStartDate}
-                  onActiveStartDateChange={({ activeStartDate }) => setActiveStartDate(activeStartDate)}
-                  tileClassName={({ date }) => {
-                    if (result) {
-                      const targetDate = result.targetDay;
-                      const isSameDay =
-                        date.getFullYear() === targetDate.getFullYear() &&
-                        date.getMonth() === targetDate.getMonth() &&
-                        date.getDate() === targetDate.getDate();
-                      if (isSameDay) return "target-day";
-                    }
-                    return null;
-                  }}
-                  formatShortWeekday={(locale, date) =>
-                    ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'][date.getDay()]
-                  }
-                  nextLabel={<i className="fa-solid fa-chevron-right text-sm"></i>}
-                  prevLabel={<i className="fa-solid fa-chevron-left text-sm"></i>}
-                  next2Label={null}
-                  prev2Label={null}
-                />
+                    nextLabel={<i className="fa-solid fa-chevron-right text-sm"></i>}
+                    prevLabel={<i className="fa-solid fa-chevron-left text-sm"></i>}
+                    next2Label={null}
+                    prev2Label={null}
+                  />
 
-                {/* Calendar Legend */}
-                <div className="calendar-legend">
-                  <div className="calendar-legend-item">
-                    <div className="calendar-legend-dot calendar-legend-dot--today"></div>
-                    <span className="calendar-legend-text">วันนี้</span>
+                  {/* Calendar Legend */}
+                  <div className="calendar-legend">
+                    <div className="calendar-legend-item">
+                      <div className="calendar-legend-dot calendar-legend-dot--today"></div>
+                      <span className="calendar-legend-text">วันนี้</span>
+                    </div>
+                    <div className="calendar-legend-item">
+                      <div className="calendar-legend-dot calendar-legend-dot--selected"></div>
+                      <span className="calendar-legend-text">วันที่เลือก</span>
+                    </div>
+                    <div className="calendar-legend-item">
+                      <div className="calendar-legend-dot calendar-legend-dot--target"></div>
+                      <span className="calendar-legend-text">วันถึงเป้าหมาย</span>
+                    </div>
                   </div>
-                  <div className="calendar-legend-item">
-                    <div className="calendar-legend-dot calendar-legend-dot--selected"></div>
-                    <span className="calendar-legend-text">วันที่เลือก</span>
-                  </div>
-                  <div className="calendar-legend-item">
-                    <div className="calendar-legend-dot calendar-legend-dot--target"></div>
-                    <span className="calendar-legend-text">วันถึงเป้าหมาย</span>
-                  </div>
+
+                  {/* Estimated Savings Display */}
+                  {selectedDate && estimatedSaving !== null && (
+                    <div className="calendar-savings-display">
+                      <p>
+                        ยอดเงินออมสะสม ณ วันที่ <span className="text-[#1e293b] dark:text-white font-bold">{formatDate(selectedDate)}</span>
+                      </p>
+                      <span className="amount">{estimatedSaving.toLocaleString()} บาท</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Estimated Savings Display */}
-                {selectedDate && estimatedSaving !== null && (
-                  <div className="calendar-savings-display">
-                    <p>
-                      ยอดเงินออมสะสม ณ วันที่ <span className="text-[#1e293b] dark:text-white font-bold">{formatDate(selectedDate)}</span>
-                    </p>
-                    <span className="amount">{estimatedSaving.toLocaleString()} บาท</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Line Chart */}
-              <div className="mt-10">
-                <h2 className="text-center text-[#3d3d3d] dark:text-white font-semibold py-4">
-                  กราฟแสดงความเติบโตของเงินออม
-                </h2>
-                <LineChartComponent
-                  data={result.chartData}
-                  selectedDate={selectedDate}
-                  estimatedSaving={estimatedSaving}
-                  formatDate={formatShortDate}
-                />
-                {/* Adjustment Section Component */}
-                <AdjustmentSection result={result} selectedDate={selectedDate} />
-              </div>
-            </>
-          ) : null}
-        </div>
+                {/* Line Chart */}
+                <div className="mt-10">
+                  <h2 className="text-center text-[#3d3d3d] dark:text-white font-semibold py-4">
+                    กราฟแสดงความเติบโตของเงินออม
+                  </h2>
+                  <LineChartComponent
+                    data={result.chartData}
+                    selectedDate={selectedDate}
+                    estimatedSaving={estimatedSaving}
+                    formatDate={formatShortDate}
+                    totalTarget={result.totalTarget}
+                  />
+                  {/* Adjustment Section Component */}
+                  <AdjustmentSection result={result} selectedDate={selectedDate} />
+                </div>
+              </>
+            ) : null}
+          </div>
+        )}
       </div>
 
-      {/* Modal */}
-      {modal && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="flex flex-col gap-4">
-            <button
-              className="bg-[#ffcc00] p-4 rounded-lg font-bold"
-              onClick={() => setModal(false)}
-            >
-              ปิด
-            </button>
-            <Policy />
-          </div>
-        </div>
-      )}
+      {/* Terms Modal */}
+      <TermsModal
+        isOpen={modal}
+        onClose={() => setModal(false)}
+        onAccept={handleTermsAccept}
+        onReject={handleTermsReject}
+        calculatorType="saving-goal"
+        showButtons={true}
+      />
     </section>
   );
 }
