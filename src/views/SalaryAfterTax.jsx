@@ -136,14 +136,14 @@ export default function SalaryAfterTax() {
                   <div className="space-y-6">
                     {/* Status Message */}
                     <div className="text-center mb-6">
-                      {(currentMode === "detailed" && result.total_monthly_expenses > 0 ? result.remaining_cash_month : result.net_income_month_after_tax) > 0 ? (
+                      {(result.total_monthly_expenses > 0 ? result.remaining_cash_month : result.net_income_month_after_tax) > 0 ? (
                         <motion.div
                           initial={{ scale: 0.8, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ delay: 0.3, type: "spring" }}
                           className="text-green-600 dark:text-green-400 font-bold text-xl md:text-2xl"
                         >
-                          {currentMode === "detailed" && result.total_monthly_expenses > 0
+                          {result.total_monthly_expenses > 0
                             ? "ยินดีด้วย! คุณมีเงินคงเหลือหลังหักค่าใช้จ่าย"
                             : "ยินดีด้วย! คุณมีรายได้สุทธิคงเหลือ"}
                         </motion.div>
@@ -206,7 +206,7 @@ export default function SalaryAfterTax() {
                           </div>
                           <h3 className="font-bold text-orange-700 dark:text-orange-400">รายจ่าย</h3>
                         </div>
-                        {currentMode === "detailed" && result.total_monthly_expenses > 0 ? (
+                        {result.total_monthly_expenses > 0 ? (
                           <div className="space-y-3">
                             <div>
                               <p className="text-xs text-orange-600/70 dark:text-orange-400/70 mb-1">ต่อเดือน</p>
@@ -225,7 +225,7 @@ export default function SalaryAfterTax() {
                           </div>
                         ) : (
                           <div className="flex items-center justify-center h-20 text-orange-400 dark:text-orange-500/50">
-                            <p className="text-sm text-center">ไม่มีข้อมูลค่าใช้จ่าย<br />(ใช้ Detailed Mode)</p>
+                            <p className="text-sm text-center">ไม่มีข้อมูลค่าใช้จ่าย</p>
                           </div>
                         )}
                       </motion.div>
@@ -262,8 +262,8 @@ export default function SalaryAfterTax() {
                       </motion.div>
                     </div>
 
-                    {/* เงินคงเหลือ - Summary Card (Only in Detailed Mode with expenses) */}
-                    {currentMode === "detailed" && result.total_monthly_expenses > 0 && (
+                    {/* เงินคงเหลือ - Summary Card (Show whenever expenses > 0) */}
+                    {result.total_monthly_expenses > 0 && (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -294,8 +294,8 @@ export default function SalaryAfterTax() {
                       </motion.div>
                     )}
 
-                    {/* Action Buttons - Only show in Detailed Mode with expenses */}
-                    {currentMode === "detailed" && result.total_monthly_expenses > 0 && (
+                    {/* Action Buttons - Show whenever expenses > 0 */}
+                    {result.total_monthly_expenses > 0 && (
                       <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
                         <Link
                           to="/"

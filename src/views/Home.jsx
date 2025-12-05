@@ -29,7 +29,7 @@ export default function Home() {
       id: 3,
       path: "/ai-port",
       title: "ตัวอย่างแนวโน้มจำลองตลาดหลักทรัพย์",
-      details: "แนะนำหุ้นที่เหมาะกับคุณ",
+      details: "จำลองกลุ่มหุ้นจากตลาดหลักทรัพย์",
       bgColor: "#FF8CA2",
       isAi: true,
       aiIcon: AI
