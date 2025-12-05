@@ -247,17 +247,32 @@ export default function FinancialInsight() {
                                                 data={getPieData()}
                                                 cx="50%"
                                                 cy="50%"
-                                                innerRadius={60}
-                                                outerRadius={100}
-                                                paddingAngle={3}
+                                                innerRadius={55}
+                                                outerRadius={95}
+                                                paddingAngle={4}
                                                 dataKey="value"
-                                                label={({ name, value }) => `${Math.round(value)}%`}
+                                                strokeWidth={0}
+                                                isAnimationActive={false}
+                                                label={({ cx, cy, midAngle, innerRadius, outerRadius, value }) => {
+                                                    const RADIAN = Math.PI / 180;
+                                                    const radius = innerRadius + (outerRadius - innerRadius) * 1.4;
+                                                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                                    return (
+                                                        <text x={x} y={y} fill="#666" textAnchor="middle" dominantBaseline="central" fontSize={14} fontWeight="600">
+                                                            {`${Math.round(value)}%`}
+                                                        </text>
+                                                    );
+                                                }}
                                             >
                                                 {getPieData().map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                                    <Cell key={`cell-${index}`} fill={entry.color} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }} />
                                                 ))}
                                             </Pie>
-                                            <Tooltip formatter={(value) => `${Math.round(value)}%`} />
+                                            <Tooltip
+                                                formatter={(value) => [`${Math.round(value)}%`, 'สัดส่วน']}
+                                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                                            />
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -294,14 +309,53 @@ export default function FinancialInsight() {
                                 {/* Bar Chart */}
                                 <div className="h-72">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={getBarData()} barGap={8}>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                            <XAxis dataKey="name" tick={{ fontSize: 14 }} />
-                                            <YAxis tick={{ fontSize: 12 }} domain={[0, 100]} />
-                                            <Tooltip formatter={(value) => `${Math.round(value)}%`} />
-                                            <Legend wrapperStyle={{ fontSize: 14 }} />
-                                            <Bar dataKey="standard" name="เกณฑ์มาตรฐาน" fill="#93c5fd" radius={[6, 6, 0, 0]} />
-                                            <Bar dataKey="user" name="คุณ" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                                        <BarChart data={getBarData()} barGap={12} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                                            <defs>
+                                                <linearGradient id="barGradientStandard" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#bfdbfe" />
+                                                    <stop offset="100%" stopColor="#93c5fd" />
+                                                </linearGradient>
+                                                <linearGradient id="barGradientUser" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#60a5fa" />
+                                                    <stop offset="100%" stopColor="#3b82f6" />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                                            <XAxis
+                                                dataKey="name"
+                                                tick={{ fontSize: 13, fill: '#666' }}
+                                                axisLine={false}
+                                                tickLine={false}
+                                            />
+                                            <YAxis
+                                                tick={{ fontSize: 12, fill: '#888' }}
+                                                domain={[0, 100]}
+                                                axisLine={false}
+                                                tickLine={false}
+                                                tickFormatter={(v) => `${v}%`}
+                                            />
+                                            <Tooltip
+                                                formatter={(value) => [`${Math.round(value)}%`]}
+                                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                                            />
+                                            <Legend
+                                                wrapperStyle={{ fontSize: 13, paddingTop: '10px' }}
+                                                iconType="circle"
+                                            />
+                                            <Bar
+                                                dataKey="standard"
+                                                name="เกณฑ์มาตรฐาน"
+                                                fill="url(#barGradientStandard)"
+                                                radius={[8, 8, 0, 0]}
+                                                isAnimationActive={false}
+                                            />
+                                            <Bar
+                                                dataKey="user"
+                                                name="คุณ"
+                                                fill="url(#barGradientUser)"
+                                                radius={[8, 8, 0, 0]}
+                                                isAnimationActive={false}
+                                            />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
