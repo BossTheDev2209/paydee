@@ -8,7 +8,8 @@ export const popularCalculators = [
         details: "คำนวณรายได้หลังหักภาษี",
         bgColor: "#67B8FF",
         isAi: true,
-        aiIcon: AI
+        aiIcon: AI,
+        altName: "Salary After Tax"
     },
     {
         id: 2,
@@ -17,7 +18,8 @@ export const popularCalculators = [
         details: "คำนวณเป้าหมายการออม",
         bgColor: "#867CFF",
         isAi: false,
-        aiIcon: AI
+        aiIcon: AI,
+        altName: "Saving Goal"
     },
     {
         id: 3,
@@ -26,7 +28,8 @@ export const popularCalculators = [
         details: "จำลองกลุ่มหุ้นจากตลาดหลักทรัพย์",
         bgColor: "#FF8CA2",
         isAi: true,
-        aiIcon: AI
+        aiIcon: AI,
+        altName: "Investment Info, SET Simulation"
     },
     {
         id: 4,
@@ -34,7 +37,8 @@ export const popularCalculators = [
         title: "บริหารหนี้สิน",
         details: "วางแผนจัดการหนี้สิน",
         bgColor: "#50df84",
-        icon: "fa-solid fa-hand-holding-dollar"
+        icon: "fa-solid fa-hand-holding-dollar",
+        altName: "Debt Management"
     }
 ];
 

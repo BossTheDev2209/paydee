@@ -566,7 +566,7 @@ export default function DebtManagement() {
                                                     </div>
                                                 </div>
 
-                                                <div className="h-64 w-full mt-6 bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-gray-100 dark:border-gray-800">
+                                                <div className="h-80 w-full mt-6 bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-gray-100 dark:border-gray-800">
                                                     <p className="text-center mb-4 font-semibold text-gray-600 dark:text-gray-300">กราฟเปรียบเทียบยอดหนี้คงเหลือ</p>
                                                     <ResponsiveContainer width="100%" height="100%">
                                                         <AreaChart data={result.chartData} margin={{ top: 10, right: 10, left: 0, bottom: 30 }}>

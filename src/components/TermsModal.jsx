@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 
 // Reusable Terms of Use Modal Component
 export default function TermsModal({
@@ -9,6 +10,16 @@ export default function TermsModal({
     calculatorType = null,
     showButtons = false
 }) {
+    // Handle Enter key to accept
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (isOpen && showButtons && e.key === "Enter") {
+                onAccept();
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen, showButtons, onAccept]);
 
     // Content for each calculator type
     const getCalculatorContent = () => {

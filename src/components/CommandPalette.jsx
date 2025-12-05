@@ -14,9 +14,9 @@ export default function CommandPalette({ isOpen, onClose }) {
     // Flattening the list if we have more categories, but for now just using popularCalculators
     // We can expand this to include other pages like 'Financial' or 'Policy'
     const staticPages = [
-        { title: "หน้าแรก", path: "/", details: "กลับสู่หน้าหลัก", icon: "fa-solid fa-home" },
-        { title: "ข้อมูลศูนย์กลาง", path: "/financial", details: "จัดการข้อมูลส่วนตัว", icon: "fa-solid fa-user-gear" },
-        { title: "เกี่ยวกับเรา", path: "/about-us", details: "ข้อมูลเกี่ยวกับ PayDee", icon: "fa-solid fa-info-circle" },
+        { title: "หน้าแรก", path: "/", details: "กลับสู่หน้าหลัก", icon: "fa-solid fa-home", altName: "Main, Home" },
+        { title: "ข้อมูลศูนย์กลาง", path: "/financial", details: "จัดการข้อมูลส่วนตัว", icon: "fa-solid fa-user-gear", altName: "Financial Profile" },
+        { title: "เกี่ยวกับเรา", path: "/about-us", details: "ข้อมูลเกี่ยวกับ PayDee", icon: "fa-solid fa-info-circle", altName: "About Us, Policy" },
     ];
 
     const allItems = [
@@ -26,7 +26,8 @@ export default function CommandPalette({ isOpen, onClose }) {
 
     const filteredItems = allItems.filter((item) =>
         item.title.toLowerCase().includes(query.toLowerCase()) ||
-        item.details.toLowerCase().includes(query.toLowerCase())
+        item.details.toLowerCase().includes(query.toLowerCase()) ||
+        (item.altName && item.altName.toLowerCase().includes(query.toLowerCase()))
     );
 
     // Reset selection when query changes
@@ -134,8 +135,8 @@ export default function CommandPalette({ isOpen, onClose }) {
                                             }}
                                             onMouseEnter={() => setSelectedIndex(index)}
                                             className={`px-4 py-3 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${index === selectedIndex
-                                                    ? "bg-[#ffcc00]/20 dark:bg-[#ffcc00]/10 text-[#2b2b2b] dark:text-white"
-                                                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5"
+                                                ? "bg-[#ffcc00]/20 dark:bg-[#ffcc00]/10 text-[#2b2b2b] dark:text-white"
+                                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5"
                                                 }`}
                                         >
                                             {/* Icon */}
