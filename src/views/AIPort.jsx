@@ -1,8 +1,10 @@
+import TextField from "@/components/TextField";
 import { color } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Label } from "recharts";
 
 export default function AIPort() {
+  const [yearInput, setYearInput] = useState("10");
   const [loading, setLoading] = useState(false);
   const [market, setMarket] = useState(null);
   const [error, setError] = useState(null);
@@ -11,6 +13,12 @@ export default function AIPort() {
   //   fetch("https://market-stock-suggestion.onrender.com/market_stock/listing"),
   //     { method: "GET", headers: { "Content-Type": "application/json" } };
   // });
+
+  const handleYearChange = (e) => {
+    const value = e.target.value;
+    setYearInput(value);
+    fetchMarketData(value);
+  };
 
   const fetchMarketData = async () => {
     setLoading(true);
@@ -23,7 +31,7 @@ export default function AIPort() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            years_forecast: "10",
+            years_forecast: yearInput,
             n_sims: "50000",
           }),
         }
@@ -474,6 +482,25 @@ export default function AIPort() {
           </span>
         </p>
         <div className="my-4 p-4 w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-sm md:text-lg">
+          {/* input */}
+          <div className="w-full flex flex-wrap items-center">
+            <label className="w-full md:w-6/12 mb-2 text-gray-700 dark:text-gray-300">
+              ปีที่ต้องการคาดการณ์{" "}
+              <span className="text-gray-400">(optional)</span>
+            </label>
+            <div className="w-full md:w-6/12 flex items-center justify-end">
+              <div className="w-10/12 pad-main">
+                <TextField
+                  name="year"
+                  value={yearInput}
+                  onChange={handleYearChange}
+                  placeholder="10"
+                />
+              </div>
+              <p className="w-2/12"> ปี </p>
+            </div>
+          </div>
+
           {/* industrial */}
           <section className="w-full py-2">
             <div className="w-full bg-[#f2f2f2] dark:bg-[#3d3d3d] py-8 rounded-lg text-base md:text-xl">
