@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { isDark, toggleTheme } = useTheme();
-  const location = useLocation();
-  const currentPath = location.pathname;
 
   // Handle scroll for sticky header effect
   useEffect(() => {
@@ -26,8 +24,6 @@ export default function Header() {
   const menuItems = [
     { label: "หน้าแรก", path: "/" },
     { label: "เกี่ยวกับเรา", path: "/about-us" },
-    { label: "คำนวณภาษี", path: "/salary-aftertax" },
-    { label: "เป้าหมายเงินออม", path: "/saving-goal" },
   ];
 
   return (
@@ -46,9 +42,12 @@ export default function Header() {
               <span className="font-bold text-[#2b2b2b] text-lg">P</span>
             </div>
             <div>
-              <h1 className={`text-xl font-bold ${scrolled ? "text-[#2b2b2b] dark:text-white" : "text-[#2b2b2b]"}`}>
+              <h1 className="text-xl font-bold text-[#2b2b2b] dark:text-white">
                 PayDee
               </h1>
+              <p className={`text-xs ${scrolled ? "text-gray-600 dark:text-gray-400" : "text-[#2b2b2b]/70 dark:text-white/70"}`}>
+                เพย์ดี
+              </p>
             </div>
           </Link>
 
@@ -58,11 +57,9 @@ export default function Header() {
               <Link
                 key={index}
                 to={item.path}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${currentPath === item.path
-                    ? "bg-[#ffcc00] text-[#2b2b2b]"
-                    : scrolled
-                      ? "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                      : "text-[#2b2b2b]/80 hover:bg-[#2b2b2b]/10"
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 hover:bg-[#ffcc00] hover:text-[#2b2b2b] ${scrolled
+                    ? "text-gray-600 dark:text-gray-300"
+                    : "text-[#2b2b2b]/80 dark:text-white/80"
                   }`}
               >
                 {item.label}
@@ -71,7 +68,7 @@ export default function Header() {
 
             {/* CTA Button */}
             <Link to="/financial">
-              <button className="ml-2 px-5 py-2 rounded-lg bg-[#2b2b2b] text-white font-bold text-sm hover:bg-[#1a1a1a] transition-all shadow-md">
+              <button className="ml-2 px-5 py-2 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold text-sm hover:bg-[#e6b800] transition-all shadow-md">
                 ข้อมูลศูนย์กลาง
               </button>
             </Link>
@@ -81,10 +78,10 @@ export default function Header() {
               onClick={toggleTheme}
               className={`ml-2 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${scrolled
                   ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-                  : "bg-[#2b2b2b]/10 hover:bg-[#2b2b2b]/20"
+                  : "bg-[#2b2b2b]/10 dark:bg-white/10 hover:bg-[#2b2b2b]/20 dark:hover:bg-white/20"
                 }`}
             >
-              <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600"}`}></i>
+              <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600 dark:text-white"}`}></i>
             </button>
           </nav>
         </div>
@@ -108,7 +105,10 @@ export default function Header() {
             <div className="w-8 h-8 rounded-lg bg-[#ffcc00] flex items-center justify-center shadow-sm">
               <span className="font-bold text-[#2b2b2b]">P</span>
             </div>
-            <span className="font-bold text-[#2b2b2b] dark:text-white">PayDee</span>
+            <div>
+              <div className="font-bold text-[#2b2b2b] dark:text-white">PayDee</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">เพย์ดี</div>
+            </div>
           </Link>
 
           {/* Theme Toggle */}
@@ -132,10 +132,7 @@ export default function Header() {
               key={index}
               to={item.path}
               onClick={handleClick}
-              className={`block px-4 py-3 rounded-lg font-medium text-center transition-all ${currentPath === item.path
-                  ? "bg-[#ffcc00] text-[#2b2b2b]"
-                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`}
+              className="block px-4 py-3 rounded-lg font-medium text-center transition-all text-gray-600 dark:text-gray-300 hover:bg-[#ffcc00] hover:text-[#2b2b2b]"
             >
               {item.label}
             </Link>
@@ -143,7 +140,7 @@ export default function Header() {
           <Link
             to="/financial"
             onClick={handleClick}
-            className="block px-4 py-3 rounded-lg bg-[#2b2b2b] text-white font-bold text-center"
+            className="block px-4 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold text-center"
           >
             ข้อมูลศูนย์กลาง
           </Link>
