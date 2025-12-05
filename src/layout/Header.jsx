@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import CommandPalette from "../components/CommandPalette";
 
@@ -8,6 +8,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const navigate = useNavigate();
 
   // Handle scroll for sticky header effect
   useEffect(() => {
@@ -18,17 +19,29 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle Ctrl+K to open search
+  // Handle shortcuts: Ctrl+K (Search), Ctrl+Z (Back)
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Ctrl + K: Open Search
       if ((e.ctrlKey || e.metaKey) && e.key === "k") {
         e.preventDefault();
         setSearchOpen((prev) => !prev);
       }
+
+      // Ctrl + Z: Go Back
+      if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+        // Prevent if user is typing in an input
+        const target = e.target;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+          return;
+        }
+        e.preventDefault();
+        navigate(-1);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [navigate]);
 
   const toggleMenu = () => setOpen((prev) => !prev);
   const handleClick = () => {
