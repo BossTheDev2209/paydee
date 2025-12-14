@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import './styles/global.css';
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ThemeProvider>
     <BrowserRouter>

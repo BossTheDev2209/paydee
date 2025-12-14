@@ -17,6 +17,59 @@ function loadData() {
   }
 }
 
+function loadQuickModeData() {
+  try {
+    const saved = sessionStorage.getItem("quick-mode-data");
+    return saved ? JSON.parse(saved) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// Convert Quick Mode data to Detailed Mode format
+function convertQuickToDetailed(quickData) {
+  if (!quickData) return {};
+  
+  const result = {};
+  
+  // Use salary directly (no conversion)
+  if (quickData.salary) {
+    result.monthlySalary = quickData.salary;
+  }
+  
+  // Map expenses to miscCost (monthly)
+  if (quickData.expenses) {
+    result.miscCost = quickData.expenses;
+  }
+  
+  // Map family status
+  if (quickData.familyStatus) {
+    result.familyStatus = quickData.familyStatus;
+  }
+  
+  // Map children
+  if (quickData.children) {
+    result.childrenCount = quickData.children;
+  }
+  
+  // Map SSF (if checked)
+  if (quickData.hasSSF && quickData.ssfAmount) {
+    result.ssf = quickData.ssfAmount;
+  }
+  
+  // Map RMF (if checked)
+  if (quickData.hasRMF && quickData.rmfAmount) {
+    result.rmf = quickData.rmfAmount;
+  }
+  
+  // Map Life Insurance (if checked)
+  if (quickData.hasLifeInsurance && quickData.lifeInsuranceAmount) {
+    result.lifeInsurance = quickData.lifeInsuranceAmount;
+  }
+  
+  return result;
+}
+
 export default function DetailedMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
@@ -46,6 +99,8 @@ export default function DetailedMode({ calculate, loading }) {
   });
 
   const savedData = loadData();
+  const quickModeData = loadQuickModeData();
+  const convertedData = convertQuickToDetailed(quickModeData);
 
   // Mock data for testing
   const fillMockData = (setFieldValue) => {
@@ -65,14 +120,14 @@ export default function DetailedMode({ calculate, loading }) {
       <CalculatorCard title="Detailed Mode">
         <Formik
           initialValues={{
-            monthlySalary: savedData?.salary || "",
+            monthlySalary: convertedData.monthlySalary || savedData?.salary || "",
             monthlyBonusExtra: "",
-            familyStatus: "single",
-            childrenCount: "",
+            familyStatus: convertedData.familyStatus || savedData?.familyStatus || "single",
+            childrenCount: convertedData.childrenCount || "",
             parentsCount: "",
-            lifeInsurance: "",
-            ssf: "",
-            rmf: "",
+            lifeInsurance: convertedData.lifeInsurance || "",
+            ssf: convertedData.ssf || "",
+            rmf: convertedData.rmf || "",
             provident: "",
             parentsHealthInsurance: "",
             donation: "",
@@ -83,7 +138,7 @@ export default function DetailedMode({ calculate, loading }) {
             foodCost: "",
             utilitiesCost: "",
             insuranceServiceCost: "",
-            miscCost: "",
+            miscCost: convertedData.miscCost || "",
           }}
           validationSchema={validationSchema}
           innerRef={formRef}

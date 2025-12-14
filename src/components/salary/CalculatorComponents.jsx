@@ -52,8 +52,8 @@ export const CalculatorInput = ({
     setFieldValue,
     savedValue
 }) => {
-    // เช็คค่าจาก Financial profile
-    const isPrefilled = savedValue && value === savedValue;
+    const normalizeNumber = (val) => (val ?? "").toString().replace(/[^0-9]/g, "");
+    const isPrefilled = normalizeNumber(value) !== "" && normalizeNumber(value) === normalizeNumber(savedValue);
 
     return (
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 relative">
@@ -77,8 +77,8 @@ export const CalculatorInput = ({
                     }}
                     className={cn(
                         "w-full transition-colors duration-300",
-                        touched && error ? "border-red-500 focus-visible:ring-red-500" : "",
-                        isPrefilled ? "text-green-600 dark:text-green-400 font-semibold" : ""
+                        touched && error ? "border-red-500 focus-visible:ring-red-500 focus-visible:border-red-500" : "",
+                        isPrefilled ? "border-green-400 focus-visible:ring-green-500 focus-visible:border-green-500 text-green-600 dark:text-green-400 font-semibold" : ""
                     )}
                 />
                 {touched && error && (

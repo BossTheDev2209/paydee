@@ -28,15 +28,41 @@ export default function Header() {
         setSearchOpen((prev) => !prev);
       }
 
-      // Ctrl + Z: Go Back
-      if ((e.ctrlKey || e.metaKey) && e.key === "z") {
-        // Prevent if user is typing in an input
+      // Ctrl + Z: Go Back (only when NOT in input/textarea to allow undo in textboxes)
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
         const target = e.target;
-        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-          return;
+        const isInput = target.tagName === 'INPUT' || 
+                        target.tagName === 'TEXTAREA' || 
+                        target.isContentEditable ||
+                        target.closest('[role="textbox"]') ||
+                        target.closest('[contenteditable="true"]');
+        
+        // Allow Ctrl+Z to work as undo in textboxes
+        if (isInput) {
+          return; // Let browser handle undo
         }
+        
+        // Only navigate back when not in input
         e.preventDefault();
         navigate(-1);
+      }
+
+      // Ctrl + Y: Redo (only when NOT in input/textarea to allow redo in textboxes)
+      if ((e.ctrlKey || e.metaKey) && e.key === "y") {
+        const target = e.target;
+        const isInput = target.tagName === 'INPUT' || 
+                        target.tagName === 'TEXTAREA' || 
+                        target.isContentEditable ||
+                        target.closest('[role="textbox"]') ||
+                        target.closest('[contenteditable="true"]');
+        
+        // Allow Ctrl+Y to work as redo in textboxes
+        if (isInput) {
+          return; // Let browser handle redo
+        }
+        
+        // Ctrl+Y doesn't have a navigation action, just let browser handle it
+        // (or we could add forward navigation if needed)
       }
     };
     window.addEventListener("keydown", handleKeyDown);

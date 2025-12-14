@@ -9,6 +9,8 @@ import Policy from "../views/Policy.jsx";
 import SalaryAfterTax from '../views/SalaryAfterTax.jsx';
 import SavingGoal from '../views/SavingGoal.jsx';
 import DebtManagement from '../views/DebtManagement.jsx';
+import CurrencyConverter from '../views/CurrencyConverter.jsx';
+import SleepCalculator from '../views/SleepCalculator.jsx';
 
 const allRoutes = [
   {
@@ -20,6 +22,8 @@ const allRoutes = [
       { path: "/financial-insight", element: <FinancialInsight /> },
       { path: "/saving-goal", element: <SavingGoal /> },
       { path: "/debt-management", element: <DebtManagement /> },
+      { path: "/currency-converter", element: <CurrencyConverter /> },
+      { path: "/sleep-calculator", element: <SleepCalculator /> },
       { path: "/financial", element: <Financial /> },
       { path: "/policy", element: <Policy /> },
       { path: "/terms-of-use", element: <Policy /> },

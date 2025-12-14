@@ -184,20 +184,20 @@ export default function DetailedMode({ calculate, loading }) {
                 />
               </CalculatorSection>
 
-              {/* Buttons - exact same as Salary After Tax */}
-              <div className="mt-8 w-full justify-between flex gap-4">
+              {/* Action Buttons - Standard Style */}
+              <div className="mt-8 w-full justify-between flex flex-col md:flex-row gap-4">
                 <button
                   type="button"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-300 transition-colors active:scale-95 duration-200"
+                  className="w-full md:w-1/3 py-3 rounded-lg bg-white dark:bg-[#2b2b2b] text-gray-700 dark:text-gray-200 font-bold hover:bg-gray-100 dark:hover:bg-[#333] transition-colors active:scale-95 duration-200 border border-transparent dark:border-gray-600 shadow-sm"
                   onClick={() => navigate("/")}
                 >
-                  กลับ
+                  กลับหน้าแรก
                 </button>
                 <button
                   type="reset"
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600 hover:bg-red-200"
+                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 border border-transparent ${isResetting
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                    : "bg-white dark:bg-[#2b2b2b] text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333] dark:border-gray-600 shadow-sm"
                     }`}
                   onClick={() => {
                     setIsResetting(true);
@@ -226,7 +226,7 @@ export default function DetailedMode({ calculate, loading }) {
                   type="submit"
                   disabled={loading}
                   className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${loading
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                     : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
                     }`}
                 >

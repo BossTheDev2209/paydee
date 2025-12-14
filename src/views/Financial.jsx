@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Format number with commas for display
 function formatNumber(value) {
-  if (!value) return "";
-  return Number(value).toLocaleString();
+  if (value === undefined || value === null || value === "") return "";
+  const numeric = String(value).replace(/,/g, "");
+  if (numeric === "") return "";
+  return Number(numeric).toLocaleString();
 }
 
 // Compact inline input component matching the design
@@ -93,10 +95,29 @@ function AutoModal({ show, title, message }) {
 export default function Financial() {
   const [modal, setModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [savedProfile, setSavedProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem("financial-form");
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
   const navigate = useNavigate();
 
+  const defaultProfile = {
+    age: "",
+    status: "",
+    country: "",
+    optional: "",
+    salary: "",
+    expenses: "",
+    saving: "",
+    debt: "",
+  };
+
   const handleSave = (values) => {
-    console.log("save:", values);
+    setSavedProfile(values);
     setModal(true);
     setTimeout(() => {
       setModal(false);
@@ -147,16 +168,8 @@ export default function Financial() {
         />
 
         <Formik
-          initialValues={{
-            age: "",
-            status: "",
-            country: "",
-            optional: "",
-            salary: "",
-            expenses: "",
-            saving: "",
-            debt: "",
-          }}
+          initialValues={savedProfile || defaultProfile}
+          enableReinitialize
           onSubmit={(values) => {
             localStorage.setItem("financial-form", JSON.stringify(values));
             handleSave(values);
@@ -268,7 +281,8 @@ export default function Financial() {
                     setIsResetting(true);
                     setTimeout(() => setIsResetting(false), 1000);
                     localStorage.removeItem("financial-form");
-                    resetForm();
+                    setSavedProfile(null);
+                    resetForm({ values: defaultProfile });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                   className={`px-8 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting

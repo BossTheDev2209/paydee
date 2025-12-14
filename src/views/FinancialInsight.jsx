@@ -37,6 +37,15 @@ export default function FinancialInsight() {
         fetchFinancialInsight();
     }, []);
 
+    // Scroll to main content once the page finishes loading (success or error)
+    useEffect(() => {
+        if (!loading) {
+            setTimeout(() => {
+                document.getElementById("insight-content")?.scrollIntoView({ behavior: "smooth" });
+            }, 150);
+        }
+    }, [loading]);
+
     const fetchFinancialInsight = async () => {
         try {
             setLoading(true);
@@ -137,7 +146,7 @@ export default function FinancialInsight() {
                 </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 md:px-8">
+            <div id="insight-content" className="max-w-6xl mx-auto px-4 md:px-8">
                 <Link
                     to="/salary-aftertax?mode=detailed"
                     className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-8"

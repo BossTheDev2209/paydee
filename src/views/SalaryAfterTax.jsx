@@ -303,33 +303,35 @@ export default function SalaryAfterTax() {
                         >
                           หน้าแรก
                         </Link>
-                        <Link
-                          to="/financial-insight"
-                          state={{
-                            expenseData: {
-                              net_income_month_after_tax: result.net_income_month_after_tax,
-                              housingCost: Number(String(result.housingCost || 0).replace(/,/g, '')),
-                              transportCost: Number(String(result.transportCost || 0).replace(/,/g, '')),
-                              debtPayment: Number(String(result.debtPayment || 0).replace(/,/g, '')),
-                              foodCost: Number(String(result.foodCost || 0).replace(/,/g, '')),
-                              utilitiesCost: Number(String(result.utilitiesCost || 0).replace(/,/g, '')),
-                              insuranceServiceCost: Number(String(result.insuranceServiceCost || 0).replace(/,/g, '')),
-                              miscCost: Number(String(result.miscCost || 0).replace(/,/g, ''))
-                            }
-                          }}
-                          className="relative px-6 py-3 rounded-lg font-bold text-center transition-all duration-300 overflow-hidden group"
-                          style={{
-                            background: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #8b5cf6 100%)"
-                          }}
-                        >
-                          <span className="relative z-10 text-white flex items-center justify-center gap-2">
-                            แนะนำด้วย AI
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 2L9 9H2l5.5 4.5L5 22l7-5 7 5-2.5-8.5L22 9h-7L12 2z" />
-                            </svg>
-                          </span>
-                          <span className="absolute top-1 right-2 text-white/60 text-lg">✦</span>
-                        </Link>
+                        {currentMode === "detailed" && (
+                          <Link
+                            to="/financial-insight"
+                            state={{
+                              expenseData: {
+                                net_income_month_after_tax: result.net_income_month_after_tax,
+                                housingCost: Number(String(result.housingCost || 0).replace(/,/g, '')),
+                                transportCost: Number(String(result.transportCost || 0).replace(/,/g, '')),
+                                debtPayment: Number(String(result.debtPayment || 0).replace(/,/g, '')),
+                                foodCost: Number(String(result.foodCost || 0).replace(/,/g, '')),
+                                utilitiesCost: Number(String(result.utilitiesCost || 0).replace(/,/g, '')),
+                                insuranceServiceCost: Number(String(result.insuranceServiceCost || 0).replace(/,/g, '')),
+                                miscCost: Number(String(result.miscCost || 0).replace(/,/g, ''))
+                              }
+                            }}
+                            className="relative px-6 py-3 rounded-lg font-bold text-center transition-all duration-300 overflow-hidden group"
+                            style={{
+                              background: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #8b5cf6 100%)"
+                            }}
+                          >
+                            <span className="relative z-10 text-white flex items-center justify-center gap-2">
+                              แนะนำด้วย AI
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L9 9H2l5.5 4.5L5 22l7-5 7 5-2.5-8.5L22 9h-7L12 2z" />
+                              </svg>
+                            </span>
+                            <span className="absolute top-1 right-2 text-white/60 text-lg">✦</span>
+                          </Link>
+                        )}
                         <button
                           type="button"
                           onClick={() => {

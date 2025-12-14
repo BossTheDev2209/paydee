@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { CalculatorCard, CalculatorSection, CalculatorInput } from "../../components/salary/CalculatorComponents";
@@ -7,9 +7,32 @@ import { Input } from "../../components/ui/input";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Label } from "../../components/ui/label";
 
+// Component to auto-save Quick Mode data to sessionStorage (clears on refresh/close)
+function AutoSaveQuickMode() {
+  const { values } = useFormikContext();
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      sessionStorage.setItem("quick-mode-data", JSON.stringify(values));
+    }, 300); // Debounce to avoid too many writes
+    return () => clearTimeout(timer);
+  }, [values]);
+  
+  return null;
+}
+
 function loadData() {
   try {
     const saved = localStorage.getItem("financial-form");
+    return saved ? JSON.parse(saved) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function loadQuickModeData() {
+  try {
+    const saved = sessionStorage.getItem("quick-mode-data");
     return saved ? JSON.parse(saved) : null;
   } catch (e) {
     return null;
@@ -43,23 +66,24 @@ export default function QuickMode({ calculate, loading }) {
   });
 
   const savedData = loadData();
+  const quickModeData = loadQuickModeData();
 
   return (
     <div className="w-full mt-10">
       <CalculatorCard title="Quick Mode">
         <Formik
           initialValues={{
-            salary: savedData?.salary || "",
-            expenses: savedData?.expenses || "",
-            tax: savedData?.tax || "",
-            familyStatus: "single",
-            children: "",
-            hasSSF: false,
-            ssfAmount: "",
-            hasRMF: false,
-            rmfAmount: "",
-            hasLifeInsurance: false,
-            lifeInsuranceAmount: "",
+            salary: quickModeData?.salary || savedData?.salary || "",
+            expenses: quickModeData?.expenses || savedData?.expenses || "",
+            tax: "",
+            familyStatus: quickModeData?.familyStatus || savedData?.familyStatus || "single",
+            children: quickModeData?.children || "",
+            hasSSF: quickModeData?.hasSSF || false,
+            ssfAmount: quickModeData?.ssfAmount || "",
+            hasRMF: quickModeData?.hasRMF || false,
+            rmfAmount: quickModeData?.rmfAmount || "",
+            hasLifeInsurance: quickModeData?.hasLifeInsurance || false,
+            lifeInsuranceAmount: quickModeData?.lifeInsuranceAmount || "",
           }}
           validationSchema={validationSchema}
           innerRef={formRef}
@@ -75,6 +99,7 @@ export default function QuickMode({ calculate, loading }) {
         >
           {({ setFieldValue, values, errors, touched }) => (
             <Form>
+              <AutoSaveQuickMode />
               <CalculatorSection>
                 <CalculatorInput
                   name="salary"

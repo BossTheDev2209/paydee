@@ -58,7 +58,7 @@ const AdjustmentSection = ({ result, selectedDate }) => {
 
   return (
     <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl p-6 mt-6 w-full mx-auto border border-gray-100 dark:border-gray-800">
-      <h2 className="text-xl font-bold mb-6 text-[#1e293b] dark:text-white">สิ่งที่ต้องปรับสำหรับเป้าหมายใหม่</h2>
+      <h2 className="text-xl font-bold mb-6 text-[#1e293b] dark:text-gray-200">สิ่งที่ต้องปรับสำหรับเป้าหมายใหม่</h2>
 
       <div className="space-y-6">
         {/* Amount Adjustment */}
@@ -237,6 +237,7 @@ export default function SavingGoal() {
       <div className="w-full bg-[#ffcc00] py-8 md:py-12 px-4 shadow-md mb-8">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-bold text-[#2b2b2b] mb-4">
+            <i className="fa-solid fa-piggy-bank mr-3"></i>
             เป้าหมายการออม
           </h1>
           <h3 className="text-lg md:text-xl text-[#2b2b2b]/80">
@@ -300,7 +301,7 @@ export default function SavingGoal() {
             ) : result ? (
               <>
                 <p className="flex flex-col items-center gap-y-4 mb-8">
-                  <h2 className="font-semibold text-xl md:text-2xl text-[#3d3d3d] dark:text-white">
+                  <h2 className="font-semibold text-xl md:text-2xl text-[#3d3d3d] dark:text-gray-200">
                     คุณจะถึงเป้าหมายในวันที่
                   </h2>
                   <span className="p-2 px-4 rounded-lg font-semibold bg-[#ffcc00] text-[#2b2b2b] text-base md:text-xl">
@@ -366,7 +367,7 @@ export default function SavingGoal() {
                   {selectedDate && estimatedSaving !== null && (
                     <div className="calendar-savings-display">
                       <p>
-                        ยอดเงินออมสะสม ณ วันที่ <span className="text-[#1e293b] dark:text-white font-bold">{formatDate(selectedDate)}</span>
+                        ยอดเงินออมสะสม ณ วันที่ <span className="text-[#1e293b] dark:text-gray-200 font-bold">{formatDate(selectedDate)}</span>
                       </p>
                       <span className="amount">{estimatedSaving.toLocaleString()} บาท</span>
                     </div>
@@ -375,7 +376,7 @@ export default function SavingGoal() {
 
                 {/* Line Chart */}
                 <div className="mt-10">
-                  <h2 className="text-center text-[#3d3d3d] dark:text-white font-semibold py-4">
+                  <h2 className="text-center text-[#3d3d3d] dark:text-gray-200 font-semibold py-4">
                     กราฟแสดงความเติบโตของเงินออม
                   </h2>
                   <LineChartComponent

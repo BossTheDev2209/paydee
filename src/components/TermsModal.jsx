@@ -301,8 +301,19 @@ export default function TermsModal({
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-gray-600 dark:text-gray-300">
-                                <p>กำลังโหลดข้อมูล...</p>
+                            <div className="space-y-4 text-gray-600 dark:text-gray-300">
+                                <p className="leading-relaxed">
+                                    เครื่องคำนวณนี้จัดทำขึ้นเพื่อให้ข้อมูลทั่วไปเท่านั้น ผลลัพธ์ที่ได้อาจไม่สะท้อนสถานการณ์จริงของคุณทั้งหมด
+                                </p>
+                                <p className="leading-relaxed">
+                                    กรุณาใช้วิจารณญาณในการตัดสินใจทางการเงิน และปรึกษาผู้เชี่ยวชาญหากจำเป็น
+                                </p>
+                                <div className="bg-amber-900/30 border-l-4 border-amber-500 p-4 rounded">
+                                    <p className="text-sm font-semibold text-amber-300">
+                                        <i className="fa-solid fa-circle-exclamation mr-2"></i>
+                                        ผลการคำนวณอาจมีความคลาดเคลื่อน ไม่ควรนำไปใช้เป็นคำแนะนำทางการเงินโดยตรง
+                                    </p>
+                                </div>
                             </div>
                         )}
                     </div>

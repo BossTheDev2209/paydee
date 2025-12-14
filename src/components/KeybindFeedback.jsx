@@ -14,10 +14,12 @@ export default function KeybindFeedback() {
             // Check for specific shortcuts
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
                 keyName = "Search";
-            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
                 keyName = "Undo";
+            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
+                keyName = "Redo";
             } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
-                keyName = "Find";
+                keyName = "Theme Switch";
             }
 
             if (keyName) {
@@ -38,10 +40,10 @@ export default function KeybindFeedback() {
 
                 setActiveKey(display);
 
-                // Clear after 2 seconds
+                // Clear after 1 seconds
                 const timer = setTimeout(() => {
                     setActiveKey(null);
-                }, 2000);
+                }, 1000);
 
                 return () => clearTimeout(timer);
             }

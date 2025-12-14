@@ -140,6 +140,17 @@ export default function CalculatorCarousel({ items, large = false }) {
                                             <p className="text-sm text-[#2b2b2b]/70 line-clamp-2">
                                                 {item.details}
                                             </p>
+
+                                            {/* Tags */}
+                                            {item.tags && item.tags.length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-3">
+                                                    {item.tags.map((tag, idx) => (
+                                                        <span key={idx} className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-white/40 text-[#2b2b2b]/80 border border-black/5">
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </button>
