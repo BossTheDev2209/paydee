@@ -2,13 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import CommandPalette from "../components/CommandPalette";
+import CalculationHistory from "../components/CalculationHistory";
+import { useCalculationHistory } from "../context/CalculationHistoryContext";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const { allHistory } = useCalculationHistory();
 
   // Handle scroll for sticky header effect
   useEffect(() => {
@@ -19,7 +23,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle shortcuts: Ctrl+K (Search), Ctrl+Z (Back)
+  // Handle shortcuts: Ctrl+K (Search), Ctrl+H (History), Ctrl+Z (Back), Ctrl+X (Reset Calculator)
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Ctrl + K: Open Search
@@ -28,20 +32,26 @@ export default function Header() {
         setSearchOpen((prev) => !prev);
       }
 
+      // Ctrl + H: Open History
+      if ((e.ctrlKey || e.metaKey) && e.key === "h") {
+        e.preventDefault();
+        setHistoryOpen((prev) => !prev);
+      }
+
       // Ctrl + Z: Go Back (only when NOT in input/textarea to allow undo in textboxes)
       if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
         const target = e.target;
-        const isInput = target.tagName === 'INPUT' || 
-                        target.tagName === 'TEXTAREA' || 
+        const isInput = target.tagName === 'INPUT' ||
+                        target.tagName === 'TEXTAREA' ||
                         target.isContentEditable ||
                         target.closest('[role="textbox"]') ||
                         target.closest('[contenteditable="true"]');
-        
+
         // Allow Ctrl+Z to work as undo in textboxes
         if (isInput) {
           return; // Let browser handle undo
         }
-        
+
         // Only navigate back when not in input
         e.preventDefault();
         navigate(-1);
@@ -50,19 +60,54 @@ export default function Header() {
       // Ctrl + Y: Redo (only when NOT in input/textarea to allow redo in textboxes)
       if ((e.ctrlKey || e.metaKey) && e.key === "y") {
         const target = e.target;
-        const isInput = target.tagName === 'INPUT' || 
-                        target.tagName === 'TEXTAREA' || 
+        const isInput = target.tagName === 'INPUT' ||
+                        target.tagName === 'TEXTAREA' ||
                         target.isContentEditable ||
                         target.closest('[role="textbox"]') ||
                         target.closest('[contenteditable="true"]');
-        
+
         // Allow Ctrl+Y to work as redo in textboxes
         if (isInput) {
           return; // Let browser handle redo
         }
-        
+
         // Ctrl+Y doesn't have a navigation action, just let browser handle it
         // (or we could add forward navigation if needed)
+      }
+
+      // Ctrl + X: Reset Calculator (trigger reset button)
+      if ((e.ctrlKey || e.metaKey) && e.key === "x") {
+        const target = e.target;
+        const isInput = target.tagName === 'INPUT' ||
+                        target.tagName === 'TEXTAREA' ||
+                        target.isContentEditable ||
+                        target.closest('[role="textbox"]') ||
+                        target.closest('[contenteditable="true"]');
+
+        // Don't trigger reset when typing in input fields
+        if (isInput) {
+          return;
+        }
+
+        // Find and click the reset button
+        // First try to find button with type="reset"
+        let resetButton = document.querySelector('button[type="reset"]');
+
+        // If not found, look for buttons containing "รีเซท" text
+        if (!resetButton) {
+          const allButtons = document.querySelectorAll('button');
+          for (const button of allButtons) {
+            if (button.textContent.trim() === 'รีเซท') {
+              resetButton = button;
+              break;
+            }
+          }
+        }
+
+        if (resetButton) {
+          e.preventDefault();
+          resetButton.click();
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -83,6 +128,7 @@ export default function Header() {
   return (
     <>
       <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CalculationHistory isOpen={historyOpen} onClose={() => setHistoryOpen(false)} />
 
       {/* Desktop Sticky Header */}
       <header
@@ -119,6 +165,23 @@ export default function Header() {
             >
               <i className="fa-solid fa-magnifying-glass text-sm"></i>
               <span className="text-sm font-medium">ค้นหา...</span>
+            </button>
+
+            {/* History Button */}
+            <button
+              onClick={() => setHistoryOpen(true)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all group relative ${scrolled
+                ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:border-gray-300 dark:hover:border-gray-600"
+                : "bg-white/50 dark:bg-black/20 border-white/20 dark:border-white/10 text-[#2b2b2b]/60 dark:text-white/60 hover:bg-white/80 dark:hover:bg-black/30"
+                }`}
+            >
+              <i className="fa-solid fa-history text-sm"></i>
+              <span className="text-sm font-medium">ประวัติ</span>
+              {allHistory.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#ffcc00] text-[#2b2b2b] text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {allHistory.length}
+                </span>
+              )}
             </button>
 
             {menuItems.map((item, index) => (

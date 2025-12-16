@@ -6,6 +6,7 @@ import { CalculatorCard, CalculatorSection, CalculatorInput } from "../../compon
 import { Input } from "../../components/ui/input";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Label } from "../../components/ui/label";
+import { useCalculationHistory } from "../../context/CalculationHistoryContext";
 
 // Component to auto-save Quick Mode data to sessionStorage (clears on refresh/close)
 function AutoSaveQuickMode() {
@@ -43,6 +44,7 @@ export default function QuickMode({ calculate, loading }) {
   const navigate = useNavigate();
   const [isResetting, setIsResetting] = useState(false);
   const formRef = useRef(null);
+  const { addCalculation } = useCalculationHistory();
 
   // Global Enter key to submit form
   useEffect(() => {

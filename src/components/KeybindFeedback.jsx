@@ -14,10 +14,14 @@ export default function KeybindFeedback() {
             // Check for specific shortcuts
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
                 keyName = "Search";
+            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "h") {
+                keyName = "History";
             } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
                 keyName = "Undo";
             } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
                 keyName = "Redo";
+            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "x") {
+                keyName = "Reset Calculator";
             } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
                 keyName = "Theme Switch";
             }

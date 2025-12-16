@@ -8,6 +8,7 @@ import { CalculatorCard } from "../components/salary/CalculatorComponents";
 import { motion, AnimatePresence } from "framer-motion";
 import SlotCounter from "../components/ui/SlotCounter";
 import TermsModal from "../components/TermsModal";
+import { useCalculationHistory } from "../context/CalculationHistoryContext";
 
 export default function SalaryAfterTax() {
   const [params, setParams] = useSearchParams();
@@ -17,6 +18,8 @@ export default function SalaryAfterTax() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [modal, setModal] = useState(false);
+  const [currentInputs, setCurrentInputs] = useState(null);
+  const { addCalculation } = useCalculationHistory();
 
   const handleTermsAccept = () => {
     setModal(false);
@@ -30,10 +33,12 @@ export default function SalaryAfterTax() {
   const handleModeChange = (newMode) => {
     setParams({ mode: newMode });
     setResult(null); // Clear result when switching modes
+    setCurrentInputs(null); // Clear inputs when switching modes
   };
 
   const calculate = (values, mode) => {
     setLoading(true);
+    setCurrentInputs({ ...values, mode }); // Store inputs for history
     setTimeout(() => {
       const result =
         mode === "detailed"
@@ -46,12 +51,19 @@ export default function SalaryAfterTax() {
   };
 
   useEffect(() => {
-    if (result) {
+    if (result && currentInputs) {
+      // Add calculation to history
+      addCalculation({
+        calculatorType: "salary-tax",
+        inputs: currentInputs,
+        results: result
+      });
+
       setTimeout(() => {
         document.getElementById('result')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
-  }, [result]);
+  }, [result, currentInputs, addCalculation]);
 
   return (
     <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">
@@ -336,6 +348,7 @@ export default function SalaryAfterTax() {
                           type="button"
                           onClick={() => {
                             setResult(null);
+                            setCurrentInputs(null);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
                           className="px-6 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors text-center"
