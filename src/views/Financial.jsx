@@ -26,7 +26,8 @@ function InlineInput({ label, name, placeholder, value, onChange, unit, optional
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-[#1a1a1a] text-[#2b2b2b] dark:text-white focus:ring-2 focus:ring-[#ffcc00] focus:border-transparent transition-all text-right"
+          style={{ color: '#ffcc00' }}
+          className="flex-1 px-6 py-2 h-12 rounded-full border border-gray-200 dark:border-white/10 bg-white/50 dark:bg-black/20 font-black focus:ring-2 focus:ring-[#ffcc00] focus:border-transparent transition-all text-center text-xl"
         />
         {unit && (
           <span className="w-16 text-sm text-gray-500 dark:text-gray-400 text-right">
@@ -155,9 +156,9 @@ export default function Financial() {
       <div className="max-w-3xl mx-auto px-4">
         <Link
           to="/"
-          className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-6"
+          className="px-6 py-2 btn-back flex items-center gap-2 mb-6 w-fit transition-all duration-300"
         >
-          <i className="fa-solid fa-arrow-left-long mr-2"></i>
+          <i className="fa-solid fa-arrow-left-long"></i>
           Back to Home
         </Link>
 
@@ -273,7 +274,6 @@ export default function Financial() {
                 </div>
               </div>
 
-              {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <button
                   type="button"
@@ -285,10 +285,7 @@ export default function Financial() {
                     resetForm({ values: defaultProfile });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`px-8 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600 hover:bg-red-200"
-                    }`}
+                  className={`px-8 py-3 btn-danger transition-all duration-300 active:scale-95 ${isResetting ? "opacity-70" : ""}`}
                 >
                   {isResetting ? (
                     <>
@@ -301,9 +298,9 @@ export default function Financial() {
                 </button>
                 <button
                   type="submit"
-                  className="px-8 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors shadow-md"
+                  className="px-8 py-3 btn-primary transition-all duration-300 flex items-center justify-center gap-2 active:scale-95"
                 >
-                  <i className="fa-solid fa-floppy-disk mr-2"></i>
+                  <i className="fa-solid fa-floppy-disk"></i>
                   บันทึกข้อมูล
                 </button>
               </div>

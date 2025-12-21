@@ -237,18 +237,18 @@ export default function DebtManagement() {
             </div>
 
             <div className="max-w-4xl mx-auto px-4">
-                <Link to="/" className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-6">
-                    <i className="fa-solid fa-arrow-left-long mr-2"></i>
+                <Link to="/" className="px-6 py-2 btn-back flex items-center gap-2 mb-6 w-fit transition-all duration-300">
+                    <i className="fa-solid fa-arrow-left-long"></i>
                     กลับหน้าหลัก
                 </Link>
 
                 {/* Mode Toggle */}
                 <div className="flex justify-center mb-8">
-                    <div className="bg-white dark:bg-[#2b2b2b] p-1.5 rounded-full shadow-sm inline-flex">
+                    <div className="flex bg-gray-100 dark:bg-white/5 p-1.5 rounded-full backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-inner">
                         <button
                             onClick={() => { setMode("quick"); setResult(null); }}
-                            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${mode === "quick"
-                                ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
+                            className={`px-6 py-2.5 rounded-full text-sm font-black transition-all duration-300 ${mode === "quick"
+                                ? "btn-primary shadow-lg scale-105"
                                 : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
                                 }`}
                         >
@@ -256,8 +256,8 @@ export default function DebtManagement() {
                         </button>
                         <button
                             onClick={() => { setMode("detailed"); setResult(null); }}
-                            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${mode === "detailed"
-                                ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
+                            className={`px-6 py-2.5 rounded-full text-sm font-black transition-all duration-300 ${mode === "detailed"
+                                ? "btn-primary shadow-lg scale-105"
                                 : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
                                 }`}
                         >
@@ -288,24 +288,15 @@ export default function DebtManagement() {
                                     />
 
                                     {/* Interest (Fixed to %) */}
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 relative">
-                                        <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                                            ดอกเบี้ย (ต่อปี)
-                                        </label>
-                                        <div className="flex-1 w-full md:w-auto relative flex items-center gap-2">
-                                            <Input
-                                                type="text"
-                                                value={quickState.interest}
-                                                onChange={(e) => handleQuickChange("interest", e.target.value.replace(/[^0-9.]/g, ""))}
-                                                placeholder="ระบุดอกเบี้ย..."
-                                                className="w-full"
-                                            />
-                                            <span className="absolute right-3 text-gray-500">%</span>
-                                        </div>
-                                        <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[100px] text-right hidden md:block">
-                                            {/* unit placeholder spacing */}
-                                        </span>
-                                    </div>
+                                    <CalculatorInput
+                                        label="ดอกเบี้ย (ต่อปี)"
+                                        name="interest"
+                                        value={quickState.interest}
+                                        onChange={(e) => handleQuickChange("interest", e.target.value.replace(/[^0-9.]/g, ""))}
+                                        setFieldValue={handleQuickChange}
+                                        placeholder="ระบุดอกเบี้ย..."
+                                        unit="%"
+                                    />
 
                                     {/* Toggle Calculation Type */}
                                     <div>
@@ -399,17 +390,14 @@ export default function DebtManagement() {
                     <div className="mt-8 w-full justify-between flex flex-col md:flex-row gap-4">
                         <button
                             type="button"
-                            className="w-full md:w-1/3 py-3 rounded-lg bg-white dark:bg-[#2b2b2b] text-gray-700 dark:text-gray-200 font-bold hover:bg-gray-100 dark:hover:bg-[#333] transition-colors active:scale-95 duration-200 border border-transparent shadow-sm"
+                            className="w-full md:w-1/3 py-3 btn-back transition-all duration-300 active:scale-95"
                             onClick={() => navigate("/")}
                         >
-                            กลับหน้าแรก
+                            กลับหน้าหลัก
                         </button>
                         <button
                             type="button"
-                            className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
-                                ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
-                                : "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30"
-                                }`}
+                            className={`w-full md:w-1/3 py-3 btn-danger transition-all duration-300 active:scale-95 ${isResetting ? "opacity-70" : ""}`}
                             onClick={resetForm}
                         >
                             {isResetting ? (
@@ -425,10 +413,7 @@ export default function DebtManagement() {
                             type="button"
                             disabled={loading}
                             onClick={calculate}
-                            className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${loading
-                                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
-                                }`}
+                            className={`w-full md:w-1/3 py-3 btn-primary transition-all duration-300 flex justify-center items-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : "active:scale-95"}`}
                         >
                             {loading ? (
                                 <>
@@ -599,19 +584,19 @@ export default function DebtManagement() {
                                     </div>
                                 )}
 
-                                <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
+                                <div className="flex flex-col md:flex-row justify-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700/30">
                                     <button
                                         onClick={() => navigate("/")}
-                                        className="px-6 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors text-center w-full md:w-auto"
+                                        className="px-8 py-3 btn-back shadow-lg transition-all duration-300 text-center w-full md:w-auto"
                                     >
-                                        กลับหน้าแรก
+                                        กลับหน้าหลัก
                                     </button>
                                     <button
                                         onClick={() => {
                                             setResult(null);
                                             window.scrollTo({ top: 0, behavior: 'smooth' });
                                         }}
-                                        className="px-6 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors text-center w-full md:w-auto"
+                                        className="px-8 py-3 btn-primary transition-all duration-300 text-center w-full md:w-auto"
                                     >
                                         คำนวณอีกครั้ง
                                     </button>

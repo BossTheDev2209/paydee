@@ -75,10 +75,13 @@ export const CalculatorInput = ({
                         const formattedVal = rawValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         setFieldValue(name, formattedVal);
                     }}
+                    style={{
+                        color: isPrefilled ? '#22c55e' : '#ffcc00'
+                    }}
                     className={cn(
-                        "w-full transition-colors duration-300",
-                        touched && error ? "border-red-500 focus-visible:ring-red-500 focus-visible:border-red-500" : "",
-                        isPrefilled ? "border-green-400 focus-visible:ring-green-500 focus-visible:border-green-500 text-green-600 dark:text-green-400 font-semibold" : ""
+                        "w-full transition-all duration-300 text-xl h-12 px-6 rounded-full text-center font-black",
+                        "bg-white/50 dark:bg-black/20 border-gray-200 dark:border-white/10",
+                        touched && error ? "border-red-500 focus-visible:ring-red-500 focus-visible:border-red-500" : ""
                     )}
                 />
                 {touched && error && (

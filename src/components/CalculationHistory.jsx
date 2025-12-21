@@ -113,19 +113,22 @@ export default function CalculationHistory({ isOpen, onClose }) {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white dark:bg-[#2b2b2b] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden"
+          className="bg-white dark:bg-[#1a1a1a] rounded-3xl shadow-[0_32px_64px_rgba(0,0,0,0.4)] max-w-4xl w-full max-h-[85vh] overflow-hidden border border-white/20 dark:border-white/10 backdrop-blur-3xl saturate-200 flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="bg-[#ffcc00] px-6 py-4 flex items-center justify-between">
-            <h2 className="text-xl md:text-2xl font-bold text-[#2b2b2b]">
-              ประวัติการคำนวณ ({allHistory.length} รายการ)
+          <div className="px-6 py-5 flex items-center justify-between border-b border-gray-100/10 dark:border-white/10 bg-white/5 backdrop-blur-md">
+            <h2 className="text-xl md:text-2xl font-black text-[#2b2b2b] dark:text-white flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#ffcc00] flex items-center justify-center shadow-md">
+                <i className="fa-solid fa-history text-[#2b2b2b] text-base"></i>
+              </div>
+              ประวัติการคำนวณ ({allHistory.length})
             </h2>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-lg bg-[#2b2b2b]/10 hover:bg-[#2b2b2b]/20 transition-colors flex items-center justify-center"
+              className="w-10 h-10 rounded-xl bg-gray-100/50 dark:bg-white/10 flex items-center justify-center hover:bg-[#ffcc00] hover:text-[#2b2b2b] transition-all duration-300 group"
             >
-              <i className="fa-solid fa-xmark text-[#2b2b2b]"></i>
+              <i className="fa-solid fa-xmark text-gray-500 dark:text-white/70 group-hover:text-[#2b2b2b]"></i>
             </button>
           </div>
 
@@ -218,8 +221,8 @@ export default function CalculationHistory({ isOpen, onClose }) {
 
           {/* Footer */}
           {allHistory.length > 0 && (
-            <div className="px-6 py-4 bg-gray-50 dark:bg-[#1a1a1a] border-t border-gray-200 dark:border-gray-600 flex justify-between items-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="px-6 py-4 bg-gray-100/50 dark:bg-black/40 border-t border-gray-100/10 dark:border-white/10 flex justify-between items-center backdrop-blur-md">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 แสดง {history.length} จาก {allHistory.length} รายการ
               </p>
               <button
@@ -228,7 +231,7 @@ export default function CalculationHistory({ isOpen, onClose }) {
                     clearHistory();
                   }
                 }}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm"
+                className="px-6 py-2.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl hover:bg-red-500 hover:text-white transition-all duration-300 font-bold text-sm shadow-sm"
               >
                 ล้างประวัติทั้งหมด
               </button>

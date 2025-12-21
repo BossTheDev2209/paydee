@@ -99,21 +99,21 @@ export default function CommandPalette({ isOpen, onClose }) {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -20 }}
                         transition={{ duration: 0.2 }}
-                        className="w-full max-w-2xl bg-white dark:bg-[#1a1a1a] rounded-xl shadow-2xl overflow-hidden relative border border-gray-200 dark:border-gray-800 flex flex-col max-h-[60vh]"
+                        className="w-full max-w-2xl bg-white/10 dark:bg-black/20 rounded-3xl shadow-[0_32px_64px_rgba(0,0,0,0.4)] overflow-hidden relative border border-white/40 dark:border-white/10 flex flex-col max-h-[80vh] backdrop-blur-3xl saturate-200"
                     >
                         {/* Search Input */}
-                        <div className="flex items-center px-4 py-4 border-b border-gray-100 dark:border-gray-800">
-                            <i className="fa-solid fa-magnifying-glass text-gray-400 mr-3 text-lg"></i>
+                        <div className="flex items-center px-6 py-5 border-b border-white/20 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-md">
+                            <i className="fa-solid fa-magnifying-glass text-[#ffcc00] mr-4 text-xl"></i>
                             <input
                                 ref={inputRef}
                                 type="text"
                                 placeholder="ค้นหาเครื่องมือคำนวณ หรือ หน้าต่างๆ..."
-                                className="w-full bg-transparent border-none outline-none text-lg text-[#2b2b2b] dark:text-white placeholder-gray-400 font-medium"
+                                className="w-full bg-transparent border-none outline-none text-xl text-[#2b2b2b] dark:text-white placeholder-gray-500/50 dark:placeholder-gray-400/50 font-bold"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                             />
                             <div className="hidden md:flex items-center gap-1">
-                                <kbd className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 dark:bg-gray-800 dark:text-gray-400 rounded-md border border-gray-200 dark:border-gray-700">ESC</kbd>
+                                <kbd className="px-2 py-1 text-[10px] font-black text-gray-500 dark:text-gray-400 bg-black/5 dark:bg-white/10 rounded-md border border-black/10 dark:border-white/10">ESC</kbd>
                             </div>
                         </div>
 
@@ -134,9 +134,9 @@ export default function CommandPalette({ isOpen, onClose }) {
                                                 onClose();
                                             }}
                                             onMouseEnter={() => setSelectedIndex(index)}
-                                            className={`px-4 py-3 rounded-lg cursor-pointer flex items-center gap-4 transition-colors ${index === selectedIndex
-                                                ? "bg-[#ffcc00]/20 dark:bg-[#ffcc00]/10 text-[#2b2b2b] dark:text-white"
-                                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5"
+                                            className={`px-4 py-4 rounded-xl cursor-pointer flex items-center gap-4 transition-all duration-200 ${index === selectedIndex
+                                                ? "bg-[#ffcc00] text-[#2b2b2b] shadow-lg scale-[1.02] z-10"
+                                                : "text-gray-600 dark:text-gray-300 hover:bg-white/10 dark:hover:bg-white/5"
                                                 }`}
                                         >
                                             {/* Icon */}
@@ -165,11 +165,11 @@ export default function CommandPalette({ isOpen, onClose }) {
                         </div>
 
                         {/* Footer */}
-                        <div className="px-4 py-2 bg-gray-50 dark:bg-[#252525] border-t border-gray-100 dark:border-gray-800 text-[10px] text-gray-500 dark:text-gray-400 flex justify-between items-center">
-                            <span>
-                                ค้นหาอย่างรวดเร็วด้วย <kbd className="font-sans px-1 py-0.5 bg-white dark:bg-[#3d3d3d] rounded border border-gray-200 dark:border-gray-600 mx-1">Ctrl</kbd> + <kbd className="font-sans px-1 py-0.5 bg-white dark:bg-[#3d3d3d] rounded border border-gray-200 dark:border-gray-600 mx-1">K</kbd>
+                        <div className="px-6 py-3 bg-gray-100/50 dark:bg-black/40 border-t border-gray-100/10 dark:border-white/10 text-[10px] text-gray-500 dark:text-gray-400 flex justify-between items-center backdrop-blur-md">
+                            <span className="font-medium opacity-80">
+                                ค้นหาอย่างรวดเร็วด้วย <kbd className="font-sans px-1.5 py-0.5 bg-white/50 dark:bg-white/10 rounded border border-gray-200/50 dark:border-white/10 mx-1">Ctrl</kbd> + <kbd className="font-sans px-1.5 py-0.5 bg-white/50 dark:bg-white/10 rounded border border-gray-200/50 dark:border-white/10 mx-1">K</kbd>
                             </span>
-                            <span>PayDee Search</span>
+                            <span className="font-bold tracking-wider opacity-60">PayDee Search</span>
                         </div>
                     </motion.div>
                 </div>

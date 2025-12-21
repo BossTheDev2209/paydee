@@ -5,13 +5,16 @@ import App from "./App.jsx";
 import './styles/global.css';
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { CalculationHistoryProvider } from "./context/CalculationHistoryContext.jsx";
+import { SettingsProvider } from "./context/SettingsContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <ThemeProvider>
     <BrowserRouter>
-      <CalculationHistoryProvider>
-        <App />
-      </CalculationHistoryProvider>
+      <SettingsProvider>
+        <CalculationHistoryProvider>
+          <App />
+        </CalculationHistoryProvider>
+      </SettingsProvider>
     </BrowserRouter>
   </ThemeProvider>
 );

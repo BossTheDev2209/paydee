@@ -130,17 +130,14 @@ export default function QuickMode({ calculate, loading }) {
               <div className="mt-8 w-full justify-between flex flex-col md:flex-row gap-4">
                 <button
                   type="button"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-white dark:bg-[#2b2b2b] text-gray-700 dark:text-gray-200 font-bold hover:bg-gray-100 dark:hover:bg-[#333] transition-colors active:scale-95 duration-200 border border-transparent dark:border-gray-600 shadow-sm"
+                  className="w-full md:w-1/3 py-3 btn-back transition-all duration-300 active:scale-95"
                   onClick={() => navigate("/")}
                 >
-                  กลับหน้าแรก
+                  กลับหน้าหลัก
                 </button>
                 <button
                   type="reset"
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 border border-transparent ${isResetting
-                    ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
-                    : "bg-white dark:bg-[#2b2b2b] text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333] dark:border-gray-600 shadow-sm"
-                    }`}
+                  className={`w-full md:w-1/3 py-3 btn-danger transition-all duration-300 active:scale-95 ${isResetting ? "opacity-70" : ""}`}
                   onClick={() => {
                     setIsResetting(true);
                     setTimeout(() => setIsResetting(false), 1000);
@@ -162,10 +159,7 @@ export default function QuickMode({ calculate, loading }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${loading
-                    ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                    : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
-                    }`}
+                  className={`w-full md:w-1/3 py-3 btn-primary transition-all duration-300 flex justify-center items-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : "active:scale-95"}`}
                 >
                   {loading ? (
                     <>

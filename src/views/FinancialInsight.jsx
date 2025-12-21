@@ -15,7 +15,7 @@ import {
     Legend
 } from "recharts";
 
-// Financial Insight Page - Receives expense data and calls LLM API
+// Financial Insight Page - Receives expense data and calls Typhoon LLM API
 export default function FinancialInsight() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -141,7 +141,7 @@ export default function FinancialInsight() {
                         รายงานข้อมูลเชิงลึกทางการเงิน
                     </h1>
                     <h3 className="text-lg md:text-xl text-white/80">
-                        วิเคราะห์โดย AI
+                        วิเคราะห์โดย Typhoon AI
                     </h3>
                 </div>
             </div>
@@ -149,9 +149,9 @@ export default function FinancialInsight() {
             <div id="insight-content" className="max-w-6xl mx-auto px-4 md:px-8">
                 <Link
                     to="/salary-aftertax?mode=detailed"
-                    className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-8"
+                    className="px-6 py-2 btn-back flex items-center gap-2 mb-8 w-fit transition-all duration-300"
                 >
-                    <i className="fa-solid fa-arrow-left-long mr-2"></i>
+                    <i className="fa-solid fa-arrow-left-long"></i>
                     กลับไปหน้าคำนวณ
                 </Link>
 
@@ -385,16 +385,16 @@ export default function FinancialInsight() {
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-10">
                             <Link
                                 to="/"
-                                className="px-8 py-4 rounded-xl bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors text-lg text-center"
+                                className="px-10 py-4 btn-back transition-all text-lg text-center"
                             >
                                 หน้าแรก
                             </Link>
                             <Link
                                 to="/salary-aftertax?mode=detailed"
-                                className="px-8 py-4 rounded-xl bg-[#ffcc00] text-[#2b2b2b] font-bold hover:bg-[#e6b800] transition-colors text-lg text-center"
+                                className="px-10 py-4 btn-primary transition-all text-lg text-center shadow-xl"
                             >
                                 คำนวณอีกครั้ง
                             </Link>

@@ -234,8 +234,15 @@ export default function CurrencyConverter() {
         const temp = fromCurrency;
         setFromCurrency(toCurrency);
         setToCurrency(temp);
-        setResult(null);
+        // Do not clear result; the useEffect will handle recalculation
     };
+
+    // Auto-recalculate when currencies change if we already have a result
+    useEffect(() => {
+        if (result && amount && rates) {
+            handleCalculate();
+        }
+    }, [fromCurrency, toCurrency]);
 
     return (
         <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">

@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
+import { useSettings } from "./SettingsContext";
 
 const CalculationHistoryContext = createContext();
 
@@ -10,6 +11,7 @@ const generateId = () => Date.now().toString() + Math.random().toString(36).subs
 export function CalculationHistoryProvider({ children }) {
   const [history, setHistory] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const { settings } = useSettings();
 
   // Load history from localStorage on mount
   useEffect(() => {
@@ -34,7 +36,10 @@ export function CalculationHistoryProvider({ children }) {
   }, [history]);
 
   // Add a new calculation to history
-  const addCalculation = (data) => {
+  const addCalculation = useCallback((data) => {
+    // Only save if setting is enabled
+    if (!settings.saveHistory) return;
+
     const newEntry = {
       id: generateId(),
       timestamp: new Date().toISOString(),
@@ -42,20 +47,20 @@ export function CalculationHistoryProvider({ children }) {
     };
 
     setHistory(prev => [newEntry, ...prev]);
-  };
+  }, [settings.saveHistory]);
 
   // Remove a calculation from history
-  const removeCalculation = (id) => {
+  const removeCalculation = useCallback((id) => {
     setHistory(prev => prev.filter(item => item.id !== id));
-  };
+  }, []);
 
   // Clear all history
-  const clearHistory = () => {
+  const clearHistory = useCallback(() => {
     setHistory([]);
-  };
+  }, []);
 
   // Search history
-  const searchHistory = (query) => {
+  const searchHistory = useCallback((query) => {
     if (!query.trim()) return history;
 
     const lowerQuery = query.toLowerCase();
@@ -80,23 +85,23 @@ export function CalculationHistoryProvider({ children }) {
 
       return inputsMatch || resultsMatch || typeMatch;
     });
-  };
+  }, [history]);
 
   // Get filtered history based on search query
-  const filteredHistory = searchHistory(searchQuery);
+  const filteredHistory = useMemo(() => searchHistory(searchQuery), [searchHistory, searchQuery]);
+
+  const value = useMemo(() => ({
+    history: filteredHistory,
+    allHistory: history,
+    searchQuery,
+    setSearchQuery,
+    addCalculation,
+    removeCalculation,
+    clearHistory
+  }), [filteredHistory, history, searchQuery, addCalculation, removeCalculation, clearHistory]);
 
   return (
-    <CalculationHistoryContext.Provider
-      value={{
-        history: filteredHistory,
-        allHistory: history,
-        searchQuery,
-        setSearchQuery,
-        addCalculation,
-        removeCalculation,
-        clearHistory
-      }}
-    >
+    <CalculationHistoryContext.Provider value={value}>
       {children}
     </CalculationHistoryContext.Provider>
   );

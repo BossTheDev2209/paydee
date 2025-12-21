@@ -104,7 +104,7 @@ export default function CalculatorCarousel({ items, large = false }) {
                                     className="block w-full h-full text-left"
                                 >
                                     <div
-                                        className={`relative rounded-xl flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] border border-transparent hover:border-gray-200 shadow-sm cursor-pointer ${large ? "h-64 md:h-56 p-6" : "h-56 md:h-48 p-5"
+                                        className={`glass-card relative rounded-xl flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] cursor-pointer ${large ? "h-64 md:h-56 p-6" : "h-56 md:h-48 p-5"
                                             }`}
                                         style={{ backgroundColor: item.bgColor }}
                                     >
@@ -122,7 +122,7 @@ export default function CalculatorCarousel({ items, large = false }) {
                                                     <img
                                                         src={item.aiIcon}
                                                         alt="AI"
-                                                        className="w-16 h-16 object-contain animate-float filter drop-shadow-[0_0_25px_rgba(59,130,246,1)] md:drop-shadow-[0_0_15px_rgba(59,130,246,0.6)] md:group-hover/icon:drop-shadow-[0_0_25px_rgba(59,130,246,1)]"
+                                                        className="w-16 h-16 object-contain pulse-glow md:group-hover/icon:drop-shadow-[0_0_25px_rgba(59,130,246,1)]"
                                                     />
                                                     <div className="absolute top-1/2 -translate-y-1/2 left-[calc(100%+8px)] w-max px-3 py-1.5 bg-black/90 text-white text-xs rounded opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-20">
                                                         เครื่องคำนวณปัญญาประดิษฐ์
@@ -143,7 +143,7 @@ export default function CalculatorCarousel({ items, large = false }) {
 
                                             {/* Tags */}
                                             {item.tags && item.tags.length > 0 && (
-                                                <div className="flex flex-wrap gap-1 mt-3">
+                                                <div className="card-tag-container flex flex-wrap gap-1 mt-3">
                                                     {item.tags.map((tag, idx) => (
                                                         <span key={idx} className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-white/40 text-[#2b2b2b]/80 border border-black/5">
                                                             {tag}
@@ -158,8 +158,8 @@ export default function CalculatorCarousel({ items, large = false }) {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className={`flex -left-8 md:-left-12 border-none bg-white/80 hover:bg-white shadow-md ${large ? "text-[#2b2b2b] hover:text-[#ffcc00]" : "text-gray-600 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"}`} />
-                <CarouselNext className={`flex -right-8 md:-right-12 border-none bg-white/80 hover:bg-white shadow-md ${large ? "text-[#2b2b2b] hover:text-[#ffcc00]" : "text-gray-600 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"}`} />
+                <CarouselPrevious className="glass-arrow flex -left-8 md:-left-12 border-none transition-all duration-300 shadow-lg" />
+                <CarouselNext className="glass-arrow flex -right-8 md:-right-12 border-none transition-all duration-300 shadow-lg" />
             </Carousel>
 
             {/* Disclaimer Modal */}

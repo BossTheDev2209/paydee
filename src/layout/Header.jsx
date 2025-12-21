@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import CommandPalette from "../components/CommandPalette";
 import CalculationHistory from "../components/CalculationHistory";
+import SettingsModal from "../components/SettingsModal";
 import { useCalculationHistory } from "../context/CalculationHistoryContext";
 
 export default function Header() {
@@ -10,6 +11,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { allHistory } = useCalculationHistory();
@@ -120,15 +122,14 @@ export default function Header() {
   };
 
   const menuItems = [
-    { label: "หน้าแรก", path: "/" },
     { label: "เกี่ยวกับเรา", path: "/about-us" },
-    { label: "ข้อกำหนดการใช้งาน", path: "/terms-of-use" },
   ];
 
   return (
     <>
       <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <CalculationHistory isOpen={historyOpen} onClose={() => setHistoryOpen(false)} />
+      <SettingsModal isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
 
       {/* Desktop Sticky Header */}
       <header
@@ -155,16 +156,19 @@ export default function Header() {
 
           {/* Navigation Links */}
           <nav className="flex items-center gap-3">
-            {/* Search Trigger (Desktop) */}
+            {/* Search Trigger (Desktop) - Expanded */}
             <button
               onClick={() => setSearchOpen(true)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all group ${scrolled
-                ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:border-gray-300 dark:hover:border-gray-600"
-                : "bg-white/50 dark:bg-black/20 border-white/20 dark:border-white/10 text-[#2b2b2b]/60 dark:text-white/60 hover:bg-white/80 dark:hover:bg-black/30"
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg border transition-all group min-w-[200px] lg:min-w-[300px] ${scrolled
+                ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400 hover:border-gray-300 dark:hover:border-gray-600"
+                : "bg-white/50 dark:bg-black/20 border-white/20 dark:border-white/10 text-[#2b2b2b]/40 dark:text-white/30 hover:bg-white/80 dark:hover:bg-black/30"
                 }`}
             >
               <i className="fa-solid fa-magnifying-glass text-sm"></i>
-              <span className="text-sm font-medium">ค้นหา...</span>
+              <span className="text-sm font-medium flex-1 text-left">ค้นหาการคำนวณ...</span>
+              <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 uppercase">
+                Ctrl K
+              </kbd>
             </button>
 
             {/* History Button */}
@@ -204,15 +208,16 @@ export default function Header() {
               </button>
             </Link>
 
-            {/* Theme Toggle */}
+            {/* Settings Trigger */}
             <button
-              onClick={toggleTheme}
+              onClick={() => setSettingsOpen(true)}
               className={`ml-2 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${scrolled
                 ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
                 : "bg-[#2b2b2b]/10 dark:bg-white/10 hover:bg-[#2b2b2b]/20 dark:hover:bg-white/20"
                 }`}
+              title="ตั้งค่า (Settings)"
             >
-              <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600 dark:text-white"}`}></i>
+              <i className="fa-solid fa-gear text-gray-600 dark:text-white"></i>
             </button>
           </nav>
         </div>
@@ -250,12 +255,11 @@ export default function Header() {
             >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>
-            {/* Theme Toggle */}
             <button
-              onClick={toggleTheme}
-              className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+              onClick={() => setSettingsOpen(true)}
+              className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white"
             >
-              <i className={`fa-solid ${isDark ? "fa-sun text-yellow-400" : "fa-moon text-gray-600"}`}></i>
+              <i className="fa-solid fa-gear"></i>
             </button>
           </div>
         </div>

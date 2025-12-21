@@ -12,13 +12,20 @@ export default function AIPort() {
   const setFieldValue = (name, value) => {
     if (name === "year") {
       setYearInput(value);
-      // Strip commas for API call
-      const cleanValue = value.replace(/,/g, '');
+    }
+  };
+
+  // Debounce API calls when input changes
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const cleanValue = yearInput.replace(/,/g, '');
       if (cleanValue) {
         fetchMarketData(cleanValue);
       }
-    }
-  };
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [yearInput]);
 
   const fetchMarketData = async (years = "10") => {
     setLoading(true);
@@ -49,9 +56,9 @@ export default function AIPort() {
     }
   };
 
-  useEffect(() => {
-    fetchMarketData();
-  }, []);
+  // Initial fetch handled by the debounce effect on mount since yearInput has default "10"
+  // But to avoid double fetch if needed, we can leave it or trust the effect.
+  // The effect will run on mount.
 
   const sectors = [
     { key: "INDUS", name: "อุตสาหกรรม", color: "text-purple-600", bg: "bg-purple-100", border: "hover:border-purple-500", icon: "fa-solid fa-industry" },
@@ -200,10 +207,19 @@ export default function AIPort() {
                 setFieldValue={setFieldValue}
                 unit="ปี"
               />
+              {loading && (
+                <div className="flex items-center gap-2 mt-2 text-sm text-[#ffcc00] animate-pulse font-medium">
+                  <i className="fa-solid fa-circle-notch fa-spin"></i>
+                  กำลังประมวลผล AI...
+                </div>
+              )}
             </div>
-            <div className="pb-4 text-sm text-gray-500 dark:text-gray-400">
-              <i className="fa-solid fa-clock-rotate-left mr-2"></i>
-              อัปเดตล่าสุด: {market?.Last_Time_for_index || "กำลังโหลด..."}
+            <div className="pb-4 text-sm text-gray-500 dark:text-gray-400 flex flex-col items-end">
+              <span className="text-xs opacity-70 mb-1">ข้อมูลตลาดหลักทรัพย์ (Real-time Simulation)</span>
+              <div className="flex items-center gap-2">
+                <i className="fa-solid fa-clock-rotate-left"></i>
+                <span>{market?.Last_Time_for_index ? `อัปเดต: ${market.Last_Time_for_index}` : "รอสักครู่..."}</span>
+              </div>
             </div>
           </div>
         </CalculatorSection>

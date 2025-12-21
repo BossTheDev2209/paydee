@@ -247,18 +247,18 @@ export default function SavingGoal() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4">
-        <Link to="/" className="inline-flex items-center text-[#979797] hover:text-[#2b2b2b] dark:hover:text-white transition-colors duration-300 mb-6">
-          <i className="fa-solid fa-arrow-left-long mr-2"></i>
+        <Link to="/" className="px-6 py-2 btn-back flex items-center gap-2 mb-6 w-fit transition-all duration-300">
+          <i className="fa-solid fa-arrow-left-long"></i>
           Back to Home
         </Link>
 
         {/* Mode Toggle - Same as Salary After Tax */}
         <div className="flex justify-center mb-8">
-          <div className="bg-white dark:bg-[#2b2b2b] p-1.5 rounded-full shadow-sm inline-flex">
+          <div className="flex bg-gray-100 dark:bg-white/5 p-1.5 rounded-full backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-inner">
             <button
               onClick={() => handleModeChange("quick")}
-              className={`px-8 py-2.5 rounded-full text-sm md:text-base font-bold transition-all duration-300 ${currentMode === "quick"
-                ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
+              className={`px-8 py-2.5 rounded-full text-sm md:text-base font-black transition-all duration-300 ${currentMode === "quick"
+                ? "btn-primary shadow-lg scale-105"
                 : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 }`}
             >
@@ -266,8 +266,8 @@ export default function SavingGoal() {
             </button>
             <button
               onClick={() => handleModeChange("detailed")}
-              className={`px-8 py-2.5 rounded-full text-sm md:text-base font-bold transition-all duration-300 ${currentMode === "detailed"
-                ? "bg-[#ffcc00] text-[#2b2b2b] shadow-md"
+              className={`px-8 py-2.5 rounded-full text-sm md:text-base font-black transition-all duration-300 ${currentMode === "detailed"
+                ? "btn-primary shadow-lg scale-105"
                 : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 }`}
             >

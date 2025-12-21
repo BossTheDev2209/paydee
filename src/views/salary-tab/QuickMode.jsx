@@ -272,22 +272,18 @@ export default function QuickMode({ calculate, loading }) {
               <div className="mt-8 w-full justify-between flex gap-4">
                 <button
                   type="button"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-300 transition-colors active:scale-95 duration-200"
+                  className="w-full md:w-1/3 py-3 btn-back transition-all duration-300 active:scale-95"
                   onClick={() => navigate("/")}
                 >
-                  กลับ
+                  กลับหน้าหลัก
                 </button>
                 <button
                   type="reset"
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600 hover:bg-red-200"
-                    }`}
+                  className={`w-full md:w-1/3 py-3 btn-danger transition-all duration-300 active:scale-95 ${isResetting ? "opacity-70" : ""}`}
                   onClick={() => {
                     setIsResetting(true);
                     setTimeout(() => setIsResetting(false), 1000);
-
-                    // Reset form values
+                    // Reset form values logic remains same...
                     setFieldValue("salary", "");
                     setFieldValue("expenses", "");
                     setFieldValue("tax", "");
@@ -299,8 +295,6 @@ export default function QuickMode({ calculate, loading }) {
                     setFieldValue("rmfAmount", "");
                     setFieldValue("hasLifeInsurance", false);
                     setFieldValue("lifeInsuranceAmount", "");
-
-                    // Scroll to top
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
@@ -316,10 +310,7 @@ export default function QuickMode({ calculate, loading }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${loading
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
-                    }`}
+                  className={`w-full md:w-1/3 py-3 btn-primary transition-all duration-300 flex justify-center items-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : "active:scale-95"}`}
                 >
                   {loading ? (
                     <>

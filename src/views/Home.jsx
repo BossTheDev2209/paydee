@@ -33,7 +33,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-6xl font-black text-[#2b2b2b] mb-4 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-black text-[#2b2b2b] mb-6 leading-relaxed">
               จัดการ
               <AnimatePresence mode="wait">
                 <motion.span
@@ -73,7 +73,7 @@ export default function Home() {
             className="flex flex-col items-center gap-4 w-full"
           >
             <button
-              className="w-full max-w-xs px-8 py-5 bg-[#2b2b2b] text-white rounded-2xl font-bold text-xl hover:bg-black hover:shadow-2xl hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 shadow-lg flex items-center justify-center gap-3"
+              className="w-full max-w-xs px-8 py-5 btn-primary transition-all duration-300 shadow-xl flex items-center justify-center gap-3 text-xl"
               onClick={() => document.getElementById('calculators')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <span>เริ่มคำนวณทันที</span>

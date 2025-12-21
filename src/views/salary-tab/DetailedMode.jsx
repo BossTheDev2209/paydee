@@ -6,7 +6,7 @@ import { CalculatorCard, CalculatorSection, CalculatorInput } from "../../compon
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
-import { calculateTaxDetailed } from "../../utils/taxDetailed";
+
 
 function loadData() {
   try {
@@ -173,7 +173,7 @@ export default function DetailedMode({ calculate, loading }) {
                   touched={touched.monthlySalary}
                   setFieldValue={setFieldValue}
                   savedValue={savedData?.salary}
-                  unit="บาท/ปี"
+                  unit="บาท/เดือน"
                 />
                 <CalculatorInput
                   name="monthlyBonusExtra"
@@ -296,50 +296,28 @@ export default function DetailedMode({ calculate, loading }) {
                   </p>
 
                   {/* Children */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      จำนวนบุตร
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="childrenCount"
-                        name="childrenCount"
-                        placeholder="0"
-                        value={values.childrenCount}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("childrenCount", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[30px] text-right hidden md:block">
-                      คน
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="childrenCount"
+                    label="จำนวนบุตร"
+                    placeholder="0"
+                    value={values.childrenCount}
+                    error={errors.childrenCount}
+                    touched={touched.childrenCount}
+                    setFieldValue={setFieldValue}
+                    unit="คน"
+                  />
 
                   {/* Parents */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4">
-                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium md:w-5/12 text-sm md:text-base">
-                      จำนวนพ่อ/แม่ที่อุปการะ
-                    </label>
-                    <div className="flex-1 w-full md:w-auto">
-                      <Input
-                        id="parentsCount"
-                        name="parentsCount"
-                        placeholder="0"
-                        value={values.parentsCount}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, "");
-                          setFieldValue("parentsCount", val);
-                        }}
-                        className="w-full"
-                      />
-                    </div>
-                    <span className="text-[#2b2b2b] dark:text-gray-200 font-medium min-w-[30px] text-right hidden md:block">
-                      คน
-                    </span>
-                  </div>
+                  <CalculatorInput
+                    name="parentsCount"
+                    label="จำนวนพ่อ/แม่ที่อุปการะ"
+                    placeholder="0"
+                    value={values.parentsCount}
+                    error={errors.parentsCount}
+                    touched={touched.parentsCount}
+                    setFieldValue={setFieldValue}
+                    unit="คน"
+                  />
                   <p className="text-xs text-gray-500 dark:text-gray-400 ml-0 md:ml-[41.666%]">
                     (พ่อแม่ของคุณ + พ่อแม่คู่สมรสรวมกัน)
                   </p>
@@ -470,22 +448,18 @@ export default function DetailedMode({ calculate, loading }) {
               <div className="mt-8 w-full justify-between flex gap-4">
                 <button
                   type="button"
-                  className="w-full md:w-1/3 py-3 rounded-lg bg-white text-gray-700 font-bold hover:bg-gray-300 transition-colors active:scale-95 duration-200"
+                  className="w-full md:w-1/3 py-3 btn-back transition-all duration-300 active:scale-95"
                   onClick={() => navigate("/")}
                 >
-                  กลับ
+                  กลับหน้าหลัก
                 </button>
                 <button
                   type="reset"
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 active:scale-95 ${isResetting
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600 hover:bg-red-200"
-                    }`}
+                  className={`w-full md:w-1/3 py-3 btn-danger transition-all duration-300 active:scale-95 ${isResetting ? "opacity-70" : ""}`}
                   onClick={() => {
                     setIsResetting(true);
                     setTimeout(() => setIsResetting(false), 1000);
-
-                    // Reset form values
+                    // Reset form values logic...
                     setFieldValue("monthlySalary", "");
                     setFieldValue("monthlyBonusExtra", "");
                     setFieldValue("familyStatus", "single");
@@ -497,7 +471,6 @@ export default function DetailedMode({ calculate, loading }) {
                     setFieldValue("provident", "");
                     setFieldValue("parentsHealthInsurance", "");
                     setFieldValue("donation", "");
-                    // Reset expense fields
                     setFieldValue("housingCost", "");
                     setFieldValue("transportCost", "");
                     setFieldValue("debtPayment", "");
@@ -505,8 +478,6 @@ export default function DetailedMode({ calculate, loading }) {
                     setFieldValue("utilitiesCost", "");
                     setFieldValue("insuranceServiceCost", "");
                     setFieldValue("miscCost", "");
-
-                    // Scroll to top
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
@@ -522,10 +493,7 @@ export default function DetailedMode({ calculate, loading }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full md:w-1/3 py-3 rounded-lg font-bold transition-all duration-200 shadow-md flex justify-center items-center gap-2 ${loading
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-[#ffcc00] text-[#2b2b2b] hover:bg-[#e6b800] active:scale-95"
-                    }`}
+                  className={`w-full md:w-1/3 py-3 btn-primary transition-all duration-300 flex justify-center items-center gap-2 ${loading ? "opacity-50 cursor-not-allowed" : "active:scale-95"}`}
                 >
                   {loading ? (
                     <>

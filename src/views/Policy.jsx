@@ -56,6 +56,11 @@ export default function Policy() {
                                     5. ตัวอย่างแนวโน้มจำลองตลาดหลักทรัพย์
                                 </a>
                             </li>
+                            <li>
+                                <a href="#ai-safety-policy" className="hover:text-[#ffcc00] transition-colors">
+                                    6. การใช้งาน AI และความปลอดภัย (AI Usage & Safety)
+                                </a>
+                            </li>
                         </ul>
                     </nav>
 
@@ -333,6 +338,39 @@ export default function Policy() {
                                         8. นิยาม BMV (Base Market Value) โดยใช้ราคาจากเดือนแรก
                                         9. คำนวณดัชนี: Index_t = (CMV_t / BMV) × BaseIndexValue
                                         10. ใช้ Monte Carlo simulation เพื่อพยากรณ์ราคาของดัชนีที่ได้คำนวณมา
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* AI Safety Policy */}
+                        <section id="ai-safety-policy" className="scroll-mt-24">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-6 border-b-2 border-[#ffcc00] pb-3">
+                                6. การใช้งาน AI และความปลอดภัย
+                            </h2>
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        การเก็บข้อมูลและประมวลผล (Data Privacy)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        การประมวลผล: ระบบใช้เทคโนโลยี Typhoon AI เพื่อวิเคราะห์ข้อมูลทางการเงิน ข้อมูลที่ส่งไปยัง AI เป็นเพียงตัวเลขรายได้และรายจ่ายเท่านั้น โดยไม่มีการส่ง "ข้อมูลที่ระบุตัวตนได้" (PII) เช่น ชื่อ นามสกุล หรือเลขบัตรประชาชน
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ข้อจำกัดของคำแนะนำ (AI Limitations)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        คำแนะนำอัตโนมัติ: ผลลัพธ์และคำแนะนำจาก AI เป็นการประมวลผลตามอัลกอริทึมทั่วไป อาจมีความผิดพลาดหรือไม่ครอบคลุมเงื่อนไขเฉพาะบุคคล ผู้ใช้งานไม่ควรตัดสินใจทางการเงินที่สำคัญโดยอ้างอิงจาก AI เพียงอย่างเดียว
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold mb-3 text-[#2b2b2b] dark:text-white">
+                                        ความปลอดภัย (Safety Standards)
+                                    </h3>
+                                    <p className="text-base leading-relaxed opacity-80">
+                                        เราปฏิบัติตามมาตรฐานการใช้งาน AI อย่างปลอดภัย โดยมีการตรวจสอบ Prompt เพื่อป้องกันการสร้างเนื้อหาที่ไม่เหมาะสม และมุ่งเน้นการให้ข้อมูลที่เป็นประโยชน์ในการวางแผนการเงินเท่านั้น
                                     </p>
                                 </div>
                             </div>
