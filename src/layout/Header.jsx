@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 import CommandPalette from "../components/CommandPalette";
 import CalculationHistory from "../components/CalculationHistory";
 import SettingsModal from "../components/SettingsModal";
+import UserMenu from "../components/UserMenu";
 import { useCalculationHistory } from "../context/CalculationHistoryContext";
 
 export default function Header() {
@@ -13,6 +15,7 @@ export default function Header() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const { language, toggleLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const { allHistory } = useCalculationHistory();
 
@@ -25,91 +28,16 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle shortcuts: Ctrl+K (Search), Ctrl+H (History), Ctrl+Z (Back), Ctrl+X (Reset Calculator)
+  // Handle shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ctrl + K: Open Search
       if ((e.ctrlKey || e.metaKey) && e.key === "k") {
         e.preventDefault();
         setSearchOpen((prev) => !prev);
       }
-
-      // Ctrl + H: Open History
       if ((e.ctrlKey || e.metaKey) && e.key === "h") {
         e.preventDefault();
         setHistoryOpen((prev) => !prev);
-      }
-
-      // Ctrl + Z: Go Back (only when NOT in input/textarea to allow undo in textboxes)
-      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
-        const target = e.target;
-        const isInput = target.tagName === 'INPUT' ||
-                        target.tagName === 'TEXTAREA' ||
-                        target.isContentEditable ||
-                        target.closest('[role="textbox"]') ||
-                        target.closest('[contenteditable="true"]');
-
-        // Allow Ctrl+Z to work as undo in textboxes
-        if (isInput) {
-          return; // Let browser handle undo
-        }
-
-        // Only navigate back when not in input
-        e.preventDefault();
-        navigate(-1);
-      }
-
-      // Ctrl + Y: Redo (only when NOT in input/textarea to allow redo in textboxes)
-      if ((e.ctrlKey || e.metaKey) && e.key === "y") {
-        const target = e.target;
-        const isInput = target.tagName === 'INPUT' ||
-                        target.tagName === 'TEXTAREA' ||
-                        target.isContentEditable ||
-                        target.closest('[role="textbox"]') ||
-                        target.closest('[contenteditable="true"]');
-
-        // Allow Ctrl+Y to work as redo in textboxes
-        if (isInput) {
-          return; // Let browser handle redo
-        }
-
-        // Ctrl+Y doesn't have a navigation action, just let browser handle it
-        // (or we could add forward navigation if needed)
-      }
-
-      // Ctrl + X: Reset Calculator (trigger reset button)
-      if ((e.ctrlKey || e.metaKey) && e.key === "x") {
-        const target = e.target;
-        const isInput = target.tagName === 'INPUT' ||
-                        target.tagName === 'TEXTAREA' ||
-                        target.isContentEditable ||
-                        target.closest('[role="textbox"]') ||
-                        target.closest('[contenteditable="true"]');
-
-        // Don't trigger reset when typing in input fields
-        if (isInput) {
-          return;
-        }
-
-        // Find and click the reset button
-        // First try to find button with type="reset"
-        let resetButton = document.querySelector('button[type="reset"]');
-
-        // If not found, look for buttons containing "รีเซท" text
-        if (!resetButton) {
-          const allButtons = document.querySelectorAll('button');
-          for (const button of allButtons) {
-            if (button.textContent.trim() === 'รีเซท') {
-              resetButton = button;
-              break;
-            }
-          }
-        }
-
-        if (resetButton) {
-          e.preventDefault();
-          resetButton.click();
-        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -117,13 +45,6 @@ export default function Header() {
   }, [navigate]);
 
   const toggleMenu = () => setOpen((prev) => !prev);
-  const handleClick = () => {
-    setOpen(false);
-  };
-
-  const menuItems = [
-    { label: "เกี่ยวกับเรา", path: "/about-us" },
-  ];
 
   return (
     <>
@@ -134,92 +55,94 @@ export default function Header() {
       {/* Desktop Sticky Header */}
       <header
         className={`hidden md:flex fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-md shadow-lg py-3"
-          : "bg-transparent py-4"
+          ? "bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-md shadow-lg py-2"
+          : "bg-transparent py-3"
           }`}
       >
         <div className="w-full max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-[#ffcc00] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-              <span className="font-bold text-[#2b2b2b] text-lg">P</span>
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-9 h-9 rounded-xl bg-[#ffcc00] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+              <span className="font-bold text-[#2b2b2b] text-base">P</span>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-[#2b2b2b] dark:text-white">
-                PayDee
-              </h1>
-              <p className={`text-xs ${scrolled ? "text-gray-600 dark:text-gray-400" : "text-[#2b2b2b]/70 dark:text-white/70"}`}>
-                เพย์ดี
-              </p>
+            <div className="hidden lg:block">
+              <h1 className="text-lg font-bold text-[#2b2b2b] dark:text-white leading-tight">PayDee</h1>
+              <p className={`text-[10px] ${scrolled ? "text-gray-500" : "text-[#2b2b2b]/60 dark:text-white/60"}`}>เพย์ดี</p>
             </div>
           </Link>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-3">
-            {/* Search Trigger (Desktop) - Expanded */}
-            <button
-              onClick={() => setSearchOpen(true)}
-              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg border transition-all group min-w-[200px] lg:min-w-[300px] ${scrolled
-                ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400 hover:border-gray-300 dark:hover:border-gray-600"
-                : "bg-white/50 dark:bg-black/20 border-white/20 dark:border-white/10 text-[#2b2b2b]/40 dark:text-white/30 hover:bg-white/80 dark:hover:bg-black/30"
-                }`}
-            >
-              <i className="fa-solid fa-magnifying-glass text-sm"></i>
-              <span className="text-sm font-medium flex-1 text-left">ค้นหาการคำนวณ...</span>
-              <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 uppercase">
-                Ctrl K
-              </kbd>
-            </button>
+          {/* Center: Search */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all min-w-[220px] lg:min-w-[320px] ${scrolled
+              ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400"
+              : "bg-white/60 dark:bg-black/30 border-white/30 dark:border-white/10 text-gray-500 dark:text-gray-400"
+              } hover:border-[#ffcc00] hover:shadow-md`}
+          >
+            <i className="fa-solid fa-magnifying-glass text-sm"></i>
+            <span className="text-sm flex-1 text-left">{t('search')}</span>
+            <kbd className="hidden lg:inline-flex h-5 items-center gap-1 rounded border bg-gray-200 dark:bg-gray-700 px-1.5 font-mono text-[10px] text-gray-500">
+              ⌘K
+            </kbd>
+          </button>
 
-            {/* History Button */}
+          {/* Right Actions */}
+          <div className="flex items-center gap-2">
+            {/* History */}
             <button
               onClick={() => setHistoryOpen(true)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all group relative ${scrolled
-                ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:border-gray-300 dark:hover:border-gray-600"
-                : "bg-white/50 dark:bg-black/20 border-white/20 dark:border-white/10 text-[#2b2b2b]/60 dark:text-white/60 hover:bg-white/80 dark:hover:bg-black/30"
+              className={`relative flex items-center gap-1.5 px-3 py-2 rounded-full transition-all ${scrolled
+                ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                : "bg-white/60 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-black/50"
                 }`}
+              title={t('history')}
             >
-              <i className="fa-solid fa-history text-sm"></i>
-              <span className="text-sm font-medium">ประวัติ</span>
+              <i className="fa-solid fa-history text-sm text-gray-600 dark:text-gray-300"></i>
+              <span className="hidden xl:inline text-sm text-gray-600 dark:text-gray-300">{t('history')}</span>
               {allHistory.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#ffcc00] text-[#2b2b2b] text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                  {allHistory.length}
+                <span className="absolute -top-1 -right-1 bg-[#ffcc00] text-[#2b2b2b] text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                  {allHistory.length > 9 ? '9+' : allHistory.length}
                 </span>
               )}
             </button>
 
-            {menuItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 hover:bg-[#ffcc00] hover:text-[#2b2b2b] ${scrolled
-                  ? "text-gray-600 dark:text-gray-300"
-                  : "text-[#2b2b2b]/80 dark:text-white/80"
-                  }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            {/* CTA Button */}
+            {/* Financial Hub */}
             <Link to="/financial">
-              <button className="ml-2 px-5 py-2 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold text-sm hover:bg-[#e6b800] transition-all shadow-md">
-                ข้อมูลศูนย์กลาง
+              <button className="px-4 py-2 rounded-full bg-[#ffcc00] text-[#2b2b2b] font-semibold text-sm hover:bg-[#e6b800] transition-all shadow-sm hover:shadow-md">
+                {t('financial')}
               </button>
             </Link>
 
-            {/* Settings Trigger */}
+            {/* Divider */}
+            <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
+
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all font-semibold text-xs ${scrolled
+                ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                : "bg-white/60 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-black/50"
+                }`}
+              title={language === 'th' ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย'}
+            >
+              {language === 'th' ? '🇹🇭' : '🇬🇧'}
+            </button>
+
+            {/* Settings */}
             <button
               onClick={() => setSettingsOpen(true)}
-              className={`ml-2 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${scrolled
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${scrolled
                 ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-                : "bg-[#2b2b2b]/10 dark:bg-white/10 hover:bg-[#2b2b2b]/20 dark:hover:bg-white/20"
+                : "bg-white/60 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-black/50"
                 }`}
-              title="ตั้งค่า (Settings)"
+              title={t('settings')}
             >
-              <i className="fa-solid fa-gear text-gray-600 dark:text-white"></i>
+              <i className="fa-solid fa-gear text-gray-600 dark:text-gray-300"></i>
             </button>
-          </nav>
+
+            {/* User Menu */}
+            <UserMenu />
+          </div>
         </div>
       </header>
 
@@ -229,7 +152,7 @@ export default function Header() {
           {/* Hamburger Menu */}
           <button
             onClick={toggleMenu}
-            className="w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+            className="w-9 h-9 flex flex-col items-center justify-center gap-1.5"
           >
             <span className={`w-5 h-0.5 bg-[#2b2b2b] dark:bg-white rounded transition-all ${open ? "rotate-45 translate-y-2" : ""}`}></span>
             <span className={`w-5 h-0.5 bg-[#2b2b2b] dark:bg-white rounded transition-all ${open ? "opacity-0" : ""}`}></span>
@@ -241,25 +164,22 @@ export default function Header() {
             <div className="w-8 h-8 rounded-lg bg-[#ffcc00] flex items-center justify-center shadow-sm">
               <span className="font-bold text-[#2b2b2b]">P</span>
             </div>
-            <div>
-              <div className="font-bold text-[#2b2b2b] dark:text-white">PayDee</div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">เพย์ดี</div>
-            </div>
+            <span className="font-bold text-[#2b2b2b] dark:text-white">PayDee</span>
           </Link>
 
           {/* Right Mobile Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <button
-              onClick={() => setSearchOpen(true)}
-              className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white"
+              onClick={toggleLanguage}
+              className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xs"
             >
-              <i className="fa-solid fa-magnifying-glass"></i>
+              {language === 'th' ? '🇹🇭' : '🇬🇧'}
             </button>
             <button
-              onClick={() => setSettingsOpen(true)}
-              className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white"
+              onClick={() => setSearchOpen(true)}
+              className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white"
             >
-              <i className="fa-solid fa-gear"></i>
+              <i className="fa-solid fa-magnifying-glass text-sm"></i>
             </button>
           </div>
         </div>
@@ -271,28 +191,51 @@ export default function Header() {
           }`}
       >
         <nav className="p-4 space-y-2">
-          {menuItems.map((item, index) => (
-            <Link
-              key={index}
-              to={item.path}
-              onClick={handleClick}
-              className="block px-4 py-3 rounded-lg font-medium text-center transition-all text-gray-600 dark:text-gray-300 hover:bg-[#ffcc00] hover:text-[#2b2b2b]"
-            >
-              {item.label}
-            </Link>
-          ))}
           <Link
             to="/financial"
-            onClick={handleClick}
-            className="block px-4 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold text-center"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#ffcc00] text-[#2b2b2b] font-bold"
           >
-            ข้อมูลศูนย์กลาง
+            <i className="fa-solid fa-database"></i>
+            {t('financial')}
           </Link>
+          <button
+            onClick={() => { setHistoryOpen(true); setOpen(false); }}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <i className="fa-solid fa-history"></i>
+            {t('history')}
+            {allHistory.length > 0 && (
+              <span className="ml-auto bg-[#ffcc00] text-[#2b2b2b] text-xs rounded-full px-2 py-0.5 font-bold">
+                {allHistory.length}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => { setSettingsOpen(true); setOpen(false); }}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <i className="fa-solid fa-gear"></i>
+            {t('settings')}
+          </button>
+          <Link
+            to="/about-us"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <i className="fa-solid fa-info-circle"></i>
+            {t('aboutUs')}
+          </Link>
+          
+          {/* User section in mobile */}
+          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+            <UserMenu />
+          </div>
         </nav>
       </div>
 
       {/* Spacer for fixed header */}
-      <div className="h-16 md:h-20"></div>
+      <div className="h-14 md:h-16"></div>
     </>
   );
 }
