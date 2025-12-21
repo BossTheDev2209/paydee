@@ -21,11 +21,23 @@ const translations = {
     getStarted: 'เริ่มต้นใช้งาน',
     learnMore: 'เรียนรู้เพิ่มเติม',
     
-    // Calculator types
-    salaryCalculator: 'คำนวณเงินเดือนหลังหักภาษี',
-    savingGoal: 'เป้าหมายการออม',
-    debtManagement: 'จัดการหนี้สิน',
-    sleepCalculator: 'คำนวณเวลานอน',
+    // Sleep Calculator Enhanced
+    sleepPlanning: 'การวางแผนก่อนนอน',
+    windDown: 'นับถอยหลังพักผ่อน',
+    caffeineCutoff: 'เวลาสุดท้ายที่ควรดื่มกาแฟ',
+    mealTracker: 'มื้อสุดท้ายที่แนะนำ',
+    sleepDebt: 'หนี้การนอน (ชม. ที่อดนอน)',
+    recoverySleep: 'การนอนชดเชย',
+    physicalRecovery: 'การฟื้นฟูร่างกาย',
+    mentalRecovery: 'การฟื้นฟูสมอง/ความจำ',
+    powerNap: 'งีบหลับ (Power Nap)',
+    wakeUpWindow: 'ช่วงเวลาตื่นที่ดีที่สุด',
+    setAlarm: 'ตั้งนาฬิกาปลุก',
+    envGuide: 'สภาพแวดล้อมที่เหมาะสม',
+    tempLight: 'อุณหภูมิและแสงไฟ',
+    activityPrep: 'เตรียมตัวตามกิจกรรม',
+    heavyWorkout: 'ออกกำลังหนัก',
+    examPrep: 'เตรียมตัวสอบ',
     
     // Common
     calculate: 'คำนวณ',
@@ -66,11 +78,23 @@ const translations = {
     getStarted: 'Get Started',
     learnMore: 'Learn More',
     
-    // Calculator types
-    salaryCalculator: 'Salary After Tax',
-    savingGoal: 'Saving Goal',
-    debtManagement: 'Debt Management',
-    sleepCalculator: 'Sleep Calculator',
+    // Sleep Calculator Enhanced
+    sleepPlanning: 'Pre-Sleep Planning',
+    windDown: 'Wind-down Countdown',
+    caffeineCutoff: 'Caffeine Cut-off',
+    mealTracker: 'Recommended Last Meal',
+    sleepDebt: 'Sleep Debt (Hours missed)',
+    recoverySleep: 'Recovery Sleep',
+    physicalRecovery: 'Physical Recovery',
+    mentalRecovery: 'Mental Recovery',
+    powerNap: 'Power Nap',
+    wakeUpWindow: 'Smart Wake-up Window',
+    setAlarm: 'Set Alarm',
+    envGuide: 'Environment Guide',
+    tempLight: 'Temperature & Light',
+    activityPrep: 'Activity-Based Prep',
+    heavyWorkout: 'Heavy Workout',
+    examPrep: 'Exam Prep',
     
     // Common
     calculate: 'Calculate',
