@@ -95,16 +95,16 @@
   .theme-glass .bg-\[\#fdfdfd\],
   .theme-glass .bg-\[\#f2f2f2\],
   .theme-glass .bg-\[\#303030\],
-  .theme-glass .bg-\[#262626\],
-  .theme-glass .bg-\[#333\],
+  .theme-glass .bg-\[\#262626\],
+  .theme-glass .bg-\[\#333\],
   .theme-glass .bg-\[\#1a1a1a\],
-  .theme-glass .bg-\[\#252525\],
-  .theme-glass [class*="dark:bg-[#"] {
+  .theme-glass .bg-\[\#252525\] {
     backdrop-filter: blur(28px) saturate(200%) !important;
     -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.08) !important;
   }
+
 
   .theme-glass.light .bg-white, 
   .theme-glass.light .bg-gray-50,
@@ -131,13 +131,13 @@
   .theme-glass.dark .bg-\[\#fdfdfd\],
   .theme-glass.dark .bg-\[\#f2f2f2\],
   .theme-glass.dark .bg-\[\#303030\],
-  .theme-glass.dark .bg-\[#262626\],
-  .theme-glass.dark .bg-\[#333\],
-  .theme-glass.dark [class*="dark:bg-[#"] {
+  .theme-glass.dark .bg-\[\#262626\],
+  .theme-glass.dark .bg-\[\#333\] {
     background: rgba(15, 23, 42, 0.6) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5) !important;
   }
+
 
   /* Specific transparency for Search and Modals */
   .theme-glass.light .max-w-2xl.bg-white,
