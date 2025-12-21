@@ -11,6 +11,7 @@ import SavingGoal from '../views/SavingGoal.jsx';
 import DebtManagement from '../views/DebtManagement.jsx';
 import CurrencyConverter from '../views/CurrencyConverter.jsx';
 import SleepCalculator from '../views/SleepCalculator.jsx';
+import UserAnalysis from '../views/UserAnalysis.jsx';
 
 const allRoutes = [
   {
@@ -30,8 +31,10 @@ const allRoutes = [
       { path: "/about-us", element: <AboutUs /> },
       { path: "/ai-port", element: <AIPort /> },
       { path: "/investment-info", element: <InvestmentInfo /> },
+      { path: "/user-analysis", element: <UserAnalysis /> },
     ],
   },
 ];
 
 export default allRoutes;
+

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import AuthModal from './AuthModal';
 
 const UserMenu = () => {
   const { user, isLoggedIn, logout, loading, isFirebaseConfigured } = useAuth();
+  const { t } = useLanguage();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -14,6 +17,7 @@ const UserMenu = () => {
     setIsLoggingOut(false);
     setShowDropdown(false);
   };
+
 
   // Don't show if Firebase is not configured
   if (!isFirebaseConfigured) {
@@ -94,18 +98,38 @@ const UserMenu = () => {
             </div>
 
             {/* Menu Items */}
-            <div className="p-2">
+            <div className="p-2 space-y-1">
+              <Link
+                to="/user-analysis"
+                onClick={() => setShowDropdown(false)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <i className="fa-solid fa-chart-line text-[#ffcc00]"></i>
+                <span>{t('userAnalysis')}</span>
+              </Link>
+              
+              <Link
+                to="/financial"
+                onClick={() => setShowDropdown(false)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <i className="fa-solid fa-database text-[#ffcc00]"></i>
+                <span>{t('financial')}</span>
+              </Link>
+
+              <div className="my-1 border-t border-gray-100 dark:border-gray-700"></div>
+
               <button
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
               >
                 {isLoggingOut ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-2 border-red-300 border-t-red-600"></div>
                 ) : (
                   <i className="fa-solid fa-right-from-bracket"></i>
                 )}
-                <span>ออกจากระบบ</span>
+                <span>{t('logout')}</span>
               </button>
             </div>
           </div>

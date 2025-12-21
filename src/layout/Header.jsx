@@ -88,6 +88,20 @@ export default function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
+            {/* User Analysis */}
+            <Link to="/user-analysis">
+              <button
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all ${scrolled
+                  ? "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  : "bg-white/60 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-black/50"
+                  }`}
+                title={t('userAnalysis')}
+              >
+                <i className="fa-solid fa-chart-line text-sm text-gray-600 dark:text-gray-300"></i>
+                <span className="hidden xl:inline text-sm text-gray-600 dark:text-gray-300">{t('userAnalysis')}</span>
+              </button>
+            </Link>
+
             {/* History */}
             <button
               onClick={() => setHistoryOpen(true)}
@@ -191,6 +205,14 @@ export default function Header() {
           }`}
       >
         <nav className="p-4 space-y-2">
+          <Link
+            to="/user-analysis"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900/30 font-medium"
+          >
+            <i className="fa-solid fa-chart-line"></i>
+            {t('userAnalysis')}
+          </Link>
           <Link
             to="/financial"
             onClick={() => setOpen(false)}
