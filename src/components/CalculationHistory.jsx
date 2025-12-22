@@ -41,6 +41,10 @@ export default function CalculationHistory({ isOpen, onClose }) {
         return "เครื่องคำนวณเป้าหมายการออม";
       case "debt-management":
         return "เครื่องคำนวณการจัดการหนี้";
+      case "sleep-calculator":
+        return "เครื่องคำนวณเวลานอน";
+      case "sleep-debt":
+        return "เครื่องคำนวณหนี้การนอน";
       default:
         return type || "ไม่ระบุ";
     }

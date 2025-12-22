@@ -11,6 +11,7 @@ import SavingGoal from '../views/SavingGoal.jsx';
 import DebtManagement from '../views/DebtManagement.jsx';
 import CurrencyConverter from '../views/CurrencyConverter.jsx';
 import SleepCalculator from '../views/SleepCalculator.jsx';
+import SleepDebt from '../views/SleepDebt.jsx';
 import UserAnalysis from '../views/UserAnalysis.jsx';
 
 const allRoutes = [
@@ -25,6 +26,7 @@ const allRoutes = [
       { path: "/debt-management", element: <DebtManagement /> },
       { path: "/currency-converter", element: <CurrencyConverter /> },
       { path: "/sleep-calculator", element: <SleepCalculator /> },
+      { path: "/sleep-debt", element: <SleepDebt /> },
       { path: "/financial", element: <Financial /> },
       { path: "/policy", element: <Policy /> },
       { path: "/terms-of-use", element: <Policy /> },

@@ -70,6 +70,17 @@ export const popularCalculators = [
         altName: "Sleep Calculator",
         tags: ["สุขภาพ", "ไลฟ์สไตล์"],
         calculatorType: "Formula"
+    },
+    {
+        id: 7,
+        path: "/sleep-debt",
+        title: "คำนวณหนี้การนอน",
+        details: "ติดตามและคำนวณหนี้การนอนของคุณ",
+        bgColor: "#9333EA",
+        icon: "fa-solid fa-moon",
+        altName: "Sleep Debt Calculator",
+        tags: ["สุขภาพ", "ไลฟ์สไตล์"],
+        calculatorType: "Formula"
     }
 ];
 

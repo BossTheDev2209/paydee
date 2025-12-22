@@ -6,6 +6,7 @@ import LineChartComponent from "../components/LineChart";
 import Calendar from "react-calendar";
 import "../styles/calendar.css";
 import TermsModal from "../components/TermsModal";
+import { useCalculationHistory } from "../context/CalculationHistoryContext";
 
 function formatDuration(days) {
   if (days < 7) return `${days} วัน`;
@@ -106,6 +107,8 @@ export default function SavingGoal() {
   const currentMode = modeParam === "detailed" ? "detailed" : "quick";
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [currentInputs, setCurrentInputs] = useState(null);
+  const { addCalculation } = useCalculationHistory();
   const today = new Date();
 
   const handleTermsAccept = () => {
@@ -164,6 +167,7 @@ export default function SavingGoal() {
     }
 
     setLoading(true);
+    setCurrentInputs({ ...values, mode }); // Store inputs for history
     setTimeout(() => {
       const target = Number(String(values.target).replace(/,/g, ''));
       const saving = Number(String(values.saving || 0).replace(/,/g, ''));
@@ -205,14 +209,16 @@ export default function SavingGoal() {
         ];
       };
 
-      setResult({
+      const calculationResult = {
         duration,
         targetDay: targetDay,
         chartData: generateChartData(),
         amountPerSave: amount,
         frequency: values.frequency,
         totalTarget: target,
-      });
+      };
+
+      setResult(calculationResult);
       setActiveStartDate(targetDay);
 
       if (selectedDate) {
@@ -224,12 +230,19 @@ export default function SavingGoal() {
   };
 
   useEffect(() => {
-    if (result) {
+    if (result && currentInputs) {
+      // Add calculation to history
+      addCalculation({
+        calculatorType: "saving-goal",
+        inputs: currentInputs,
+        results: result
+      });
+
       setTimeout(() => {
         document.getElementById("result")?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     }
-  }, [result]);
+  }, [result, currentInputs, addCalculation]);
 
   return (
     <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">

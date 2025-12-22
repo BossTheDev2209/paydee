@@ -5,8 +5,10 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import { motion, AnimatePresence } from "framer-motion";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
 import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
 import TermsModal from "../components/TermsModal";
 import { useLanguage } from "../context/LanguageContext";
+import { useCalculationHistory } from "../context/CalculationHistoryContext";
 
 // Circular Time Picker Component
 const CircularTimePicker = ({ value, onChange, label }) => {
@@ -260,9 +262,21 @@ const SleepCycleTimeline = ({ cycles, bedtime, wakeTime }) => {
                             </div>
 
                             <span className="text-xs font-bold opacity-50 mb-1">Cycle {cycle.id}</span>
-                            <span className={`text-[10px] md:text-xs font-bold text-center leading-tight ${cycle.textClass}`}>
-                                {cycle.label}
-                            </span>
+                            <div className="flex flex-col items-center gap-1">
+                                {/* Icons for each sleep stage */}
+                                {cycle.label === "Deep Sleep" && (
+                                    <i className="fa-solid fa-dumbbell text-sm text-indigo-600 dark:text-indigo-400"></i>
+                                )}
+                                {cycle.label === "Light Sleep" && (
+                                    <i className="fa-solid fa-moon text-sm text-blue-600 dark:text-blue-400"></i>
+                                )}
+                                {cycle.label === "REM / Wake" && (
+                                    <i className="fa-solid fa-brain text-sm text-yellow-600 dark:text-yellow-400"></i>
+                                )}
+                                <span className={`text-[10px] md:text-xs font-bold text-center leading-tight ${cycle.textClass}`}>
+                                    {cycle.label}
+                                </span>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
@@ -279,15 +293,23 @@ const SleepCycleTimeline = ({ cycles, bedtime, wakeTime }) => {
                 </div>
             </div>
             
-            <div className="flex items-center gap-4 mt-2 justify-center text-[10px] text-gray-500">
-                <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 bg-indigo-100 border border-indigo-200 rounded"></div> Deep Sleep
+            <div className="flex items-center gap-4 mt-2 justify-center text-[10px] text-gray-500 flex-wrap">
+                <div className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded-lg">
+                    <i className="fa-solid fa-dumbbell text-indigo-600 dark:text-indigo-400"></i>
+                    <div className="w-3 h-3 bg-indigo-500 border border-indigo-600 rounded"></div>
+                    <span className="font-semibold">Deep Sleep</span>
+                    <span className="text-gray-400">(ฟื้นฟูกล้ามเนื้อ)</span>
                 </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 bg-blue-100 border border-blue-200 rounded"></div> Light Sleep
+                <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-lg">
+                    <i className="fa-solid fa-moon text-blue-600 dark:text-blue-400"></i>
+                    <div className="w-3 h-3 bg-blue-500 border border-blue-600 rounded"></div>
+                    <span className="font-semibold">Light Sleep</span>
                 </div>
-                <div className="flex items-center gap-1">
-                     <div className="w-3 h-3 bg-[#ffcc00]/20 border border-[#ffcc00]/50 rounded"></div> REM/Wake
+                <div className="flex items-center gap-1.5 bg-yellow-50 dark:bg-yellow-900/20 px-2 py-1 rounded-lg">
+                    <i className="fa-solid fa-brain text-yellow-600 dark:text-yellow-400"></i>
+                    <div className="w-3 h-3 bg-[#ffcc00] border border-yellow-600 rounded"></div>
+                    <span className="font-semibold">REM</span>
+                    <span className="text-gray-400">(ความจำ)</span>
                 </div>
             </div>
         </div>
@@ -300,6 +322,7 @@ export default function SleepCalculator() {
     const modeParam = params.get("mode");
     const currentMode = modeParam === "detailed" ? "detailed" : "quick";
     const { t, language } = useLanguage();
+    const { addCalculation } = useCalculationHistory();
 
     // Quick Mode States
     const [wakeTime, setWakeTime] = useState("07:00");
@@ -320,6 +343,7 @@ export default function SleepCalculator() {
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
     const [selectedCycles, setSelectedCycles] = useState(5);
+    const [selectedHours, setSelectedHours] = useState(null); // null = use cycles, number = use hours
     const [isResetting, setIsResetting] = useState(false);
 
     const SLEEP_CYCLE_MINUTES = 90;
@@ -329,15 +353,89 @@ export default function SleepCalculator() {
         setResult(null);
     };
 
-    const calculateBedtime = (cycles, timeStr, latency) => {
+    const calculateBedtime = (cycles, timeStr, latency, hours = null) => {
         const [hour, minute] = timeStr.split(":").map(Number);
         const wakeDate = new Date();
         wakeDate.setHours(hour, minute, 0, 0);
 
-        const totalSleepMinutes = cycles * SLEEP_CYCLE_MINUTES;
+        // If hours is specified, use it; otherwise use cycles
+        const totalSleepMinutes = hours !== null 
+            ? hours * 60 
+            : cycles * SLEEP_CYCLE_MINUTES;
         const totalWithLatency = totalSleepMinutes + parseInt(latency);
 
         return new Date(wakeDate.getTime() - totalWithLatency * 60000);
+    };
+
+    // Calculate cycles from hours (round to nearest cycle)
+    const hoursToCycles = (hours) => {
+        return Math.round((hours * 60) / SLEEP_CYCLE_MINUTES);
+    };
+
+    // Calculate sleep quality assessment
+    const assessSleepQuality = (hours) => {
+        if (hours < 6) {
+            return {
+                level: "poor",
+                label: "นอนน้อยเกินไป",
+                color: "red",
+                score: Math.max(0, (hours / 6) * 50),
+                description: "การนอนน้อยกว่า 6 ชั่วโมงอาจส่งผลเสียต่อสุขภาพ สมาธิ และความจำ",
+                recommendations: [
+                    "พยายามนอนให้ได้อย่างน้อย 6 ชั่วโมง",
+                    "พิจารณางีบหลับสั้นๆ 20 นาทีในช่วงบ่าย",
+                    "ปรับเวลานอนให้เร็วขึ้น"
+                ]
+            };
+        } else if (hours >= 6 && hours < 7) {
+            return {
+                level: "fair",
+                label: "นอนพอใช้",
+                color: "orange",
+                score: 60 + ((hours - 6) / 1) * 20,
+                description: "การนอน 6-7 ชั่วโมงพอใช้ได้ แต่ยังไม่ใช่เวลาที่เหมาะสมที่สุด",
+                recommendations: [
+                    "ลองเพิ่มเวลานอนเป็น 7-9 ชั่วโมง",
+                    "คุณจะรู้สึกสดชื่นและมีสมาธิดีขึ้น"
+                ]
+            };
+        } else if (hours >= 7 && hours <= 9) {
+            return {
+                level: "excellent",
+                label: "นอนเหมาะสม",
+                color: "green",
+                score: 80 + Math.min(20, (hours - 7) / 2 * 20),
+                description: "การนอน 7-9 ชั่วโมงเป็นเวลาที่เหมาะสมที่สุดสำหรับผู้ใหญ่",
+                recommendations: [
+                    "ยอดเยี่ยม! คุณนอนในเวลาที่เหมาะสม",
+                    "รักษาเวลานอนนี้ไว้เพื่อสุขภาพที่ดี"
+                ]
+            };
+        } else if (hours > 9 && hours <= 10) {
+            return {
+                level: "good",
+                label: "นอนมาก",
+                color: "blue",
+                score: 85,
+                description: "การนอน 9-10 ชั่วโมงอาจมากเกินไปเล็กน้อย แต่ยังอยู่ในช่วงที่ยอมรับได้",
+                recommendations: [
+                    "บางคนอาจรู้สึกง่วงนอนหลังตื่น",
+                    "ลองลดเป็น 7-9 ชั่วโมงดู"
+                ]
+            };
+        } else {
+            return {
+                level: "excessive",
+                label: "นอนมากเกินไป",
+                color: "purple",
+                score: 70,
+                description: "การนอนมากกว่า 10 ชั่วโมงอาจไม่จำเป็นและอาจทำให้รู้สึกง่วงนอน",
+                recommendations: [
+                    "ลองลดเวลานอนเป็น 7-9 ชั่วโมง",
+                    "คุณภาพการนอนสำคัญกว่าปริมาณ"
+                ]
+            };
+        }
     };
 
     const formatTime = (date) => {
@@ -374,12 +472,13 @@ export default function SleepCalculator() {
                 });
             }
 
-            setResult({
+            const calculationResult = {
                 type: "quick",
                 options,
                 wakeTime,
                 selectedCycles: 5
-            });
+            };
+            setResult(calculationResult);
             setSelectedCycles(5);
             setLoading(false);
         }, 800);
@@ -423,13 +522,14 @@ export default function SleepCalculator() {
                 });
             }
 
-            setResult({
+            const calculationResult = {
                 type: "detailed",
                 scenarios,
                 wakeTime: weekdayWakeTime,
                 recommendedCycles,
                 recommendations: generateRecommendations(recommendedCycles, sleepQuality, caffeine, nextDayGoal, lastCaffeineTime)
-            });
+            };
+            setResult(calculationResult);
             setSelectedCycles(recommendedCycles);
             setLoading(false);
         }, 800);
@@ -499,14 +599,15 @@ export default function SleepCalculator() {
             const now = new Date();
             const wakeUp = new Date(now.getTime() + (minutes + 15) * 60000); // +15m to fall asleep
             
-            setResult({
+            const calculationResult = {
                 type: "power-nap",
                 duration: minutes,
                 wakeTime: formatTime(wakeUp),
                 recommendations: [
                     minutes === 20 ? "การงีบ 20 นาทีช่วยเพิ่มความตื่นตัวได้ทันทีโดยไม่ทำให้งัวเงีย" : "การงีบ 90 นาทีเป็นหนึ่งรอบการนอนที่สมบูรณ์ ช่วยเรื่องความจำระยะยาว"
                 ]
-            });
+            };
+            setResult(calculationResult);
             setLoading(false);
         }, 500);
     };
@@ -539,7 +640,24 @@ export default function SleepCalculator() {
     const getAdjustedBedtime = () => {
         if (!result) return null;
         const timeStr = result.type === "quick" ? wakeTime : weekdayWakeTime;
-        return calculateBedtime(selectedCycles, timeStr, sleepLatency);
+        return calculateBedtime(selectedCycles, timeStr, sleepLatency, selectedHours);
+    };
+
+    const getCurrentSleepHours = () => {
+        return selectedHours !== null ? selectedHours : (selectedCycles * 1.5);
+    };
+
+    const handleHoursChange = (hours) => {
+        setSelectedHours(hours);
+        // Auto-update cycles to match
+        const cycles = hoursToCycles(hours);
+        setSelectedCycles(cycles);
+    };
+
+    const handleCyclesChange = (cycles) => {
+        setSelectedCycles(cycles);
+        // Clear hours selection to use cycles
+        setSelectedHours(null);
     };
 
     const handleReset = () => {
@@ -554,9 +672,48 @@ export default function SleepCalculator() {
         setNextDayGoal("normal");
         setResult(null);
         setSelectedCycles(5);
+        setSelectedHours(null);
         setTimeout(() => setIsResetting(false), 1000);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    // Save calculation to history when result changes
+    useEffect(() => {
+        if (result) {
+            // Prepare inputs based on calculation type
+            let inputs = {};
+            if (result.type === "quick") {
+                inputs = {
+                    mode: "quick",
+                    wakeTime,
+                    sleepLatency,
+                    activityLevel,
+                    sleepDebt
+                };
+            } else if (result.type === "detailed") {
+                inputs = {
+                    mode: "detailed",
+                    weekdayWakeTime,
+                    sleepQuality,
+                    caffeineAmount,
+                    lastCaffeineTime,
+                    nextDayGoal,
+                    sleepLatency
+                };
+            } else if (result.type === "power-nap") {
+                inputs = {
+                    mode: "power-nap",
+                    duration: result.duration
+                };
+            }
+
+            addCalculation({
+                calculatorType: "sleep-calculator",
+                inputs,
+                results: result
+            });
+        }
+    }, [result, wakeTime, sleepLatency, activityLevel, sleepDebt, weekdayWakeTime, sleepQuality, caffeineAmount, lastCaffeineTime, nextDayGoal, addCalculation]);
 
     return (
         <section className="w-full min-h-screen bg-gray-50 dark:bg-[#1a1a1a] pb-20">
@@ -695,34 +852,68 @@ export default function SleepCalculator() {
 
                             {/* Sleep Debt Picker */}
                             <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
-                                <div className="flex justify-between items-center mb-4">
-                                    <label className="text-[#2b2b2b] dark:text-gray-200 font-medium text-sm md:text-base">
-                                        {t('sleepDebt')}
-                                    </label>
-                                    <span className="text-purple-500 font-bold text-lg">{sleepDebt} {t('baht') === 'บาท' ? 'ชม.' : 'Hrs'}</span>
+                                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-4 rounded-xl border border-purple-200 dark:border-purple-800">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <label className="text-[#2b2b2b] dark:text-gray-200 font-medium text-sm md:text-base">
+                                            {t('sleepDebt')}
+                                        </label>
+                                        <span className="text-purple-500 font-bold text-lg">{sleepDebt} {t('baht') === 'บาท' ? 'ชม.' : 'Hrs'}</span>
+                                    </div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                                        ไม่แน่ใจว่าคุณมีหนี้การนอนเท่าไหร่?
+                                    </p>
+                                    <Link
+                                        to="/sleep-debt"
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                                    >
+                                        <i className="fa-solid fa-calculator"></i>
+                                        คำนวณหนี้การนอน
+                                    </Link>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                                        หรือป้อนค่าด้วยตนเองด้านล่าง
+                                    </p>
+                                    <div className="space-y-3 mt-3">
+                                        <div className="flex items-center gap-4">
+                                            <button 
+                                                onClick={() => setSleepDebt(Math.max(0, sleepDebt - 0.5))}
+                                                className="w-10 h-10 rounded-full bg-white dark:bg-[#2b2b2b] border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                            >
+                                                <i className="fa-solid fa-minus text-gray-600 dark:text-gray-300"></i>
+                                            </button>
+                                            <input 
+                                                type="range"
+                                                min="0"
+                                                max="50"
+                                                step="0.5"
+                                                value={Math.min(sleepDebt, 50)}
+                                                onChange={(e) => setSleepDebt(parseFloat(e.target.value))}
+                                                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-purple-500"
+                                            />
+                                            <button 
+                                                onClick={() => setSleepDebt(sleepDebt + 0.5)}
+                                                className="w-10 h-10 rounded-full bg-white dark:bg-[#2b2b2b] border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                            >
+                                                <i className="fa-solid fa-plus text-gray-600 dark:text-gray-300"></i>
+                                            </button>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <label className="text-xs text-gray-600 dark:text-gray-400">หรือป้อนค่าตรง:</label>
+                                            <input 
+                                                type="number"
+                                                min="0"
+                                                max="200"
+                                                step="0.5"
+                                                value={sleepDebt}
+                                                onChange={(e) => {
+                                                    const val = parseFloat(e.target.value) || 0;
+                                                    setSleepDebt(Math.max(0, Math.min(200, val)));
+                                                }}
+                                                className="w-24 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#2b2b2b] text-[#2b2b2b] dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                            />
+                                            <span className="text-xs text-gray-600 dark:text-gray-400">ชม.</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-4">
-                                    <button 
-                                        onClick={() => setSleepDebt(Math.max(0, sleepDebt - 0.5))}
-                                        className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200"
-                                    >-</button>
-                                    <input 
-                                        type="range"
-                                        min="0"
-                                        max="12"
-                                        step="0.5"
-                                        value={sleepDebt}
-                                        onChange={(e) => setSleepDebt(parseFloat(e.target.value))}
-                                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-purple-500"
-                                    />
-                                    <button 
-                                        onClick={() => setSleepDebt(Math.min(12, sleepDebt + 0.5))}
-                                        className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200"
-                                    >+</button>
-                                </div>
-                                <p className="text-xs text-gray-500 mt-2">
-                                    หากเมื่อวานนอนน้อย ระบบจะเพิ่มรอบการนอนชดเชยให้โดยอัตโนมัติ
-                                </p>
                             </div>
                         </CalculatorSection>
 
@@ -966,7 +1157,7 @@ export default function SleepCalculator() {
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 transition={{ delay: 0.3, type: "spring" }}
                                             >
-                                                {selectedCycles < 4 && (
+                                                {getCurrentSleepHours() < 6 && (
                                                     <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-xl">
                                                         <p className="text-red-600 dark:text-red-400 font-bold text-sm">
                                                             <i className="fa-solid fa-triangle-exclamation mr-2"></i>
@@ -979,8 +1170,70 @@ export default function SleepCalculator() {
                                                     {getAdjustedBedtime() ? formatTime(getAdjustedBedtime()) : "--:--"}
                                                 </p>
                                                 <p className="text-gray-600 dark:text-gray-400 mt-2">
-                                                    ({selectedCycles} รอบนอน = {(selectedCycles * 1.5).toFixed(1)} ชั่วโมง)
+                                                    {selectedHours !== null 
+                                                        ? `${getCurrentSleepHours().toFixed(1)} ชั่วโมง (${selectedCycles} รอบนอน)`
+                                                        : `${selectedCycles} รอบนอน = ${(selectedCycles * 1.5).toFixed(1)} ชั่วโมง`
+                                                    }
                                                 </p>
+                                                
+                                                {/* Sleep Quality Assessment */}
+                                                {result && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, scale: 0.9 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        transition={{ delay: 0.4 }}
+                                                        className="mt-4"
+                                                    >
+                                                        {(() => {
+                                                            const assessment = assessSleepQuality(getCurrentSleepHours());
+                                                            return (
+                                                                <div className={`p-4 rounded-xl border-2 ${
+                                                                    assessment.color === "red" ? "bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-800" :
+                                                                    assessment.color === "orange" ? "bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-800" :
+                                                                    assessment.color === "green" ? "bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-800" :
+                                                                    assessment.color === "blue" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-800" :
+                                                                    "bg-purple-50 dark:bg-purple-900/20 border-purple-300 dark:border-purple-800"
+                                                                }`}>
+                                                                    <div className="flex items-center justify-between mb-2">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className={`text-lg font-bold ${
+                                                                                assessment.color === "red" ? "text-red-600 dark:text-red-400" :
+                                                                                assessment.color === "orange" ? "text-orange-600 dark:text-orange-400" :
+                                                                                assessment.color === "green" ? "text-green-600 dark:text-green-400" :
+                                                                                assessment.color === "blue" ? "text-blue-600 dark:text-blue-400" :
+                                                                                "text-purple-600 dark:text-purple-400"
+                                                                            }`}>
+                                                                                {assessment.label}
+                                                                            </span>
+                                                                            <div className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                                                                                assessment.color === "red" ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300" :
+                                                                                assessment.color === "orange" ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300" :
+                                                                                assessment.color === "green" ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" :
+                                                                                assessment.color === "blue" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" :
+                                                                                "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                                                                            }`}>
+                                                                                {Math.round(assessment.score)}/100
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                                                                        {assessment.description}
+                                                                    </p>
+                                                                    {assessment.recommendations && assessment.recommendations.length > 0 && (
+                                                                        <ul className="space-y-1 mt-2">
+                                                                            {assessment.recommendations.map((rec, i) => (
+                                                                                <li key={i} className="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-1.5">
+                                                                                    <i className="fa-solid fa-circle-check mt-1 text-[#ffcc00]"></i>
+                                                                                    <span>{rec}</span>
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })()}
+                                                    </motion.div>
+                                                )}
 
                                                 <div className="mt-4 inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-full border border-green-200 dark:border-green-800">
                                                     <i className="fa-solid fa-bell text-green-500 text-sm"></i>
@@ -999,11 +1252,40 @@ export default function SleepCalculator() {
                                             </motion.div>
                                         </div>
 
-                                        {/* Cycle Selector with Danger Zone */}
+                                        {/* Sleep Duration Selector */}
                                         <div className="bg-white dark:bg-[#2b2b2b] rounded-xl p-6">
-                                            <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-gray-200 mb-4">
-                                                ปรับจำนวนรอบนอน
-                                            </h3>
+                                            <div className="flex items-center justify-between mb-4">
+                                                <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-gray-200">
+                                                    เลือกระยะเวลานอน
+                                                </h3>
+                                                <div className="flex items-center gap-2 text-xs">
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedHours(null);
+                                                        }}
+                                                        className={`px-3 py-1 rounded-lg transition-all ${
+                                                            selectedHours === null
+                                                                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-bold"
+                                                                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                                                        }`}
+                                                    >
+                                                        รอบนอน
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedHours(7.5);
+                                                            setSelectedCycles(5);
+                                                        }}
+                                                        className={`px-3 py-1 rounded-lg transition-all ${
+                                                            selectedHours !== null
+                                                                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-bold"
+                                                                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                                                        }`}
+                                                    >
+                                                        ชั่วโมง
+                                                    </button>
+                                                </div>
+                                            </div>
 
                                             {/* Danger Zone Label */}
                                             <div className="flex items-center gap-4 mb-3 text-sm">
@@ -1018,36 +1300,94 @@ export default function SleepCalculator() {
                                             </div>
 
                                             <div className="space-y-6">
-                                                {/* Cycle Selector Buttons */}
-                                                <div className="grid grid-cols-6 gap-2">
-                                                    {[2, 3, 4, 5, 6, 7].map((cycles) => {
-                                                        const isDanger = cycles < 4;
-                                                        const isRecommended = result.type === "detailed"
-                                                            ? cycles === result.recommendedCycles
-                                                            : cycles === 5;
-                                                        return (
-                                                            <button
-                                                                key={cycles}
-                                                                onClick={() => setSelectedCycles(cycles)}
-                                                                className={`py-3 rounded-xl font-semibold transition-all relative ${selectedCycles === cycles
-                                                                    ? isDanger
-                                                                        ? "bg-red-500 text-white shadow-lg ring-2 ring-red-300"
-                                                                        : "bg-[#ffcc00] text-[#2b2b2b] shadow-lg"
-                                                                    : isDanger
-                                                                        ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-2 border-red-200 dark:border-red-800 hover:bg-red-200 dark:hover:bg-red-900/50"
-                                                                        : "bg-gray-100 dark:bg-[#3d3d3d] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#4d4d4d]"
-                                                                    }`}
-                                                            >
-                                                                <div className="text-lg font-black">{cycles}</div>
-                                                                {isRecommended && !isDanger && (
-                                                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                                                                        <i className="fa-solid fa-check text-[8px] text-white"></i>
-                                                                    </div>
-                                                                )}
-                                                            </button>
-                                                        );
-                                                    })}
-                                                </div>
+                                                {/* Hours Selector */}
+                                                {selectedHours !== null ? (
+                                                    <div>
+                                                        <div className="grid grid-cols-4 md:grid-cols-6 gap-2 mb-4">
+                                                            {[5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 11].map((hours) => {
+                                                                const cycles = hoursToCycles(hours);
+                                                                const isDanger = hours < 6;
+                                                                const isRecommended = hours >= 7 && hours <= 9;
+                                                                const assessment = assessSleepQuality(hours);
+                                                                return (
+                                                                    <button
+                                                                        key={hours}
+                                                                        onClick={() => handleHoursChange(hours)}
+                                                                        className={`py-3 rounded-xl font-semibold transition-all relative ${
+                                                                            Math.abs(selectedHours - hours) < 0.1
+                                                                                ? isDanger
+                                                                                    ? "bg-red-500 text-white shadow-lg ring-2 ring-red-300"
+                                                                                    : "bg-[#ffcc00] text-[#2b2b2b] shadow-lg"
+                                                                                : isDanger
+                                                                                    ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-2 border-red-200 dark:border-red-800 hover:bg-red-200 dark:hover:bg-red-900/50"
+                                                                                    : isRecommended
+                                                                                        ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-2 border-green-200 dark:border-green-800 hover:bg-green-200 dark:hover:bg-green-900/50"
+                                                                                        : "bg-gray-100 dark:bg-[#3d3d3d] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#4d4d4d]"
+                                                                        }`}
+                                                                    >
+                                                                        <div className="text-sm font-black">{hours}</div>
+                                                                        <div className="text-[10px] opacity-70">ชม.</div>
+                                                                        {isRecommended && !isDanger && (
+                                                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                                                                <i className="fa-solid fa-check text-[8px] text-white"></i>
+                                                                            </div>
+                                                                        )}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                        {/* Custom Hours Input */}
+                                                        <div className="flex items-center gap-2">
+                                                            <label className="text-sm text-gray-600 dark:text-gray-400">หรือระบุเอง:</label>
+                                                            <input
+                                                                type="number"
+                                                                min="4"
+                                                                max="12"
+                                                                step="0.5"
+                                                                value={selectedHours}
+                                                                onChange={(e) => {
+                                                                    const val = parseFloat(e.target.value) || 0;
+                                                                    if (val >= 4 && val <= 12) {
+                                                                        handleHoursChange(val);
+                                                                    }
+                                                                }}
+                                                                className="w-24 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#2b2b2b] text-[#2b2b2b] dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                            />
+                                                            <span className="text-sm text-gray-600 dark:text-gray-400">ชั่วโมง</span>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    /* Cycle Selector Buttons */
+                                                    <div className="grid grid-cols-6 gap-2">
+                                                        {[2, 3, 4, 5, 6, 7].map((cycles) => {
+                                                            const isDanger = cycles < 4;
+                                                            const isRecommended = result.type === "detailed"
+                                                                ? cycles === result.recommendedCycles
+                                                                : cycles === 5;
+                                                            return (
+                                                                <button
+                                                                    key={cycles}
+                                                                    onClick={() => handleCyclesChange(cycles)}
+                                                                    className={`py-3 rounded-xl font-semibold transition-all relative ${selectedCycles === cycles
+                                                                        ? isDanger
+                                                                            ? "bg-red-500 text-white shadow-lg ring-2 ring-red-300"
+                                                                            : "bg-[#ffcc00] text-[#2b2b2b] shadow-lg"
+                                                                        : isDanger
+                                                                            ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-2 border-red-200 dark:border-red-800 hover:bg-red-200 dark:hover:bg-red-900/50"
+                                                                            : "bg-gray-100 dark:bg-[#3d3d3d] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#4d4d4d]"
+                                                                        }`}
+                                                                >
+                                                                    <div className="text-lg font-black">{cycles}</div>
+                                                                    {isRecommended && !isDanger && (
+                                                                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                                                            <i className="fa-solid fa-check text-[8px] text-white"></i>
+                                                                        </div>
+                                                                    )}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
 
                                                 {/* New Timeline Visualizer */}
                                                 <SleepCycleTimeline 
@@ -1055,8 +1395,33 @@ export default function SleepCalculator() {
                                                     bedtime={getAdjustedBedtime() ? formatTime(getAdjustedBedtime()) : ""}
                                                     wakeTime={result.type === "quick" ? wakeTime : weekdayWakeTime}
                                                 />
+                                                
+                                                {/* Sleep Quality Summary */}
+                                                {result && selectedHours !== null && (
+                                                    <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                                                        <div className="flex items-center justify-between">
+                                                            <div>
+                                                                <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                                                                    คุณภาพการนอนที่คาดหวัง
+                                                                </p>
+                                                                <p className="text-xs text-gray-600 dark:text-gray-400">
+                                                                    {(() => {
+                                                                        const assessment = assessSleepQuality(getCurrentSleepHours());
+                                                                        return assessment.description;
+                                                                    })()}
+                                                                </p>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                                                    {Math.round(assessSleepQuality(getCurrentSleepHours()).score)}
+                                                                </div>
+                                                                <div className="text-xs text-gray-500 dark:text-gray-400">คะแนน</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
 
-                                                {/* One-Click Alarm Sync */}
+                                                {/* One-Click Alarm Sync - Thumb-friendly */}
                                                 <div className="pt-4 flex justify-center">
                                                     <button 
                                                         onClick={() => {
@@ -1068,10 +1433,10 @@ export default function SleepCalculator() {
                                                             const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=ตื่นนอน (PayDee)&details=เวลาตื่นที่คำนวณจากรอบการนอน&location=&dates=${start.toISOString().replace(/-|:|\.\d+/g, "")}/${end.toISOString().replace(/-|:|\.\d+/g, "")}`;
                                                             window.open(url, '_blank');
                                                         }}
-                                                        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md active:scale-95"
+                                                        className="flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold transition-all shadow-lg active:scale-95 min-h-[56px] text-base md:text-lg w-full md:w-auto"
                                                     >
-                                                        <i className="fa-brands fa-google"></i>
-                                                        {t('setAlarm')} (Google Calendar)
+                                                        <i className="fa-brands fa-google text-xl"></i>
+                                                        <span>{t('setAlarm')} (Google Calendar)</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1079,48 +1444,77 @@ export default function SleepCalculator() {
 
                                         {/* Wind-down Countdown & Environment Guide */}
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {/* Wind-down */}
+                                            {/* Wind-down - Horizontal Timeline */}
                                             <div className="bg-white dark:bg-[#2b2b2b] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
                                                 <h3 className="font-bold text-[#2b2b2b] dark:text-gray-200 mb-4 flex items-center gap-2">
                                                     <i className="fa-solid fa-hourglass-half text-orange-400"></i>
                                                     {t('windDown')}
                                                 </h3>
-                                                <div className="space-y-4">
-                                                    {getWindDownPlan(getAdjustedBedtime()).map((step, i) => (
-                                                        <div key={i} className="flex items-center gap-3">
-                                                            <div className="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-500">
-                                                                <i className={`fa-solid ${step.icon}`}></i>
+                                                {/* Horizontal Timeline */}
+                                                <div className="relative">
+                                                    {/* Timeline Line */}
+                                                    <div className="absolute left-0 right-0 top-8 h-0.5 bg-gradient-to-r from-orange-200 via-orange-300 to-orange-200 dark:from-orange-800 dark:via-orange-700 dark:to-orange-800"></div>
+                                                    
+                                                    <div className="flex items-start justify-between gap-2 relative z-10">
+                                                        {getWindDownPlan(getAdjustedBedtime()).map((step, i) => (
+                                                            <div key={i} className="flex flex-col items-center flex-1 min-w-0">
+                                                                {/* Time Circle */}
+                                                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 dark:from-orange-600 dark:to-orange-800 flex items-center justify-center shadow-lg mb-2 border-2 border-white dark:border-[#2b2b2b]">
+                                                                    <i className={`fa-solid ${step.icon} text-white text-sm`}></i>
+                                                                </div>
+                                                                {/* Time Label */}
+                                                                <div className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-1 text-center">
+                                                                    {step.formattedTime}
+                                                                </div>
+                                                                {/* Activity */}
+                                                                <div className="text-[10px] text-gray-600 dark:text-gray-300 text-center leading-tight px-1">
+                                                                    {step.activity}
+                                                                </div>
                                                             </div>
-                                                            <div>
-                                                                <div className="text-xs font-bold text-orange-600 dark:text-orange-400">{step.formattedTime}</div>
-                                                                <div className="text-sm text-gray-600 dark:text-gray-300">{step.activity}</div>
-                                                            </div>
-                                                        </div>
-                                                    ))}
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            {/* Environment Guide */}
-                                            <div className="bg-white dark:bg-[#2b2b2b] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
-                                                <h3 className="font-bold text-[#2b2b2b] dark:text-gray-200 mb-4 flex items-center gap-2">
-                                                    <i className="fa-solid fa-leaf text-green-500"></i>
-                                                    {t('envGuide')}
-                                                </h3>
-                                                <div className="space-y-4">
-                                                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                                                        <div className="text-xs font-bold text-gray-400 uppercase mb-1">{t('tempLight')}</div>
-                                                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                                                            <i className="fa-solid fa-temperature-low mr-2 text-blue-400"></i>
-                                                            อุณหภูมิที่เหมาะสมคือ 22-25 °C
-                                                        </p>
-                                                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                                            <i className="fa-solid fa-lightbulb mr-2 text-yellow-400"></i>
-                                                            ควรปิดไฟให้สนิทหรือใช้ไฟส้มสลัว
-                                                        </p>
+                                            {/* Environment Guide - Expert Tips Style */}
+                                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 shadow-sm border border-green-200 dark:border-green-800">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
+                                                        <i className="fa-solid fa-user-doctor text-white text-lg"></i>
                                                     </div>
-                                                    <div className="flex items-start gap-2 text-xs text-gray-500 italic">
-                                                        <i className="fa-solid fa-quote-left mt-1"></i>
-                                                        สภาพแวดล้อมที่มืดและเย็นช่วยกระตุ้นการหลั่งเมลาโทนินได้ดีขึ้น
+                                                    <div>
+                                                        <h3 className="font-bold text-[#2b2b2b] dark:text-gray-200 flex items-center gap-2">
+                                                            <i className="fa-solid fa-lightbulb text-green-500"></i>
+                                                            {t('envGuide')}
+                                                        </h3>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">ทิปจากผู้เชี่ยวชาญ</p>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-4">
+                                                    <div className="p-4 bg-white/60 dark:bg-black/20 rounded-lg border border-green-100 dark:border-green-800">
+                                                        <div className="text-xs font-bold text-gray-400 uppercase mb-2">{t('tempLight')}</div>
+                                                        <div className="space-y-2">
+                                                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                                                                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                                                    <i className="fa-solid fa-temperature-low text-blue-500"></i>
+                                                                </div>
+                                                                <span>อุณหภูมิที่เหมาะสมคือ <strong>22-25 °C</strong></span>
+                                                            </div>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                                                                <div className="w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
+                                                                    <i className="fa-solid fa-lightbulb text-yellow-500"></i>
+                                                                </div>
+                                                                <span>ควรปิดไฟให้สนิทหรือใช้ไฟส้มสลัว</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-start gap-3 p-3 bg-green-100/50 dark:bg-green-900/20 rounded-lg border-l-4 border-green-400">
+                                                        <div className="w-8 h-8 rounded-full bg-green-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                            <i className="fa-solid fa-quote-left text-white text-xs"></i>
+                                                        </div>
+                                                        <p className="text-xs text-gray-700 dark:text-gray-300 italic leading-relaxed">
+                                                            สภาพแวดล้อมที่มืดและเย็นช่วยกระตุ้นการหลั่งเมลาโทนินได้ดีขึ้น ทำให้หลับลึกและตื่นมาสดชื่น
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1192,16 +1586,26 @@ export default function SleepCalculator() {
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: 0.3 }}
-                                                className="bg-white dark:bg-[#2b2b2b] rounded-xl p-6"
+                                                className="bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800"
                                             >
-                                                <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-gray-200 mb-4">
-                                                    คำแนะนำ
-                                                </h3>
-                                                <ul className="space-y-2">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-lg">
+                                                        <i className="fa-solid fa-user-doctor text-white text-lg"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-lg font-bold text-[#2b2b2b] dark:text-gray-200">
+                                                            คำแนะนำจากผู้เชี่ยวชาญ
+                                                        </h3>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">ทิปดีๆ เพื่อการนอนที่มีคุณภาพ</p>
+                                                    </div>
+                                                </div>
+                                                <ul className="space-y-3">
                                                     {result.recommendations.map((rec, i) => (
-                                                        <li key={i} className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                                                            <span className="w-2 h-2 rounded-full bg-[#ffcc00] mt-2 flex-shrink-0"></span>
-                                                            <span>{rec}</span>
+                                                        <li key={i} className="flex items-start gap-3 p-3 bg-white/60 dark:bg-black/20 rounded-lg border border-yellow-100 dark:border-yellow-800">
+                                                            <div className="w-6 h-6 rounded-full bg-yellow-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                                <i className="fa-solid fa-lightbulb text-white text-xs"></i>
+                                                            </div>
+                                                            <span className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{rec}</span>
                                                         </li>
                                                     ))}
                                                 </ul>

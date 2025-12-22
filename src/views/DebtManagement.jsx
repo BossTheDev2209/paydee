@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import SlotCounter from "@/components/ui/SlotCounter";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, AreaChart, Area, Line, ReferenceLine, CartesianGrid, Legend } from 'recharts';
 import TermsModal from "@/components/TermsModal";
+import { useCalculationHistory } from "../context/CalculationHistoryContext";
 
 export default function DebtManagement() {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function DebtManagement() {
     const [loading, setLoading] = useState(false);
     const [isResetting, setIsResetting] = useState(false);
     const [infoModalOpen, setInfoModalOpen] = useState(false);
+    const { addCalculation } = useCalculationHistory();
 
     // Quick Mode State
     const [quickState, setQuickState] = useState({
@@ -97,14 +99,15 @@ export default function DebtManagement() {
             }
         }
 
-        setResult({
+        const calculationResult = {
             totalDebt,
             totalInterest,
             principal,
             computedResult,
             label,
             type: "quick"
-        });
+        };
+        setResult(calculationResult);
     };
 
     const simulateDebt = (balance, apr, payment) => {
@@ -183,7 +186,7 @@ export default function DebtManagement() {
             }
         }
 
-        setResult({
+        const calculationResult = {
             scenarioA,
             scenarioB,
             difference: {
@@ -192,16 +195,25 @@ export default function DebtManagement() {
             },
             chartData,
             type: "detailed"
-        });
+        };
+        setResult(calculationResult);
     };
 
     useEffect(() => {
         if (result) {
+            // Add calculation to history
+            const inputs = mode === "quick" ? quickState : detailedState;
+            addCalculation({
+                calculatorType: "debt-management",
+                inputs: { ...inputs, mode },
+                results: result
+            });
+
             setTimeout(() => {
                 document.getElementById('result-section')?.scrollIntoView({ behavior: 'smooth' });
             }, 100);
         }
-    }, [result]);
+    }, [result, mode, quickState, detailedState, addCalculation]);
 
     const fillExampleData = () => {
         if (mode === "quick") {

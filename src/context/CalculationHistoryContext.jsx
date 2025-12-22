@@ -37,8 +37,10 @@ export function CalculationHistoryProvider({ children }) {
 
   // Add a new calculation to history
   const addCalculation = useCallback((data) => {
-    // Only save if setting is enabled
-    if (!settings.saveHistory) return;
+    // Only save if setting is enabled (default to true if not set)
+    if (settings.saveHistory === false) {
+      return;
+    }
 
     const newEntry = {
       id: generateId(),
