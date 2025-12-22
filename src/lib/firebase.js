@@ -4,12 +4,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, orderBy, getDocs, deleteDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyDiE4QqyX6kuzhIKLab7CHN0Wf_isMMpC4",
+  authDomain: "paydee-s-boss-ver.firebaseapp.com",
+  projectId: "paydee-s-boss-ver",
+  storageBucket: "paydee-s-boss-ver.firebasestorage.app",
+  messagingSenderId: "533708723016",
+  appId: "1:533708723016:web:08a85df2d601ced9d9997d",
+  measurementId: "G-1RV8V43EX7"
 };
 
 // Initialize Firebase
